@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { Camera, CameraType } from 'expo-camera';
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner'; 
+import { Camera } from 'expo-camera';
 
 export default function App() {
-  const [type, setType] = useState(CameraType.back);
+  const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
   const lastTap = useRef(null);
 
@@ -15,6 +14,10 @@ export default function App() {
       setHasPermission(status === 'granted');
     })();
   }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    console.log(`Scanned barcode of type ${type} with data: ${data}`);
+  };
 
   if (hasPermission === null) {
     return (
@@ -33,7 +36,7 @@ export default function App() {
   }
 
   function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+    setType(current => (current === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back));
   }
 
   function handleDoubleTap() {
@@ -48,25 +51,29 @@ export default function App() {
 
   return (
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
-    <View style={styles.container}>
-      <Camera style={styles.camera} type={type}>
-        <View style={styles.qrContainer}>
-          <View style={[styles.qrOutline, styles.topLeftCorner]} />
-          <View style={[styles.qrOutline, styles.topRightCorner]} />
-          <View style={[styles.qrOutline, styles.bottomLeftCorner]} />
-          <View style={[styles.qrOutline, styles.bottomRightCorner]} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.overlay}>
-          <Text style={styles.scanText}>Scan the QR code in your gym</Text>
-        </View>
-      </Camera>
-    </View>
-  </TouchableWithoutFeedback>
+      <View style={styles.container}>
+        <Camera 
+          style={styles.camera} 
+          type={type} 
+          onBarCodeScanned={handleBarCodeScanned}
+        >
+          <View style={styles.qrContainer}>
+            <View style={[styles.qrOutline, styles.topLeftCorner]} />
+            <View style={[styles.qrOutline, styles.topRightCorner]} />
+            <View style={[styles.qrOutline, styles.bottomLeftCorner]} />
+            <View style={[styles.qrOutline, styles.bottomRightCorner]} />
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+              <Text style={styles.text}>Flip Camera</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.overlay}>
+            <Text style={styles.scanText}>Scan the QR code in your gym</Text>
+          </View>
+        </Camera>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
