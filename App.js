@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { Camera, CameraType } from 'expo-camera';
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'; 
+import { Button, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { BarCodeScanner } from 'expo-barcode-scanner'; 
 
 export default function App() {
   const [type, setType] = useState(CameraType.back);
@@ -10,7 +11,7 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
@@ -46,17 +47,26 @@ export default function App() {
   }
 
   return (
-<TouchableWithoutFeedback onPress={handleDoubleTap}>
-      <View style={styles.container}>
-        <Camera style={styles.camera} type={type}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-              <Text style={styles.text}>Flip Camera</Text>
-            </TouchableOpacity>
-          </View>
-        </Camera>
-      </View>
-    </TouchableWithoutFeedback>
+    <TouchableWithoutFeedback onPress={handleDoubleTap}>
+    <View style={styles.container}>
+      <Camera style={styles.camera} type={type}>
+        <View style={styles.qrContainer}>
+          <View style={[styles.qrOutline, styles.topLeftCorner]} />
+          <View style={[styles.qrOutline, styles.topRightCorner]} />
+          <View style={[styles.qrOutline, styles.bottomLeftCorner]} />
+          <View style={[styles.qrOutline, styles.bottomRightCorner]} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+            <Text style={styles.text}>Flip Camera</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.overlay}>
+          <Text style={styles.scanText}>Scan the QR code in your gym</Text>
+        </View>
+      </Camera>
+    </View>
+  </TouchableWithoutFeedback>
   );
 }
 
@@ -70,11 +80,25 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
     width: '100%',
+    position: 'relative',
+  },
+  qrContainer: {
+    position: 'absolute',
+    width: 270, // Adjust the width
+    height: 270, // Adjust the height
+    top: '50%',
+    left: '50%',
+    marginTop: -130,
+    marginLeft: -130,
+    zIndex: 2,
+    overflow: 'hidden', // Ensure the corners are clipped properly
+    borderRadius: 8, // Adjust the border radius as needed
   },
   buttonContainer: {
     position: 'absolute',
     bottom: 20,
     left: 20,
+    zIndex: 3, // Ensure the button is above the text
   },
   button: {
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -84,13 +108,54 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
   },
-  qrPlaceholder: {
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 3, // Ensure the text is above everything
+  },
+  scanText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    width: 200,
-    height: 200,
-    backgroundColor: '#ccc', // Placeholder background color
-    transform: [{ translateX: -100 }, { translateY: -100 }], // Center the placeholder
+    top : '20%',
+  },
+  qrOutline: {
+    position: 'absolute',
+    borderColor: '#fff',
+    borderWidth: 6,
+  },
+  topLeftCorner: {
+    top: 0,
+    left: 0,
+    width: 50,
+    height: 50,
+    borderBottomWidth: 0,
+    borderRightWidth: 0,
+  },
+  topRightCorner: {
+    top: 0,
+    right: 0,
+    width: 50,
+    height: 50,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+  },
+  bottomLeftCorner: {
+    bottom: 0,
+    left: 0,
+    width: 50,
+    height: 50,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+  },
+  bottomRightCorner: {
+    bottom: 0,
+    right: 0,
+    width: 50,
+    height: 50,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
   },
 });
