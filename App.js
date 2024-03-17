@@ -1,12 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Camera } from 'expo-camera';
+import { IPADRESS } from './config';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import LoginScreen from './screens/loginScreen';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
-  const lastTap = useRef(null);
 
   useEffect(() => {
     (async () => {
@@ -15,9 +19,29 @@ export default function App() {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
-    console.log(`Scanned barcode of type ${type} with data: ${data}`);
-  };
+//   const handleBarCodeScanned = async ({ type, data }) => {
+//     console.log(`Scanned barcode of type ${type} with data: ${data}`);
+
+//     try {
+//         const response = await fetch(`http://${IPADRESS}:3000/api/v1/gyms/compareQrCode`, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({ qrCode: data }),
+//         });
+
+//         const responseData = await response.json();
+//         console.log(responseData);
+        
+//         if(responseData.matched) {
+//           navigation.navigate('login');
+//         }
+
+//     } catch (error) {
+//         console.error('Error:', error);
+//     }
+// };
 
   if (hasPermission === null) {
     return (
@@ -35,11 +59,27 @@ export default function App() {
     );
   }
 
-  function toggleCameraType() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Camera">
+          {props => <CameraScreen {...props} navigation={props.navigation}/>}
+        </Stack.Screen>
+        <Stack.Screen name="login" component={LoginScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function CameraScreen({ navigation }) {
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const lastTap = useRef(null);
+
+  const toggleCameraType = () => {
     setType(current => (current === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back));
   }
 
-  function handleDoubleTap() {
+  const handleDoubleTap = () => {
     const now = Date.now();
     const DOUBLE_TAP_DELAY = 300;
     if (lastTap.current && now - lastTap.current < DOUBLE_TAP_DELAY) {
@@ -48,6 +88,32 @@ export default function App() {
       lastTap.current = now;
     }
   }
+
+  const handleBarCodeScanned = async ({ type, data }) => {
+    // console.log(`Scanned barcode of type ${type} with data: ${data}`);
+
+    try {
+        const response = await fetch(`http://${IPADRESS}:3000/api/v1/gyms/compareQrCode`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ qrCode: data }),
+        });
+
+
+        const responseData = await response.json();
+        if(responseData.status === 'success') {
+          navigation.navigate('login');
+        }
+        else {
+          console.log("QR code not found");
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
 
   return (
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
