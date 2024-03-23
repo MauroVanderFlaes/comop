@@ -5,7 +5,8 @@ import { IPADRESS } from './config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from './screens/loginScreen';
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'react-native-gesture-handler';
 const Stack = createStackNavigator();
 
 export default function App() {
