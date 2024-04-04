@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { Button, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import { IPADRESS } from './config';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,6 +8,8 @@ import LoginScreen from './screens/loginScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-gesture-handler';
 const Stack = createStackNavigator();
+
+const LogoImage = require('./assets/images/ComopLogo.png');
 
 export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -20,29 +22,6 @@ export default function App() {
     })();
   }, []);
 
-//   const handleBarCodeScanned = async ({ type, data }) => {
-//     console.log(`Scanned barcode of type ${type} with data: ${data}`);
-
-//     try {
-//         const response = await fetch(`http://${IPADRESS}:3000/api/v1/gyms/compareQrCode`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ qrCode: data }),
-//         });
-
-//         const responseData = await response.json();
-//         console.log(responseData);
-        
-//         if(responseData.matched) {
-//           navigation.navigate('login');
-//         }
-
-//     } catch (error) {
-//         console.error('Error:', error);
-//     }
-// };
 
   if (hasPermission === null) {
     return (
@@ -62,7 +41,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Camera">
           {props => <CameraScreen {...props} navigation={props.navigation}/>}
         </Stack.Screen>
@@ -74,6 +53,7 @@ export default function App() {
 
 function CameraScreen({ navigation }) {
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [errorAlertShown, setErrorAlertShown] = useState(false); // State variable to track if error alert has been shown
   const lastTap = useRef(null);
 
   const toggleCameraType = () => {
@@ -91,8 +71,6 @@ function CameraScreen({ navigation }) {
   }
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    // console.log(`Scanned barcode of type ${type} with data: ${data}`);
-
     try {
         const response = await fetch(`http://${IPADRESS}:3000/api/v1/gyms/compareQrCode`, {
             method: 'POST',
@@ -105,10 +83,13 @@ function CameraScreen({ navigation }) {
 
         const responseData = await response.json();
         if(responseData.status === 'success') {
-          navigation.navigate('login');
+          navigation.navigate('login', { qrCode: data });
         }
         else {
-          console.log("QR code not found");
+          if (!errorAlertShown) { // Show the alert only if it hasn't been shown before
+            Alert.alert('Error', 'Invalid QR code', [{ text: 'OK', onPress: () => setErrorAlertShown(false) }]);
+            setErrorAlertShown(true); // Set the state to true to indicate that the alert has been shown
+          }
         }
 
     } catch (error) {
@@ -116,9 +97,12 @@ function CameraScreen({ navigation }) {
     }
 };
 
+
+
   return (
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
       <View style={styles.container}>
+        <Image source={LogoImage} style={styles.logo} />
         <Camera 
           style={styles.camera} 
           type={type} 
@@ -132,13 +116,14 @@ function CameraScreen({ navigation }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-              <Text style={styles.text}>Flip Camera</Text>
+
             </TouchableOpacity>
           </View>
+        </Camera>
           <View style={styles.overlay}>
             <Text style={styles.scanText}>Scan the QR code in your gym</Text>
+            <Text style={styles.textMessage}>You will be automatically redirected after scanning</Text>
           </View>
-        </Camera>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -150,11 +135,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+
   },
+
+  logo: { 
+    width: 140, 
+    height: 32, 
+    marginBottom: 20, 
+    marginTop: -100 
+  },
+
   camera: {
-    flex: 1,
-    width: '100%',
+    flex: 0.6,
+    width: '90%',
     position: 'relative',
+    overflow: 'hidden',
+    borderRadius: 15,
+    
+    
   },
   qrContainer: {
     position: 'absolute',
@@ -168,33 +166,36 @@ const styles = StyleSheet.create({
     overflow: 'hidden', // Ensure the corners are clipped properly
     borderRadius: 8, // Adjust the border radius as needed
   },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    zIndex: 3, // Ensure the button is above the text
-  },
-  button: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    padding: 10,
-    borderRadius: 5,
-  },
+
   text: {
     color: 'white',
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: '#F2F2F2',
+    paddingVertical: 10,
     alignItems: 'center',
-    zIndex: 3, // Ensure the text is above everything
+    zIndex: 3,
+    height: '18%',
+    marginTop: 0,
   },
   scanText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#1C1B1B',
     position: 'absolute',
     top : '20%',
   },
+
+  textMessage: {
+    fontSize: 15,
+    color: '#1C1B1B',
+    position: 'absolute',
+    top : '50%',
+  },
+
   qrOutline: {
     position: 'absolute',
     borderColor: '#fff',
