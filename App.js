@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from './screens/loginScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-gesture-handler';
+import SignupScreen from './screens/SignupScreen';
 const Stack = createStackNavigator();
 
 const LogoImage = require('./assets/images/ComopLogo.png');
@@ -45,7 +46,7 @@ export default function App() {
         <Stack.Screen name="Camera">
           {props => <CameraScreen {...props} navigation={props.navigation}/>}
         </Stack.Screen>
-        <Stack.Screen name="login" component={LoginScreen} />
+        <Stack.Screen name="signup" component={SignupScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -83,7 +84,7 @@ function CameraScreen({ navigation }) {
 
         const responseData = await response.json();
         if(responseData.status === 'success') {
-          navigation.navigate('login', { qrCode: data });
+          navigation.navigate('signup');
         }
         else {
           if (!errorAlertShown) { // Show the alert only if it hasn't been shown before
