@@ -5,6 +5,10 @@ import { IPADRESS } from './config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from './screens/loginScreen';
+import Newsfeed from './screens/newsfeed';
+import Challenges from './screens/challenges';
+import Fitpass from './screens/fitpass';
+import Profile from './screens/profile';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-gesture-handler';
 const Stack = createStackNavigator();
@@ -41,11 +45,15 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{headerShown: false, animationEnabled: false}}>
         <Stack.Screen name="Camera">
           {props => <CameraScreen {...props} navigation={props.navigation}/>}
         </Stack.Screen>
         <Stack.Screen name="login" component={LoginScreen} />
+        <Stack.Screen name="newsfeed" component={Newsfeed} />
+        <Stack.Screen name="challenges" component={Challenges} />
+        <Stack.Screen name="fitpass" component={Fitpass} />
+        <Stack.Screen name="profile" component={Profile} />
       </Stack.Navigator>
     </NavigationContainer>
   );
