@@ -1,13 +1,19 @@
+// LoginScreen.js
+
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import Logo from '../components/logo';
-import { IPADRESS } from '../config'; // Make sure IPADRESS is correctly imported
+import Nav from '../components/nav';
+import { IPADRESS } from '../config'; 
+import CustomButton from '../components/button';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import Challenges from './challenges';
 
 export default function LoginScreen({ route }) {
-  
-  // api call to check if the qr code is valid
-  const [gyms, setGyms] = useState([]); // State to store fetched gyms
-  const scannedQrCode = route.params.qrCode; // Get scanned QR code from route params
+  const navigation = useNavigation(); // Initialize navigation
+
+  const [gyms, setGyms] = useState([]);
+  const scannedQrCode = route.params.qrCode;
 
   const getGyms = async () => {
     try {
@@ -19,49 +25,52 @@ export default function LoginScreen({ route }) {
         body: JSON.stringify({ qrCode: scannedQrCode }),
       });
       const json = await response.json();
-      console.log(json); // Check what json.data is
-      setGyms(json.data); // Set gyms state with fetched gym data
+      console.log(json);
+      setGyms(json.data);
     } catch (error) {
       console.error('Error:', error);
     }
   };
-  
 
   useEffect(() => {
-    getGyms(); // Call getGyms function when component mounts
-  }, []); // Empty dependency array ensures this effect runs only once when component mounts
+    getGyms();
+  }, []);
 
+  const handleContinue = () => {
+    navigation.navigate('challenges'); // Navigate to Challenges screen
+  };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       <Logo />
       <Image source={require('../assets/images/NewFitZaventem.png')} style={styles.img} />
       {gyms && (
         <View style={styles.boxGym}>
           <Text>Logo gym</Text>
           <Text style={styles.gymName}>{gyms.name}</Text>
-          {/* Add more gym details here */}
         </View>
       )}
+      <CustomButton onPress={handleContinue} title="Continue" />
+      {/* <Nav /> */}
     </View>
   );
-  
-  
 }
 
-const styles = {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   img: {
     top: -150,
   },
-
   gymName: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-
   boxGym: {
     display: 'flex',
     flexDirection: 'row',
-
-  }
-};
+  },
+});
