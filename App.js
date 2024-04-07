@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from './screens/loginScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-gesture-handler';
+import SignupScreen from './screens/SignupScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -66,7 +67,7 @@ export default function App() {
         <Stack.Screen name="Camera">
           {props => <CameraScreen {...props} navigation={props.navigation}/>}
         </Stack.Screen>
-        <Stack.Screen name="login" component={LoginScreen} />
+        <Stack.Screen name="signup" component={SignupScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -105,7 +106,7 @@ function CameraScreen({ navigation }) {
 
         const responseData = await response.json();
         if(responseData.status === 'success') {
-          navigation.navigate('login');
+          navigation.navigate('signup');
         }
         else {
           console.log("QR code not found");
