@@ -95,7 +95,7 @@ function CameraScreen({ navigation }) {
 
         const responseData = await response.json();
         if(responseData.status === 'success') {
-          navigation.navigate('signup');
+          navigation.navigate('login', { qrCode: data });
         }
         else {
           if (!errorAlertShown) { // Show the alert only if it hasn't been shown before

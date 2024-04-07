@@ -37,7 +37,7 @@ export default function LoginScreen({ route }) {
   }, []);
 
   const handleContinue = () => {
-    navigation.navigate('challenges'); // Navigate to Challenges screen
+    navigation.navigate('signup'); // Navigate to Challenges screen
   };
 
   return (
