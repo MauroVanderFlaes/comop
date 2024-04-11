@@ -4,14 +4,15 @@ import { Camera } from 'expo-camera';
 import { IPADRESS } from './config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import LoginScreen from './screens/loginScreen';
+import gymConfirm from './screens/gymConfirm';
 import Newsfeed from './screens/newsfeed';
 import Challenges from './screens/challenges';
 import Fitpass from './screens/fitpass';
 import Profile from './screens/profile';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-gesture-handler';
-import SignupScreen from './screens/SignupScreen';
+import SignupScreen from './screens/signupScreen';
+import LoginScreen from './screens/loginScreen';
 const Stack = createStackNavigator();
 
 const LogoImage = require('./assets/images/ComopLogo.png');
@@ -51,12 +52,13 @@ export default function App() {
           {props => <CameraScreen {...props} navigation={props.navigation}/>}
         </Stack.Screen>
 
-        <Stack.Screen name="login" component={LoginScreen} />
+        <Stack.Screen name="gymConfirm" component={gymConfirm} />
         <Stack.Screen name="newsfeed" component={Newsfeed} />
         <Stack.Screen name="challenges" component={Challenges} />
         <Stack.Screen name="fitpass" component={Fitpass} />
         <Stack.Screen name="profile" component={Profile} />
         <Stack.Screen name="signup" component={SignupScreen} />
+        <Stack.Screen name="login" component={LoginScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
@@ -95,7 +97,7 @@ function CameraScreen({ navigation }) {
 
         const responseData = await response.json();
         if(responseData.status === 'success') {
-          navigation.navigate('login', { qrCode: data });
+          navigation.navigate('gymConfirm', { qrCode: data });
         }
         else {
           if (!errorAlertShown) { // Show the alert only if it hasn't been shown before
