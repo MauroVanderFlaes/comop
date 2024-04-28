@@ -8,11 +8,13 @@ const LoginScreen = ({ navigation }) => {
     // Deze functie wordt uitgevoerd wanneer er op de link wordt geklikt
     navigation.navigate('signup');
   };
+  
+
 
   const onSubmit = () => {
     // Deze functie wordt uitgevoerd wanneer het formulier wordt ingediend
     console.log('Formulier ingediend');
-    navigation.navigate('challenges');
+    // navigation.navigate('challenges');
   };
 
   return (
