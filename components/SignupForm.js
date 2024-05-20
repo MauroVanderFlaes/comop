@@ -75,9 +75,12 @@ export default SignupForm;
 
 const styles = StyleSheet.create({
   input: {
-    height: 40,
-    width: 200,
-    margin: 12,
-    borderWidth: 1,
+    height: 48,
+    width: 350,
+    margin: 15,
+    borderWidth: 2,
+    borderRadius: 24,
+    paddingLeft: 24,
+    borderColor: '#6CC2FF',
   },
 });
