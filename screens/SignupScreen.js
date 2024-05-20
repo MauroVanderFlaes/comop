@@ -19,7 +19,7 @@ const SignupScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       <Image source={LogoImage} style={styles.logo} />
       <Text>Signup</Text>
       <SignupForm onSubmit={onSubmit}/>
@@ -36,5 +36,11 @@ const styles = {
     height: 32, 
     marginBottom: 20, 
     marginTop: -100 
+  },
+
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };
