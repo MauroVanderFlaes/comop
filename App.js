@@ -68,4 +68,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  customTitle: {
+    fontSize: 20,
+    fontFamily: 'AzoSans Regular',
+  }
 });

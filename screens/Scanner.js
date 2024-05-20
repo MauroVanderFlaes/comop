@@ -1,12 +1,34 @@
 // Scanner.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import { Camera } from 'expo-camera/legacy';
 import { IPADRESS } from '../config';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 const LogoImage = require('../assets/images/ComopLogo.png');
 
 export default function CameraScreen({ navigation }) {
+
+  const [fontsLoaded, fontError] = useFonts({
+    'AzoSans Regular': require('../assets/fonts/AzoSans-Regular.ttf'),
+    'AzoSans Bold': require('../assets/fonts/AzoSans-Bold.ttf'),
+    'AzoSans Medium': require('../assets/fonts/AzoSans-Medium.ttf'),
+    'AzoSans Light': require('../assets/fonts/AzoSans-Light.ttf'),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [errorAlertShown, setErrorAlertShown] = useState(false); // State variable to track if error alert has been shown
@@ -75,7 +97,7 @@ export default function CameraScreen({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={onLayoutRootView}>
         <Image source={LogoImage} style={styles.logo} />
         <Camera 
           style={styles.camera} 
@@ -95,8 +117,8 @@ export default function CameraScreen({ navigation }) {
           </View>
         </Camera>
         <View style={styles.overlay}>
-          <Text style={styles.scanText}>Scan the QR code in your gym</Text>
-          <Text style={styles.textMessage}>You will be automatically redirected after scanning</Text>
+          <Text style={styles.customTitle}>Scan the QR code in your gym</Text>
+          <Text style={styles.customText}>You will be automatically redirected after scanning</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -121,6 +143,7 @@ const styles = StyleSheet.create({
     width: '90%',
     position: 'relative',
     overflow: 'hidden',
+    borderRadius: 20,
   },
   qrContainer: {
     position: 'absolute',
@@ -146,19 +169,6 @@ const styles = StyleSheet.create({
     zIndex: 3,
     height: '20%',
     marginTop: 0,
-  },
-  scanText: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#1C1B1B',
-    position: 'absolute',
-    top : '30%',
-  },
-  textMessage: {
-    fontSize: 16,
-    color: '#1C1B1B',
-    position: 'absolute',
-    top : '60%',
   },
   qrOutline: {
     position: 'absolute',
@@ -196,5 +206,21 @@ const styles = StyleSheet.create({
     height: 50,
     borderTopWidth: 0,
     borderLeftWidth: 0,
+  },
+
+  customTitle: {
+    fontSize: 26,
+    fontFamily: 'AzoSans Bold',
+    color: '#1C1B1B',
+    position: 'absolute',
+    top : '20%',
+  },
+  customText: {
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: 'AzoSans Regular',
+    color: '#1C1B1B',
+    position: 'absolute',
+    top : '50%',
   },
 });
