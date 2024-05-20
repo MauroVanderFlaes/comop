@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
-import { Camera } from 'expo-camera';
+import { Camera } from 'expo-camera/legacy';
 import { IPADRESS } from './config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -11,7 +11,7 @@ import Fitpass from './screens/fitpass';
 import Profile from './screens/profile';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-gesture-handler';
-import SignupScreen from './screens/signupScreen';
+import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/loginScreen';
 const Stack = createStackNavigator();
 
