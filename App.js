@@ -1,7 +1,14 @@
+<<<<<<< finishProfile---Jarne
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
+import { Camera } from 'expo-camera/legacy';
+import { IPADRESS } from './config';
+=======
 // App.js
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Camera } from 'expo-camera/legacy';
+>>>>>>> master
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import gymConfirm from './screens/gymConfirm';
