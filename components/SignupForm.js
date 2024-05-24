@@ -39,7 +39,7 @@ const SignupForm = ({ onSubmit }) => {
   };
 
   return (
-    <View>
+    <View style= {styles.container}>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -83,5 +83,10 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     paddingLeft: 24,
     borderColor: '#6CC2FF',
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

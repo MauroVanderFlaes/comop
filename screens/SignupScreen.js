@@ -21,7 +21,7 @@ const SignupScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={LogoImage} style={styles.logo} />
-      <Text>Signup</Text>
+      <Text style={styles.Title}>Signup</Text>
       <SignupForm onSubmit={onSubmit}/>
       <Text>Already have an account? <Text style={{ color: 'blue' }} onPress={goToLogin}>Login</Text></Text>
     </View>
@@ -42,5 +42,6 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 20,
   },
 };

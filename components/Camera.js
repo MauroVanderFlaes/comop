@@ -5,6 +5,7 @@ import { Camera } from 'expo-camera/legacy';
 import { IPADRESS } from '../config';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import theme from '../theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -208,16 +209,13 @@ const styles = StyleSheet.create({
   },
 
   customTitle: {
-    fontSize: 26,
-    fontFamily: 'AzoSans Bold',
-    color: '#1C1B1B',
+    ...theme.textStyles.customTitle,
     position: 'absolute',
     top : '20%',
   },
   customText: {
-    fontSize: 18,
+    ...theme.textStyles.customText,
     textAlign: 'center',
-    fontFamily: 'AzoSans Regular',
     color: '#1C1B1B',
     position: 'absolute',
     top : '50%',
