@@ -1,4 +1,4 @@
-// Scanner.js
+// Camera.js
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import { Camera } from 'expo-camera/legacy';
@@ -10,8 +10,7 @@ SplashScreen.preventAutoHideAsync();
 
 const LogoImage = require('../assets/images/ComopLogo.png');
 
-export default function CameraScreen({ navigation }) {
-
+const CameraComponent = ({ navigation }) => {
   const [fontsLoaded, fontError] = useFonts({
     'AzoSans Regular': require('../assets/fonts/AzoSans-Regular.ttf'),
     'AzoSans Bold': require('../assets/fonts/AzoSans-Bold.ttf'),
@@ -19,20 +18,16 @@ export default function CameraScreen({ navigation }) {
     'AzoSans Light': require('../assets/fonts/AzoSans-Light.ttf'),
   });
 
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [errorAlertShown, setErrorAlertShown] = useState(false); // State variable to track if error alert has been shown
+  const lastTap = useRef(null);
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
-
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [hasPermission, setHasPermission] = useState(null);
-  const [errorAlertShown, setErrorAlertShown] = useState(false); // State variable to track if error alert has been shown
-  const lastTap = useRef(null);
 
   useEffect(() => {
     (async () => {
@@ -40,6 +35,26 @@ export default function CameraScreen({ navigation }) {
       setHasPermission(status === 'granted');
     })();
   }, []);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  if (hasPermission === null) {
+    return (
+      <View style={styles.container}>
+        <Text>Requesting camera permission...</Text>
+      </View>
+    );
+  }
+
+  if (!hasPermission) {
+    return (
+      <View style={styles.container}>
+        <Text>No access to camera</Text>
+      </View>
+    );
+  }
 
   const toggleCameraType = () => {
     setType(current => (current === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back));
@@ -79,22 +94,6 @@ export default function CameraScreen({ navigation }) {
     }
   };
 
-  if (hasPermission === null) {
-    return (
-      <View style={styles.container}>
-        <Text>Requesting camera permission...</Text>
-      </View>
-    );
-  }
-
-  if (!hasPermission) {
-    return (
-      <View style={styles.container}>
-        <Text>No access to camera</Text>
-      </View>
-    );
-  }
-
   return (
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
       <View style={styles.container} onLayout={onLayoutRootView}>
@@ -123,7 +122,7 @@ export default function CameraScreen({ navigation }) {
       </View>
     </TouchableWithoutFeedback>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -224,3 +223,5 @@ const styles = StyleSheet.create({
     top : '50%',
   },
 });
+
+export default CameraComponent;
