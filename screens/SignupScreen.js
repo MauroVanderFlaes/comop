@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation }) => {
       <Image source={LogoImage} style={styles.logo} />
       <Text style={styles.title}>Signup</Text>
       <SignupForm onSubmit={onSubmit}/>
-      <Text style={styles.text}>Already have an account? <Text style={{ color: 'blue' }} onPress={goToLogin}>Login</Text></Text>
+      <Text style={styles.text}>Already have an account? <Text style={{color: theme.colors.purple_dark}} onPress={goToLogin}>Login</Text></Text>
     </View>
   );
 }
@@ -52,4 +52,8 @@ const styles = {
     alignItems: 'center',
     gap: 20,
   },
+
+  btn: {
+    ...theme.colors.orange_dark,
+  }
 };
