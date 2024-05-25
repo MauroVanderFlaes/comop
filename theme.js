@@ -33,7 +33,45 @@ const theme = {
         fontFamily: 'AzoSans Regular',
         color: '#1C1B1B',
       },
+      customCaption: {
+        fontSize: 14,
+        fontFamily: 'AzoSans Regular',
+        color: '#1C1B1B',
+      }
     },
+    buttonStyles: {
+      button: {
+        backgroundColor: '#1C1B1B',
+        borderRadius: 24,
+        width: 242,
+        height: 48,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      buttonText: {
+        color: '#F2F2F2',
+        fontSize: 16,
+      }
+    },
+    fieldStyles: {
+      input: {
+        height: 55,
+        width: 350,
+        margin: 15,
+        borderWidth: 2,
+        borderRadius: 28,
+        paddingLeft: 24,
+        borderColor: '#6CC2FF',
+      },
+    },
+    containerStyles: {
+      containerCenter: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }
+    }
   };
   
   export default theme;
