@@ -14,7 +14,7 @@ import gymConfirm from './screens/gymConfirm';
 import Newsfeed from './screens/newsfeed';
 import Challenges from './screens/challenges';
 import Fitpass from './screens/fitpass';
-import Profile from './screens/profile';
+import Profile from './components/profile';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/loginScreen';
 import cameraScreen from './screens/cameraScreen';
