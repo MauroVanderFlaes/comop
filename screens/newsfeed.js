@@ -2,11 +2,18 @@
 import React from "react";
 import { View, Text } from "react-native";
 import Nav from "../components/nav";
+import Logo from "../components/logo";
+import theme from "../theme";
 
 const Newsfeed = () => {
     return (
         <View style={styles.feed}>
-            <Text>Newsfeed</Text>
+            <Logo />
+        <View>
+            <Text style={theme.textStyles.NameTitle}>Hello naam,</Text>
+            <Text style={theme.textStyles.customSubtitle}>What happened in your gym today?</Text>
+        </View>
+            <Text>Newsfeed/Leaderboard</Text>
             <Nav />
         </View>
     );
