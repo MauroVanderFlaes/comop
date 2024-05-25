@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet } from 'react-native';
 import { IPADRESS } from '../config';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomButton from './button';
 import theme from '../theme';
 
 const LoginForm = ({ onSubmit }) => {
@@ -54,7 +55,7 @@ const LoginForm = ({ onSubmit }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -69,7 +70,7 @@ const LoginForm = ({ onSubmit }) => {
         onChangeText={setPassword}
         secureTextEntry={true}
       />
-      <Button title="Login" onPress={handleLogin} />
+      <CustomButton title="Login" onPress={handleLogin} style={styles.button} />
     </View>
   );
       
@@ -80,6 +81,10 @@ export default LoginForm;
 
 const styles = StyleSheet.create({
   input: {
-    ...theme.fieldStyles.customField,
+    ...theme.fieldStyles.input,
   },
+  container: {
+    ...theme.containerStyles.containerCenter,
+  },
+
 });
