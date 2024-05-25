@@ -33,7 +33,19 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/AzoSans Regular.ttf",
+            "./assets/fonts/AzoSans Bold.ttf",
+            "./assets/fonts/AzoSans Light.ttf",
+            "./assets/fonts/AzoSans Medium.ttf"
+          ]
+        }
+      ]
     ]
+    
   }
 }

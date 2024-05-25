@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, Image } from 'react-native';
 import SignupForm from '../components/SignupForm';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import theme from '../theme';
 
+const LogoImage = require('../assets/images/ComopLogo.png');
 
 const SignupScreen = ({ navigation }) => {
 
@@ -18,12 +20,36 @@ const SignupScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Signup</Text>
+    <View style={styles.container}>
+      <Image source={LogoImage} style={styles.logo} />
+      <Text style={styles.title}>Signup</Text>
       <SignupForm onSubmit={onSubmit}/>
-      <Text>Already have an account? <Text style={{ color: 'blue' }} onPress={goToLogin}>Login</Text></Text>
+      <Text style={styles.text}>Already have an account? <Text style={{ color: 'blue' }} onPress={goToLogin}>Login</Text></Text>
     </View>
   );
 }
 
 export default SignupScreen;
+
+const styles = {
+  title: {
+    ...theme.textStyles.customTitle,
+  },
+  logo: { 
+    width: 140, 
+    height: 32, 
+    marginBottom: 20, 
+    marginTop: -100 
+  },
+
+  text: {
+    ...theme.textStyles.customText,
+  },
+
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+  },
+};

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 import { IPADRESS } from '../config';
+import CustomButton from './button';
+import theme from '../theme';
 
 const SignupForm = ({ onSubmit }) => {
   const [username, setUsername] = useState('');
@@ -38,7 +40,7 @@ const SignupForm = ({ onSubmit }) => {
   };
 
   return (
-    <View>
+    <View style= {styles.container}>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -66,7 +68,7 @@ const SignupForm = ({ onSubmit }) => {
         onChangeText={setRepeatPassword}
         secureTextEntry={true}
       />
-      <Button title="Signup" onPress={handleSignup} />
+      <CustomButton title="Sign up" onPress={handleSignup} style={styles.button} />
     </View>
   );
 }
@@ -75,9 +77,10 @@ export default SignupForm;
 
 const styles = StyleSheet.create({
   input: {
-    height: 40,
-    width: 200,
-    margin: 12,
-    borderWidth: 1,
+    ...theme.fieldStyles.input,
+    ...theme.textStyles.customCaption,
+  },
+  container: {
+    ...theme.containerStyles.containerCenter,
   },
 });

@@ -1,16 +1,34 @@
-// Scanner.js
-import React, { useState, useEffect, useRef } from 'react';
+// Camera.js
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import { Camera } from 'expo-camera/legacy';
 import { IPADRESS } from '../config';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import theme from '../theme';
+
+SplashScreen.preventAutoHideAsync();
 
 const LogoImage = require('../assets/images/ComopLogo.png');
 
-export default function CameraScreen({ navigation }) {
+const CameraComponent = ({ navigation }) => {
+  const [fontsLoaded, fontError] = useFonts({
+    'AzoSans Regular': require('../assets/fonts/AzoSans-Regular.ttf'),
+    'AzoSans Bold': require('../assets/fonts/AzoSans-Bold.ttf'),
+    'AzoSans Medium': require('../assets/fonts/AzoSans-Medium.ttf'),
+    'AzoSans Light': require('../assets/fonts/AzoSans-Light.ttf'),
+  });
+
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [errorAlertShown, setErrorAlertShown] = useState(false); // State variable to track if error alert has been shown
   const lastTap = useRef(null);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
 
   useEffect(() => {
     (async () => {
@@ -18,6 +36,26 @@ export default function CameraScreen({ navigation }) {
       setHasPermission(status === 'granted');
     })();
   }, []);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  if (hasPermission === null) {
+    return (
+      <View style={styles.container}>
+        <Text>Requesting camera permission...</Text>
+      </View>
+    );
+  }
+
+  if (!hasPermission) {
+    return (
+      <View style={styles.container}>
+        <Text>No access to camera</Text>
+      </View>
+    );
+  }
 
   const toggleCameraType = () => {
     setType(current => (current === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back));
@@ -57,25 +95,9 @@ export default function CameraScreen({ navigation }) {
     }
   };
 
-  if (hasPermission === null) {
-    return (
-      <View style={styles.container}>
-        <Text>Requesting camera permission...</Text>
-      </View>
-    );
-  }
-
-  if (!hasPermission) {
-    return (
-      <View style={styles.container}>
-        <Text>No access to camera</Text>
-      </View>
-    );
-  }
-
   return (
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={onLayoutRootView}>
         <Image source={LogoImage} style={styles.logo} />
         <Camera 
           style={styles.camera} 
@@ -95,13 +117,13 @@ export default function CameraScreen({ navigation }) {
           </View>
         </Camera>
         <View style={styles.overlay}>
-          <Text style={styles.scanText}>Scan the QR code in your gym</Text>
-          <Text style={styles.textMessage}>You will be automatically redirected after scanning</Text>
+          <Text style={styles.customTitle}>Scan the QR code in your gym</Text>
+          <Text style={styles.customText}>You will be automatically redirected after scanning</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -121,6 +143,7 @@ const styles = StyleSheet.create({
     width: '90%',
     position: 'relative',
     overflow: 'hidden',
+    borderRadius: 20,
   },
   qrContainer: {
     position: 'absolute',
@@ -146,19 +169,6 @@ const styles = StyleSheet.create({
     zIndex: 3,
     height: '20%',
     marginTop: 0,
-  },
-  scanText: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#1C1B1B',
-    position: 'absolute',
-    top : '30%',
-  },
-  textMessage: {
-    fontSize: 16,
-    color: '#1C1B1B',
-    position: 'absolute',
-    top : '60%',
   },
   qrOutline: {
     position: 'absolute',
@@ -197,4 +207,19 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
   },
+
+  customTitle: {
+    ...theme.textStyles.customTitle,
+    position: 'absolute',
+    top : '20%',
+  },
+  customText: {
+    ...theme.textStyles.customText,
+    textAlign: 'center',
+    color: '#1C1B1B',
+    position: 'absolute',
+    top : '50%',
+  },
 });
+
+export default CameraComponent;
