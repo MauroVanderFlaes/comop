@@ -8,6 +8,7 @@ import { IPADRESS } from '../config';
 import CustomButton from '../components/button';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import Challenges from './challenges';
+import theme from '../theme';
 
 export default function GymConfirm({ route }) {
   const navigation = useNavigation(); // Initialize navigation
@@ -57,7 +58,7 @@ export default function GymConfirm({ route }) {
         </View>
       )}
       <CustomButton onPress={handleContinue} title="Continue" />
-      <Text style={{marginTop: 20,}}>Not your gym? Click <Text style={{ color: 'blue' }} onPress={goBack}>here</Text> to re-scan QR code</Text>
+      <Text style={{...theme.textStyles.customText, marginTop: 20,}}>Not your gym? Click <Text style={{ color: theme.colors.purple_dark }} onPress={goBack}>here</Text> to re-scan QR code</Text>
       {/* <Nav /> */}
     </View>
   );
@@ -65,6 +66,7 @@ export default function GymConfirm({ route }) {
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

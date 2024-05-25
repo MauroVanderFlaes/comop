@@ -1,6 +1,9 @@
 import React from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, Image } from 'react-native';
 import LoginForm from '../components/LoginForm';
+import theme from '../theme';
+
+const LogoImage = require('../assets/images/ComopLogo.png');
 
 const LoginScreen = ({ navigation }) => {
 
@@ -19,11 +22,27 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Login</Text>
+      <Image source={LogoImage} style={styles.logo} />
+      <Text style={styles.title}>Login</Text>
       <LoginForm onSubmit={onSubmit}/>
-      <Text>Don't have a account? <Text style={{ color: 'blue' }} onPress={goToSignup}>Signup</Text></Text>
+      <Text style={styles.text}>Don't have a account? <Text style={{ color: theme.colors.purple_dark }} onPress={goToSignup}>Signup</Text></Text>
     </View>
   );
+}
+
+const styles = {
+  text: {
+    ...theme.textStyles.customText,
+  },
+  title: {
+    ...theme.textStyles.customTitle,
+  },
+  logo: { 
+    width: 140, 
+    height: 32, 
+    marginBottom: 20, 
+    marginTop: -100 
+  },
 }
 
 export default LoginScreen;

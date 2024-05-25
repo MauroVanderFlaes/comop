@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet } from 'react-native';
 import { IPADRESS } from '../config';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import theme from '../theme';
 
 const LoginForm = ({ onSubmit }) => {
   const [email, setEmail] = useState('');
@@ -79,8 +80,6 @@ export default LoginForm;
 
 const styles = StyleSheet.create({
   input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
+    ...theme.fieldStyles.customField,
   },
 });
