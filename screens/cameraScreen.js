@@ -1,6 +1,6 @@
 // cameraScreen.js
 import React from 'react';
-import Camera from '../components/Camera'; // Controleer dit pad
+import Camera from '../components/Camera';
 
 const CameraScreen = ({ navigation }) => {
   return <Camera navigation={navigation} />;

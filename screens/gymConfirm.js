@@ -40,6 +40,11 @@ export default function GymConfirm({ route }) {
     navigation.navigate('signup'); // Navigate to Challenges screen
   };
 
+  const goBack = () => {
+    // Deze functie wordt uitgevoerd wanneer er op de link wordt geklikt
+    navigation.navigate('Camera');
+  };
+
   return (
     <View style={styles.container}>
       <Logo />
@@ -48,9 +53,11 @@ export default function GymConfirm({ route }) {
         <View style={styles.boxGym}>
           <Text>Logo gym</Text>
           <Text style={styles.gymName}>{gyms.name}</Text>
+          
         </View>
       )}
       <CustomButton onPress={handleContinue} title="Continue" />
+      <Text style={{marginTop: 20,}}>Not your gym? Click <Text style={{ color: 'blue' }} onPress={goBack}>here</Text> to re-scan QR code</Text>
       {/* <Nav /> */}
     </View>
   );

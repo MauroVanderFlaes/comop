@@ -5,6 +5,7 @@ import { Camera } from 'expo-camera/legacy';
 import { IPADRESS } from '../config';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { useFocusEffect } from '@react-navigation/native';
 import theme from '../theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -22,6 +23,7 @@ const CameraComponent = ({ navigation }) => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [errorAlertShown, setErrorAlertShown] = useState(false); // State variable to track if error alert has been shown
+  const [isCameraVisible, setIsCameraVisible] = useState(true); // State to control camera visibility
   const lastTap = useRef(null);
 
   const onLayoutRootView = useCallback(async () => {
@@ -36,6 +38,13 @@ const CameraComponent = ({ navigation }) => {
       setHasPermission(status === 'granted');
     })();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsCameraVisible(true);
+      return () => setIsCameraVisible(false);
+    }, [])
+  );
 
   if (!fontsLoaded && !fontError) {
     return null;
@@ -59,7 +68,7 @@ const CameraComponent = ({ navigation }) => {
 
   const toggleCameraType = () => {
     setType(current => (current === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back));
-  }
+  };
 
   const handleDoubleTap = () => {
     const now = Date.now();
@@ -69,7 +78,7 @@ const CameraComponent = ({ navigation }) => {
     } else {
       lastTap.current = now;
     }
-  }
+  };
 
   const handleBarCodeScanned = async ({ type, data }) => {
     try {
@@ -99,23 +108,25 @@ const CameraComponent = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
       <View style={styles.container} onLayout={onLayoutRootView}>
         <Image source={LogoImage} style={styles.logo} />
-        <Camera 
-          style={styles.camera} 
-          type={type} 
-          onBarCodeScanned={handleBarCodeScanned}
-        >
-          <View style={styles.qrContainer}>
-            <View style={[styles.qrOutline, styles.topLeftCorner]} />
-            <View style={[styles.qrOutline, styles.topRightCorner]} />
-            <View style={[styles.qrOutline, styles.bottomLeftCorner]} />
-            <View style={[styles.qrOutline, styles.bottomRightCorner]} />
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+        {isCameraVisible && (
+          <Camera 
+            style={styles.camera} 
+            type={type} 
+            onBarCodeScanned={handleBarCodeScanned}
+          >
+            <View style={styles.qrContainer}>
+              <View style={[styles.qrOutline, styles.topLeftCorner]} />
+              <View style={[styles.qrOutline, styles.topRightCorner]} />
+              <View style={[styles.qrOutline, styles.bottomLeftCorner]} />
+              <View style={[styles.qrOutline, styles.bottomRightCorner]} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
 
-            </TouchableOpacity>
-          </View>
-        </Camera>
+              </TouchableOpacity>
+            </View>
+          </Camera>
+        )}
         <View style={styles.overlay}>
           <Text style={styles.customTitle}>Scan the QR code in your gym</Text>
           <Text style={styles.customText}>You will be automatically redirected after scanning</Text>
