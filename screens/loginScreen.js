@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, Text, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import LoginForm from '../components/LoginForm';
 import Logo from '../components/logo';
 import theme from '../theme';
-
-const LogoImage = require('../assets/images/ComopLogo.png');
 
 const LoginScreen = ({ navigation }) => {
 
@@ -12,34 +10,47 @@ const LoginScreen = ({ navigation }) => {
     // Deze functie wordt uitgevoerd wanneer er op de link wordt geklikt
     navigation.navigate('signup');
   };
-  
-
 
   const onSubmit = () => {
     // Deze functie wordt uitgevoerd wanneer het formulier wordt ingediend
     console.log('Formulier ingediend');
-    // navigation.navigate('challenges');
+    // Navigeren naar een ander scherm na succesvol inloggen
+    navigation.navigate('challenges');
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       <Logo />
       <Text style={styles.title}>Login</Text>
-      <LoginForm onSubmit={onSubmit}/>
-      <Text style={styles.text}>Don't have a account? <Text style={{ color: theme.colors.purple_dark }} onPress={goToSignup}>Signup</Text></Text>
+      <LoginForm onSubmit={onSubmit} />
+      <Text style={styles.text}>
+        Don't have an account?{' '}
+        <Text style={styles.signupLink} onPress={goToSignup}>
+          Signup
+        </Text>
+      </Text>
     </View>
   );
-}
+};
 
-const styles = {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  title: {
+    ...theme.textStyles.customTitle,
+    marginBottom: 20,
+  },
   text: {
     ...theme.textStyles.customText,
     marginTop: 20,
   },
-  title: {
-    ...theme.textStyles.customTitle,
+  signupLink: {
+    color: theme.colors.purple_dark,
   },
-
-}
+});
 
 export default LoginScreen;

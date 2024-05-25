@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Alert, StyleSheet } from 'react-native';
 import { IPADRESS } from '../config';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from './button';
 import theme from '../theme';
 
 const LoginForm = ({ onSubmit }) => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState(''); // [1
+  const [identifier, setIdentifier] = useState(''); // Combineert e-mail en gebruikersnaam in één veld
   const [password, setPassword] = useState('');
-  const navigation = useNavigation(); // Initialize navigation
+  const navigation = useNavigation();
 
   const _storeData = async (userData) => {
     try {
@@ -34,7 +33,7 @@ const LoginForm = ({ onSubmit }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email, password: password}),
+        body: JSON.stringify({ identifier: identifier, password: password }),
       });
       if (response.ok) {
         // Voer een callbackfunctie uit die is doorgegeven aan onSubmit
@@ -43,14 +42,14 @@ const LoginForm = ({ onSubmit }) => {
         console.log("Login successful");
         _storeData(data.data.user);
         onSubmit();
-        
       } else {
-        console.log("ai ai");
+        const errorData = await response.json();
+        Alert.alert('Error', errorData.message);
+        console.log("Login failed:", errorData.message);
       }
-    } 
-    
-    catch (error) {
+    } catch (error) {
       console.error('Error:', error);
+      Alert.alert('Error', 'Something went wrong. Please try again later.');
     }
   };
 
@@ -58,10 +57,10 @@ const LoginForm = ({ onSubmit }) => {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
+        placeholder="Email or Username"
+        value={identifier}
+        onChangeText={setIdentifier}
+        keyboardType="default" // Verandert naar default zodat zowel e-mail als username ingevoerd kan worden
       />
       <TextInput
         style={styles.input}
@@ -73,8 +72,6 @@ const LoginForm = ({ onSubmit }) => {
       <CustomButton title="Login" onPress={handleLogin} style={styles.button} />
     </View>
   );
-      
-
 };
 
 export default LoginForm;
@@ -86,5 +83,4 @@ const styles = StyleSheet.create({
   container: {
     ...theme.containerStyles.containerCenter,
   },
-
 });
