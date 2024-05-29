@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     },
     paragraph: {
         fontSize: 16,
-        color: '#333',
         marginBottom: 10,
     },
 });

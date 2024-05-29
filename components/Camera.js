@@ -129,7 +129,6 @@ const CameraComponent = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
   },
   qrOutline: {
     position: 'absolute',
-    borderColor: '#fff',
+    borderColor: theme.colors.offwhite,
     borderWidth: 6,
   },
   topLeftCorner: {

@@ -18,7 +18,6 @@ const Fitpass = () => {
 
 const styles = {
     fitpassStyle: {
-        backgroundColor: "#f5f5f5",
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
