@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   img: {
-    top: -150,
+    top: -100,
   },
   gymName: {
     fontSize: 20,
