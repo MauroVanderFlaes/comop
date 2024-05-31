@@ -33,7 +33,7 @@ const LoginForm = ({ onSubmit }) => {
         url = `${render}/api/v1/users/login`
       }
       else {
-        url = `http://${IPADRESS}:3000/api/v1/users/login`
+        url = `http:/${IPADRESS}:3000/api/v1/users/login`
       }
       const response = await fetch(url, {
         method: 'POST',

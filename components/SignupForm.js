@@ -20,7 +20,7 @@ const SignupForm = ({ onSubmit }) => {
         url = `${render}/api/v1/users/signup`
       }
       else {
-        url = `http://${IPADRESS}:3000/api/v1/users/signup`
+        url = `http:/${IPADRESS}:3000/api/v1/users/signup`
       }
 
     try {
