@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Alert, StyleSheet } from 'react-native';
-import { IPADRESS } from '../config';
+import { IPADRESS, prod, render } from '../config';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from './button';
@@ -28,7 +28,14 @@ const LoginForm = ({ onSubmit }) => {
   const handleLogin = async () => {
     try {
       // Fetch request to login
-      const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/login`, {
+      let url;
+      if (prod) {
+        url = `${render}/api/v1/users/login`
+      }
+      else {
+        url = `http://${IPADRESS}:3000/api/v1/users/login`
+      }
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
