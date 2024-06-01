@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 import { IPADRESS, prod, render } from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from './button';
 import theme from '../theme';
 
@@ -9,6 +10,20 @@ const SignupForm = ({ onSubmit }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+
+  const _storeData = async (userData) => {
+    try {
+      await AsyncStorage.setItem(
+        'userData', // Key
+        JSON.stringify(userData) // Store user data received from server response
+      );
+      console.log('Login data saved successfully');
+      navigation.navigate('challenges');
+    } catch (error) {
+      console.error('Error saving login data:', error);
+      Alert.alert('Error', 'Failed to save login data. Please try again.');
+    }
+  };
 
   const handleSignup = async () => {
     if (password !== repeatPassword) {
@@ -35,14 +50,20 @@ const SignupForm = ({ onSubmit }) => {
 
       if (response.ok) {
         // Voer een callbackfunctie uit die is doorgegeven aan onSubmit
+        const data = await response.json();
+        console.log(data.data.user);
         console.log("Registration successful ");
+        _storeData(data.data.user);
         onSubmit();
         
       } else {
-        console.log("ai ai");
+        const errorData = await response.json();
+        Alert.alert('Error', errorData.message);
+        console.log("Signup failed:", errorData.message);
       }
     } catch (error) {
       console.error('Error:', error);
+      Alert.alert('Error', 'Something went wrong. Please try again later.');
     }
   };
 
