@@ -6,6 +6,7 @@ import { IPADRESS } from '../config';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import theme from '../theme';
+import Logo from './logo';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -98,7 +99,7 @@ const CameraComponent = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
       <View style={styles.container} onLayout={onLayoutRootView}>
-        <Image source={LogoImage} style={styles.logo} />
+        <Logo />
         <Camera 
           style={styles.camera} 
           type={type} 
@@ -128,18 +129,17 @@ const CameraComponent = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
   logo: { 
     width: 140, 
-    height: 32, 
-    marginBottom: 20, 
-    marginTop: -100 
+    height: 32,
+    position: 'absolute',
+    top: 100,
   },
   camera: {
-    flex: 0.6,
+    flex: 0.65,
     width: '90%',
     position: 'relative',
     overflow: 'hidden',
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   qrOutline: {
     position: 'absolute',
-    borderColor: '#fff',
+    borderColor: theme.colors.offwhite,
     borderWidth: 6,
   },
   topLeftCorner: {
@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
   customText: {
     ...theme.textStyles.customText,
     textAlign: 'center',
-    color: '#1C1B1B',
     position: 'absolute',
     top : '50%',
   },

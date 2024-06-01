@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import theme from "../theme";
 
 const Nav = () => {
     const navigation = useNavigation();
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
         width: "90%",
         height: 60,
         borderRadius: 30,
-        backgroundColor: "#1C1B1B",
+        backgroundColor: theme.colors.offblack,
         position: "absolute",
         bottom: 20,
         zIndex: 50,

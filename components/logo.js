@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         width: 140,
         height: 32,
         position: 'absolute',
-        top: 68,
+        top: 80,
     }
 });
 

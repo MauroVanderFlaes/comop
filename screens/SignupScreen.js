@@ -3,6 +3,7 @@ import { View, Text, Alert, Image } from 'react-native';
 import SignupForm from '../components/SignupForm';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import theme from '../theme';
+import Logo from '../components/logo';
 
 const LogoImage = require('../assets/images/ComopLogo.png');
 
@@ -21,7 +22,7 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={LogoImage} style={styles.logo} />
+      <Logo />
       <Text style={styles.title}>Signup</Text>
       <SignupForm onSubmit={onSubmit}/>
       <Text style={styles.text}>Already have an account? <Text style={{color: theme.colors.purple_dark}} onPress={goToLogin}>Login</Text></Text>
@@ -37,9 +38,9 @@ const styles = {
   },
   logo: { 
     width: 140, 
-    height: 32, 
-    marginBottom: 20, 
-    marginTop: -100 
+    height: 32,
+    position: 'absolute',
+    top: 100,
   },
 
   text: {

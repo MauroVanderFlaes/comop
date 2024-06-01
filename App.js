@@ -14,7 +14,7 @@ import gymConfirm from './screens/gymConfirm';
 import Newsfeed from './screens/newsfeed';
 import Challenges from './screens/challenges';
 import Fitpass from './screens/fitpass';
-import Profile from './screens/profile';
+import Profile from './components/profile';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/loginScreen';
 import cameraScreen from './screens/cameraScreen';
@@ -23,7 +23,7 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
           <Stack.Screen name="Camera" component={cameraScreen} />
@@ -39,12 +39,3 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

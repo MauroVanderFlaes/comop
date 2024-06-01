@@ -26,17 +26,22 @@ const theme = {
       customTitle: {
         fontSize: 26,
         fontFamily: 'AzoSans Bold',
-        color: '#1C1B1B',
+      },
+      NameTitle: {
+        fontSize: 32,
+        fontFamily: 'AzoSans Bold',
+      },
+      customSubtitle: {
+        fontSize: 20,
+        fontFamily: 'AzoSans Regular',
       },
       customText: {
         fontSize: 18,
         fontFamily: 'AzoSans Regular',
-        color: '#1C1B1B',
       },
       customCaption: {
         fontSize: 14,
         fontFamily: 'AzoSans Regular',
-        color: '#1C1B1B',
       }
     },
     buttonStyles: {
