@@ -26,15 +26,18 @@ const LoginForm = ({ onSubmit }) => {
   };
 
   const handleLogin = async () => {
-    try {
-      // Fetch request to login
-      let url;
-      if (prod) {
+    console.log(prod);
+    let url;
+      if (PROD) {
         url = `${render}/api/v1/users/login`
       }
       else {
         url = `http:/${IPADRESS}:3000/api/v1/users/login`
       }
+
+    try {
+      // Fetch request to login
+      console.log(url);
       const response = await fetch(url, {
         method: 'POST',
         headers: {

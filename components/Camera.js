@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import { Camera } from 'expo-camera/legacy';
-import { IPADRESS } from '../config';
+import { IPADRESS, prod, render } from '../config';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import theme from '../theme';
@@ -73,8 +73,16 @@ const CameraComponent = ({ navigation }) => {
   }
 
   const handleBarCodeScanned = async ({ type, data }) => {
+    let url;
+      if (prod) {
+        url = `${render}/api/v1/gyms/compareQrCode`
+      }
+      else {
+        url = `http:/${IPADRESS}:3000/api/v1/gyms/compareQrCode`
+      }
+
     try {
-      const response = await fetch(`http://${IPADRESS}:3000/api/v1/gyms/compareQrCode`, {
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
