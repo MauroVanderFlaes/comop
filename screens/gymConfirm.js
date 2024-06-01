@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import Logo from '../components/logo';
 import Nav from '../components/nav';
-import { IPADRESS } from '../config'; 
+import { IPADRESS, prod, render } from '../config';
 import CustomButton from '../components/button';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import Challenges from './challenges';
