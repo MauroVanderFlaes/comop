@@ -32,7 +32,8 @@
     "react-native-asset": "^2.1.1",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-svg": "15.2.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "expo-updates": "~0.25.15"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
