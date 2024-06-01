@@ -28,7 +28,7 @@ const LoginForm = ({ onSubmit }) => {
   const handleLogin = async () => {
     console.log(prod);
     let url;
-      if (PROD) {
+      if (prod) {
         url = `${render}/api/v1/users/login`
       }
       else {
