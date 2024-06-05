@@ -18,6 +18,7 @@ import Profile from './components/profile';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/loginScreen';
 import cameraScreen from './screens/cameraScreen';
+import challengesCategoryOne from './screens/challengesCategoryOne';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ export default function App() {
           <Stack.Screen name="profile" component={Profile} />
           <Stack.Screen name="signup" component={SignupScreen} />
           <Stack.Screen name="login" component={LoginScreen} />
+          <Stack.Screen name="challengesCategoryOne" component={challengesCategoryOne} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
