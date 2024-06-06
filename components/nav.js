@@ -8,6 +8,8 @@ const Nav = () => {
     const route = useRoute();
     const routeName = route.name;
 
+    const isChallengesRoute = routeName.startsWith("challenges");
+
     return (
         <View style={styles.nav}>
             <TouchableOpacity onPress={() => navigation.navigate("newsfeed")}>
@@ -18,8 +20,8 @@ const Nav = () => {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("challenges")}>
                 <Image
-                    style={[styles.icon, routeName === "challenges" && styles.selectedIcon]}
-                    source={routeName === "challenges" ? require("../assets/images/ChallengesWhite.png") : require("../assets/images/ChallengesDark.png")}
+                    style={[styles.icon, isChallengesRoute && styles.selectedIcon]}
+                    source={isChallengesRoute ? require("../assets/images/ChallengesWhite.png") : require("../assets/images/ChallengesDark.png")}
                 />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("fitpass")}>
@@ -55,6 +57,9 @@ const styles = StyleSheet.create({
         width: 75,
         height: 52,
         resizeMode: "contain",
+    },
+    selectedIcon: {
+        tintColor: theme.colors.highlight,
     },
 });
 
