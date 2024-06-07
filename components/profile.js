@@ -62,10 +62,12 @@ const Profile = () => {
             if (data && data.data && data.data.imgUrl) {
                 setImage(data.data.imgUrl);
             } else {
-                throw new Error("Profile image URL not found in response");
+                console.log("No profile image found, using default image");
+                setImage(null); // Explicitly set to null to use default image
             }
         } catch (error) {
             console.error('Error fetching profile image:', error);
+            setImage(null); 
         }
     };
 
