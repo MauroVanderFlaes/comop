@@ -5,6 +5,7 @@ import { IPADRESS, prod, render } from '../config';
 import Logo from "../components/logo";
 import theme from "../theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView } from "react-native-gesture-handler";
 
 const Fitpass = () => {
     const [userData, setUserData] = useState(null);
@@ -65,6 +66,9 @@ const Fitpass = () => {
                         {credits !== null ? `${credits} Credits` : "Loading..."}
                     </Text>
                 )}
+                <ScrollView>
+                    
+                </ScrollView>
             </View>
             <Nav />
         </View>
@@ -86,6 +90,7 @@ const styles = {
 
     boxFitpass: {
         width: "90%",
+        maxHeight: "70%",
         backgroundColor: "#1C1B1B",
         color: "#F2F2F2",
         borderRadius: 15,
