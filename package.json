@@ -18,6 +18,7 @@
     "@react-navigation/native": "^6.1.16",
     "@react-navigation/stack": "^6.3.28",
     "@types/react": "~18.2.79",
+    "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "expo": "^51.0.10",
     "expo-barcode-scanner": "~13.0.1",
@@ -32,6 +33,7 @@
     "react-native": "0.74.1",
     "react-native-asset": "^2.1.1",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-image-picker": "^7.1.2",
     "react-native-svg": "15.2.0",
     "typescript": "^5.3.0"
   },
