@@ -1,18 +1,60 @@
-// Newsfeed.js
-
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { IPADRESS, prod, render } from '../config';
 import Nav from "../components/nav";
 import Logo from "../components/logo";
 import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
 import ToggleButton from "../components/ToggleButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Newsfeed = () => {
     const [selectedOption, setSelectedOption] = useState("Newsfeed");
+    const [gymMembers, setGymMembers] = useState([]);
+
+    // get user data from async storage
+    useEffect(() => {
+        const getUserData = async () => {
+            try {
+                const userData = await AsyncStorage.getItem('userData');
+                const parsedUserData = JSON.parse(userData);
+                console.log("Userdata", parsedUserData);
+                getGymMembers(parsedUserData.gymId);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        getUserData();
+    }, []);
 
     const handleOptionSelect = (option) => {
         setSelectedOption(option);
+    };
+
+    const getGymMembers = async (gymId) => {
+        let url;
+        // Define the URL based on your environment
+        if (prod) {
+            url = `${render}/api/v1/users/${gymId}`;
+        } else {
+            url = `http://${IPADRESS}:3000/api/v1/users/${gymId}`;
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const json = await response.json();
+            console.log(json); // Log de ontvangen JSON-respons
+            setGymMembers(json.data.users); // Dit moet mogelijk worden bijgewerkt
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
@@ -32,6 +74,24 @@ const Newsfeed = () => {
                     <View style={styles.section}>
                         <Text style={styles.contentText}>Newsfeed</Text>
                         <Text style={styles.paragraph}>Gym members</Text>
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                            <View style={styles.memberContainer}>
+                                {/* Render the gym members here */}
+                                {(gymMembers?.length ?? 0) > 0 ? (
+                                    gymMembers.map(member => (
+                                        <View key={member._id} style={styles.member}>
+                                            <Image 
+                                                source={{ uri: member.imgUrl }} 
+                                                style={styles.memberImage} 
+                                            />
+                                            <Text>{member.username}</Text>
+                                        </View>
+                                    ))
+                                ) : (
+                                    <Text>No gym members available</Text>
+                                )}
+                            </View>
+                        </ScrollView>
                     </View>
                 ) : (
                     <View style={styles.section}>
@@ -73,6 +133,19 @@ const styles = StyleSheet.create({
     paragraph: {
         fontSize: 16,
         marginBottom: 10,
+    },
+    memberContainer: {
+        flexDirection: 'row',
+    },
+    member: {
+        alignItems: 'center',
+        marginRight: 10, // Optional: Add some space between items
+    },
+    memberImage: {
+        width: 65,
+        height: 65,
+        borderRadius: 50,
+        marginBottom: 5, // Add some space between the image and the username
     },
 });
 
