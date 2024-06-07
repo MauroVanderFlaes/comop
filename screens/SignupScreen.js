@@ -7,7 +7,8 @@ import Logo from '../components/logo';
 
 const LogoImage = require('../assets/images/ComopLogo.png');
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = () => {
+  const navigation = useNavigation(); // Initialize navigation
 
   const goToLogin = () => {
     // Deze functie wordt uitgevoerd wanneer er op de link wordt geklikt
@@ -24,7 +25,7 @@ const SignupScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Logo />
       <Text style={styles.title}>Signup</Text>
-      <SignupForm onSubmit={onSubmit}/>
+      <SignupForm onSubmit={onSubmit} navigation={navigation} />
       <Text style={styles.text}>Already have an account? <Text style={{color: theme.colors.purple_dark}} onPress={goToLogin}>Login</Text></Text>
     </View>
   );

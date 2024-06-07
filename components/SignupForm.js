@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { IPADRESS, prod, render } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from './button';
 import theme from '../theme';
+import { useNavigation } from '@react-navigation/native';
 
-const SignupForm = ({ onSubmit }) => {
+const SignupForm = ({ onSubmit, navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
