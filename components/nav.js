@@ -9,13 +9,14 @@ const Nav = () => {
     const routeName = route.name;
 
     const isChallengesRoute = routeName.startsWith("challenges");
+    const isNewsfeedRoute = routeName.startsWith("newsfeed");
 
     return (
         <View style={styles.nav}>
             <TouchableOpacity onPress={() => navigation.navigate("newsfeed")}>
                 <Image
-                    style={[styles.icon, routeName === "newsfeed" && styles.selectedIcon]}
-                    source={routeName === "newsfeed" ? require("../assets/images/NewsfeedWhite.png") : require("../assets/images/NewsfeedDark.png")}
+                    style={[styles.icon, isNewsfeedRoute && styles.selectedIcon]}
+                    source={isNewsfeedRoute ? require("../assets/images/NewsfeedWhite.png") : require("../assets/images/NewsfeedDark.png")}
                 />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("challenges")}>
