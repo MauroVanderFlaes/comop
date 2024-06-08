@@ -1,11 +1,9 @@
-// App.js
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
 
 // Importeer het thema
 import theme from './theme';
@@ -20,7 +18,9 @@ import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/loginScreen';
 import cameraScreen from './screens/cameraScreen';
 import challengesCategoryOne from './screens/challengesCategoryOne';
-import newsfeedGymfeed from './screens/newsfeedGymfeed'; // Voeg deze regel toe
+import newsfeedGymfeed from './screens/newsfeedGymfeed';
+import TermsAndConditions from './screens/TermsAndConditions';
+import PrivacyPolicy from './screens/PrivacyPolicy';
 
 const Stack = createStackNavigator();
 
@@ -39,6 +39,8 @@ export default function App() {
           <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="challengesCategoryOne" component={challengesCategoryOne} />
           <Stack.Screen name="newsfeedGymfeed" component={newsfeedGymfeed} />
+          <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
+          <Stack.Screen name="privacyPolicy" component={PrivacyPolicy} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
