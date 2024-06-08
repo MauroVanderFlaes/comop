@@ -13,7 +13,8 @@ const SignupForm = ({ onSubmit }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [isChecked, setIsChecked] = useState(false); // State for checkbox
+  const [isChecked, setIsChecked] = useState(false); // State for policy checkbox
+  const [updatesChecked, setUpdatesChecked] = useState(false); // State for updates checkbox
 
   const navigation = useNavigation();
 
@@ -32,7 +33,7 @@ const SignupForm = ({ onSubmit }) => {
   };
 
   const handleSignup = async () => {
-    // Check if checkbox is checked
+    // Check if policy checkbox is checked
     if (!isChecked) {
       Alert.alert('Error', 'Please accept the policy and conditions.');
       return;
@@ -57,7 +58,12 @@ const SignupForm = ({ onSubmit }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: username, email: email, password: password }),
+        body: JSON.stringify({ 
+          username: username, 
+          email: email, 
+          password: password, 
+          newsletter: updatesChecked // Include the new field
+        }),
       });
 
       console.log(response);
@@ -133,7 +139,15 @@ const SignupForm = ({ onSubmit }) => {
           </Pressable>
         </Text>
       </View>
-      {/* Button for signup */}
+      {/* Checkbox for updates */}
+      <View style={styles.checkboxContainer}>
+        <Pressable
+          style={[styles.checkboxBase, updatesChecked && styles.checkboxChecked]}
+          onPress={() => setUpdatesChecked(!updatesChecked)}>
+          {updatesChecked && <Ionicons name="checkmark" size={24} color="white" />}
+        </Pressable>
+        <Text style={styles.checkboxLabel}>I would like to receive updates</Text>
+      </View>
       <CustomButton title="Sign up" onPress={handleSignup} style={styles.button} />
     </View>
   );
@@ -152,6 +166,7 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 8, // Add margin for better spacing
   },
   checkboxBase: {
     width: 24,
