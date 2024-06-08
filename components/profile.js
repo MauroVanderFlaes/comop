@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, Button, ActivityIndicator } from "react-native";
+import { View, Text, Image, TouchableOpacity, Button, ActivityIndicator, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Nav from "./nav";
 import Logo from "./logo";
@@ -29,7 +29,8 @@ const Profile = () => {
                     setUserData(JSON.parse(value));
                 }
             } catch (error) {
-                console.error('Error retrieving user data:', error);
+                // console.error('Error retrieving user data:', error);
+                Alert.alert(`Error retrieving user data: ${error.message}`);
             }
             
         };
@@ -62,11 +63,12 @@ const Profile = () => {
             if (data && data.data && data.data.imgUrl) {
                 setImage(data.data.imgUrl);
             } else {
-                console.log("No profile image found, using default image");
+                // console.log("No profile image found, using default image");
                 setImage(null); // Explicitly set to null to use default image
             }
         } catch (error) {
-            console.error('Error fetching profile image:', error);
+            // console.error('Error fetching profile image:', error);
+            Alert.alert(`Error fetching profile image: ${error.message}`);
             setImage(null); 
         }
     };
@@ -89,13 +91,17 @@ const Profile = () => {
                     console.log("Image uploaded successfully:", uploadedUrl);
                     setImage(result.assets[0].uri);
                     await storeImage(uploadedUrl);
-                } else {
-                    console.error("Image upload failed");
+                } 
+                else {
+                    const error = new Error("Failed to upload image");
+                    Alert.alert(`Error uploading image: ${error.message}`);
+                    // Alert.alert(`Error uploading image: ${error.message}`);
                     // Handle error, e.g., show an error message to the user
                 }
             }
         } catch (error) {
-            console.error('Error selecting image:', error);
+            // console.error('Error selecting image:', error);
+            Alert.alert(`Error selecting image: ${error.message}`);
             // Handle error, e.g., show an error message to the user
         }
     };
@@ -122,9 +128,17 @@ const Profile = () => {
     
             const imgData = await response.json();
             console.log("Image data:", imgData);
-            return imgData.secure_url;
+
+            if(response.ok){
+                return imgData.secure_url;
+            }
+            else{
+                // Alert.alert(`Failed to upload image: ${imgData.message}`);
+                throw new Error(`Failed to upload image: ${imgData.error.message}`);
+            }
         } catch (error) {
-            console.error("Error uploading image:", error);
+            // console.error("Error uploading image:", error);
+            Alert.alert(`Error uploading image: ${error.message}`);
             return null;
         }
     };
@@ -153,7 +167,8 @@ const Profile = () => {
                 console.error("Failed to store image URL");
             }
         } catch (error) {
-            console.error('Error storing image URL:', error);
+            // console.error('Error storing image URL:', error);
+            Alert.alert(`Error storing image URL: ${error.message}`);
         }
     };
     
