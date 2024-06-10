@@ -21,6 +21,7 @@ import challengesCategoryOne from './screens/challengesCategoryOne';
 import newsfeedGymfeed from './screens/newsfeedGymfeed';
 import TermsAndConditions from './screens/TermsAndConditions';
 import PrivacyPolicy from './screens/PrivacyPolicy';
+import ChallengesDetails from './screens/challengesDetail';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ export default function App() {
           <Stack.Screen name="newsfeedGymfeed" component={newsfeedGymfeed} />
           <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
           <Stack.Screen name="privacyPolicy" component={PrivacyPolicy} />
+          <Stack.Screen name="challengesDetails" component={ChallengesDetails} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

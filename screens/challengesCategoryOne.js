@@ -6,10 +6,12 @@ import ArrowBack from "../components/arrowBack";
 import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
 import { IPADRESS, prod, render } from '../config';
+import { useNavigation } from "@react-navigation/native";
 
 const ChallengesCategoryOne = () => {
     const [challenges, setChallenges] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("Community Challenges");
+    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +51,7 @@ const ChallengesCategoryOne = () => {
     };
 
     const filteredChallenges = filterChallengesByCategory(selectedCategory);
+    const completedChallengesCount = filteredChallenges.filter(challenge => challenge.completed).length;
 
     return (
         <View style={styles.container}>
@@ -74,23 +77,23 @@ const ChallengesCategoryOne = () => {
                         <View style={styles.completeBox}>
                             <Text style={styles.textComplete}>Complete all</Text>
                             <View style={styles.boxAmount}>
-                                <Text>amount done</Text>
+                                <Text>{completedChallengesCount}/{filteredChallenges.length} done</Text>
                             </View>
                         </View>
                         <Image source={require("../assets/images/completedChallengesImg.png")} style={styles.image} />
                     </View>
                     {filteredChallenges.length > 0 ? (
                         filteredChallenges.map((challenge) => (
-                            <View key={challenge._id} style={styles.boxChallenge}>
+                            <TouchableOpacity key={challenge._id} style={styles.boxChallenge} onPress={() => navigation.navigate('challengesDetails', { challenge })}>
                                 <Image source={{ uri: challenge.imageUrl }} style={styles.challengeImg} />
                                 <View style={styles.contentChallenge}>
                                     <View style={styles.boxTextAbove}>
                                         <Text style={styles.challengeTitle}>{challenge.title}</Text>
                                         <View style={styles.boxHrs}><Text style={styles.challengeHrs}>{challenge.time} hrs left</Text></View>
                                     </View>
-                                    <Text style={styles.textDescription}>{challenge.description}</Text>
+                                    <Text style={styles.textDescription}>{challenge.description.split(' ').slice(0, 8).join(' ')}{challenge.description.split(' ').length > 8 ? '...' : ''}</Text>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         ))
                     ) : (
                         <Text>No challenges available yet...</Text>
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
     },
     boxChallenge: {
         width: 350,
-        height: 150,
+        height: 130,
         backgroundColor: "#C9C9C9",
         borderRadius: 15,
         marginTop: 20,
@@ -225,7 +228,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     boxHrs: {
-        backgroundColor: "#F2F2F2",
+        backgroundColor: "#FFB952",
         borderRadius: 15,
         padding: 5,
     },
