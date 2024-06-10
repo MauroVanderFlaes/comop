@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -19,6 +18,9 @@ import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/loginScreen';
 import cameraScreen from './screens/cameraScreen';
 import challengesCategoryOne from './screens/challengesCategoryOne';
+import newsfeedGymfeed from './screens/newsfeedGymfeed';
+import TermsAndConditions from './screens/TermsAndConditions';
+import PrivacyPolicy from './screens/PrivacyPolicy';
 import ChallengesDetails from './screens/challengesDetail';
 import ChallengesCountdown from './screens/challengesCountdown';
 import ChallengesActive from './screens/challengesActive';
@@ -39,6 +41,9 @@ export default function App() {
           <Stack.Screen name="signup" component={SignupScreen} />
           <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="challengesCategoryOne" component={challengesCategoryOne} />
+          <Stack.Screen name="newsfeedGymfeed" component={newsfeedGymfeed} />
+          <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
+          <Stack.Screen name="privacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="challengesDetails" component={ChallengesDetails} />
           <Stack.Screen name="challengesCountdown" component={ChallengesCountdown} />
           <Stack.Screen name="challengesActive" component={ChallengesActive} />
