@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import Nav from "../components/nav";
 import Logo from "../components/logo";
@@ -7,11 +7,14 @@ import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
 import { IPADRESS, prod, render } from '../config';
 import { useNavigation } from "@react-navigation/native";
+import ChallengesActive from "./challengesActive";
 
 const ChallengesCategoryOne = () => {
     const [challenges, setChallenges] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("Community Challenges");
     const navigation = useNavigation();
+
+   
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,6 +38,7 @@ const ChallengesCategoryOne = () => {
                     const data = await response.json();
                     console.log(data.data);
                     setChallenges(data.data);
+
                 } else {
                     const errorData = await response.json();
                     console.log("Error fetching challenges:", errorData.message);
@@ -45,6 +49,8 @@ const ChallengesCategoryOne = () => {
         }
         fetchData();
     }, []);
+
+
 
     const filterChallengesByCategory = (category) => {
         return challenges.filter(challenge => challenge.category === category);
