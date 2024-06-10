@@ -1,23 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, Image, TouchableWithoutFeedback, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
+import { useNavigation } from "@react-navigation/native";
 import Nav from "../components/nav";
 import Logo from "../components/logo";
 import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
+import { IPADRESS, prod, render } from '../config';
+import ChallengesActive from "./challengesActive";
 
 const Challenges = () => {
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-    const navigation = useNavigation(); // Initialize navigation
+    const [activeChallengesExist, setActiveChallengesExist] = useState(false);
+    const [challenges, setChallenges] = useState([]);
+    const navigation = useNavigation();
+
+    const fetchData = useCallback(async () => {
+        let url;
+        if (prod) {
+            url = `${render}/api/v1/challenges/active`;
+        } else {
+            url = `http://${IPADRESS}:3000/api/v1/challenges/active`;
+        }
+    
+        try {
+            console.log(url);
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                setChallenges(data.data);
+    
+                const activeChallenge = data.data.find(challenge => challenge.active);
+                if (activeChallenge) {
+                    goToActiveChallenge(activeChallenge);
+                }
+            } else {
+                const errorData = await response.json();
+                console.log("Error fetching challenges:", errorData.message);
+            }
+        } catch (error) {
+            console.error("Error fetching challenges:", error);
+        }
+    }, [navigation]);
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            console.log("Fetching challenges");
+            fetchData();
+        });
+        
+        return unsubscribe;
+    }, [navigation]);
+
+    const goToActiveChallenge = (activeChallenge) => {
+        console.log("Navigating to active challenge");
+        navigation.navigate('challengesActive', { challenge: activeChallenge });
+    }
 
     const handlePress = () => {
         setIsOverlayVisible(!isOverlayVisible);
-        console.log(isOverlayVisible); // Log current state
+        console.log(isOverlayVisible);
     };
 
     const handleNavigate = () => {
-        navigation.navigate('challengesCategoryOne'); // Replace 'ChallengesCategoryOne' with the name of your screen
-    };
+        navigation.navigate('challengesCategoryOne');
+    }
 
     return (
         <View style={styles.challengeStyle}>

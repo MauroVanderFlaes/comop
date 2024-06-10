@@ -6,12 +6,16 @@ import UserGreeting from '../components/userGreeting';
 import Logo from '../components/logo';
 import theme from '../theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { IPADRESS, prod, render } from '../config';
 
 
 const ChallengesDetails = ({ route }) => {
     const { challenge } = route.params;
+    // console.log('Challengessss:', challenge);
+    const navigation = useNavigation();
 
-    console.log('Challenge:', challenge);
+    // console.log('Challenge:', challenge);
     const [userData, setUserData] = useState({});
 
     useEffect(() => {
@@ -31,6 +35,36 @@ const ChallengesDetails = ({ route }) => {
         retrieveUserData();
     }, []);
 
+    const handleStartChallenge = async () => {
+        console.log('Starting challenge');
+        let url;
+        if (prod) {
+            url = `${render}/api/v1/challenges/active/${challenge._id}`;
+        } else {
+            url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
+        }
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: userData._id }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            console.log('Challenge activated:', result);
+
+            navigation.navigate('challengesCountdown', { challenge, userData });
+        } catch (error) {
+            console.error('Error activating challenge:', error);
+        }
+    };
+
     // get async storage data of user
    
 
@@ -39,6 +73,15 @@ const ChallengesDetails = ({ route }) => {
             <Logo />
                 <View style={styles.innerContainer}>
             <ArrowBack style={styles.ArrowBack} />
+
+                <View style={styles.leftImageContainer}>
+                    <Image source={require('../assets/images/linesLeftImg.png')} style={styles.leftImage} />
+                </View>
+
+                <View style={styles.rightImageContainer}>
+                    <Image source={require('../assets/images/linesRightImg.png')} style={styles.rightImage} />
+                </View>
+
                     <View style={styles.titleBox}>
                         <Text style={theme.textStyles.NameTitle}>{challenge.title}</Text>
                         <Text style={theme.textStyles.customSubtitle}>Go get it {userData.username}!</Text>
@@ -52,7 +95,9 @@ const ChallengesDetails = ({ route }) => {
                             <Image source={{ uri: challenge.imageUrl }} style={styles.challengeImg} />
                         </View>
                     </View>
-                    <Text style={styles.challengeDescription}>{challenge.description}</Text>
+                    <View style={styles.boxDescription}>
+                        <Text style={styles.challengeDescription}>{challenge.description}</Text>
+                    </View>
                     <View style={styles.hrsBox}>
                         <Text style={styles.challengeTime}>{challenge.time} hrs left</Text>
                     </View>
@@ -63,14 +108,12 @@ const ChallengesDetails = ({ route }) => {
 
 
                     <View style={styles.ButtonContainer}>
-                        <TouchableOpacity
-                            style={styles.buttonChallenge}
-                            onPress={() => {
-                                // handle button press
-                            }}
-                        >
-                            <Text style={styles.buttonText}>{`Go get it ${userData.username}!`}</Text>
-                        </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.buttonChallenge}
+                        onPress={handleStartChallenge}
+                    >
+                        <Text style={styles.buttonText}>{`Go get it ${userData.username}!`}</Text>
+                    </TouchableOpacity>
                     </View>                   
                     
                 </View>
@@ -132,7 +175,7 @@ const styles = StyleSheet.create({
         width: 350,
         fontSize: 16,
         color: '#1C1B1B',
-        textAlign: 'left',
+        textAlign: 'center',
         fontFamily: 'AzoSans-regular',
         marginBottom: 10,
     },
@@ -141,14 +184,15 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 390,
         right: 15,
-        backgroundColor: '#FFB952',
+        // backgroundColor: '#f2f2f2',
+        color: '#f2f2f2',
         padding: 8,
         borderRadius: 20,
     },
 
     challengeTime: {
         fontSize: 16,
-        color: '#1C1B1B',
+        color: '#f2f2f2',
         fontWeight: 'regular',
         fontFamily: 'AzoSans-regular',
     },
@@ -160,8 +204,7 @@ const styles = StyleSheet.create({
     },
 
     boxCredits: {
-        marginTop: 40,
-        marginBottom: 20,
+        marginTop: 60,
         justifyContent: 'center',
         alignItems: 'center',
 
@@ -194,8 +237,32 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    }
-    
+    },
+
+    leftImageContainer: {
+        position: 'absolute',
+        top: 500,
+        left: -90,
+        zIndex: 1,
+    },
+
+    leftImage: {
+        height: 56,
+        width: 160,
+    },
+
+    rightImageContainer: {
+        position: 'absolute',
+        top: 600,
+        right: -140,
+        zIndex: 1,
+    },
+
+    rightImage: {
+        height: 40,
+        width: 216,
+    },
+
 });
 
 export default ChallengesDetails;
