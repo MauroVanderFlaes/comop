@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 import { IPADRESS, prod, render } from '../config';
+import { useNavigation } from '@react-navigation/native';
 import Nav from "../components/nav";
 import Logo from "../components/logo";
 import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
 import ToggleButton from "../components/ToggleButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PanGestureHandler } from 'react-native-gesture-handler';
 
 const Newsfeed = () => {
     const [selectedOption, setSelectedOption] = useState("Newsfeed");
     const [gymMembers, setGymMembers] = useState([]);
+    const navigation = useNavigation();
 
-    // get user data from async storage
     useEffect(() => {
         const getUserData = async () => {
             try {
@@ -34,7 +36,6 @@ const Newsfeed = () => {
 
     const getGymMembers = async (gymId) => {
         let url;
-        // Define the URL based on your environment
         if (prod) {
             url = `${render}/api/v1/users/${gymId}`;
         } else {
@@ -50,10 +51,16 @@ const Newsfeed = () => {
             });
 
             const json = await response.json();
-            console.log(json); // Log de ontvangen JSON-respons
-            setGymMembers(json.data.users); // Dit moet mogelijk worden bijgewerkt
+            console.log(json);
+            setGymMembers(json.data.users);
         } catch (error) {
             console.error('Error:', error);
+        }
+    };
+
+    const handleSwipe = ({ nativeEvent }) => {
+        if (nativeEvent.translationY < -50) {
+            navigation.navigate('newsfeedGymfeed');
         }
     };
 
@@ -72,11 +79,9 @@ const Newsfeed = () => {
             <View style={styles.content}>
                 {selectedOption === "Newsfeed" ? (
                     <View style={styles.section}>
-                        <Text style={styles.contentText}>Newsfeed</Text>
-                        <Text style={styles.paragraph}>Gym members</Text>
-                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                        <Text style={styles.contentText}>Gym members</Text>
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
                             <View style={styles.memberContainer}>
-                                {/* Render the gym members here */}
                                 {(gymMembers?.length ?? 0) > 0 ? (
                                     gymMembers.map(member => (
                                         <View key={member._id} style={styles.member}>
@@ -84,7 +89,7 @@ const Newsfeed = () => {
                                                 source={{ uri: member.imgUrl }} 
                                                 style={styles.memberImage} 
                                             />
-                                            <Text>{member.username}</Text>
+                                            <Text style={styles.username}>{member.username}</Text>
                                         </View>
                                     ))
                                 ) : (
@@ -92,6 +97,19 @@ const Newsfeed = () => {
                                 )}
                             </View>
                         </ScrollView>
+                        <View style={styles.container}>
+                            <Text style={styles.contentText}>Gymfeed</Text>
+                            <PanGestureHandler onGestureEvent={handleSwipe}>
+                                <View style={styles.feedContainer}>
+                                <Text style={styles.contentGymfeed}>Tap or swipe up for more</Text>
+                                    <TouchableOpacity style={styles.navigationRect} onPress={() => navigation.navigate('newsfeedGymfeed')}></TouchableOpacity>
+                                    <View>
+                                        
+                                        <Text style={styles.contentGymfeed}>placeholder gym message with blur</Text>
+                                    </View>
+                                </View>
+                            </PanGestureHandler>
+                        </View>
                     </View>
                 ) : (
                     <View style={styles.section}>
@@ -108,13 +126,14 @@ const Newsfeed = () => {
 const styles = StyleSheet.create({
     feed: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
     },
     greetingContainer: {
+        marginTop: 150,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginBottom: 20,
     },
     content: {
@@ -126,9 +145,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     contentText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 10,
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
+        marginBottom: 24,
     },
     paragraph: {
         fontSize: 16,
@@ -136,16 +155,48 @@ const styles = StyleSheet.create({
     },
     memberContainer: {
         flexDirection: 'row',
+        marginBottom: -50,
     },
     member: {
         alignItems: 'center',
-        marginRight: 10, // Optional: Add some space between items
+        marginRight: 16,
     },
     memberImage: {
         width: 65,
         height: 65,
         borderRadius: 50,
-        marginBottom: 5, // Add some space between the image and the username
+        marginBottom: 5,
+    },
+    username: {
+        ...theme.textStyles.customDetail,
+    },
+    container: {
+        marginTop: 24,
+    },
+    feedContainer: {
+        width: "100%",
+        height: "62%",
+        backgroundColor: "#343434",
+        color: "#F2F2F2",
+        borderRadius: 15,
+        padding: 10,
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+    },
+    navigationRect: {
+        backgroundColor: "#F2F2F2",
+        width: "80%",
+        height: 10,
+        borderRadius: 50,
+        marginTop: 10,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    contentGymfeed: {
+       color: "#F2F2F2",
     },
 });
 

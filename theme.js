@@ -42,6 +42,10 @@ const theme = {
       customCaption: {
         fontSize: 14,
         fontFamily: 'AzoSans Regular',
+      },
+      customDetail: {
+        fontSize: 16,
+        fontFamily: 'AzoSans Light',
       }
     },
     buttonStyles: {

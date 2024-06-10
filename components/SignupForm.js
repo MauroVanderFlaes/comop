@@ -1,16 +1,22 @@
+// SignupForm.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { IPADRESS, prod, render } from '../config';
+import { View, TextInput, StyleSheet, Alert, Pressable, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { IPADRESS, prod, render } from '../config';
 import CustomButton from './button';
 import theme from '../theme';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
-const SignupForm = ({ onSubmit, navigation }) => {
+const SignupForm = ({ onSubmit }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+  const [isChecked, setIsChecked] = useState(false); // State for policy checkbox
+  const [updatesChecked, setUpdatesChecked] = useState(false); // State for updates checkbox
+
+  const navigation = useNavigation();
 
   const _storeData = async (userData) => {
     try {
@@ -27,26 +33,39 @@ const SignupForm = ({ onSubmit, navigation }) => {
   };
 
   const handleSignup = async () => {
-    if (password !== repeatPassword) {
-      alert('Error: Passwords do not match');
+    // Check if policy checkbox is checked
+    if (!isChecked) {
+      Alert.alert('Error', 'Please accept the policy and conditions.');
       return;
     }
+
+    // Check if passwords match
+    if (password !== repeatPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
     let url;
-      if (prod) {
-        url = `${render}/api/v1/users/signup`
-      }
-      else {
-        url = `http:/${IPADRESS}:3000/api/v1/users/signup`
-      }
+    if (prod) {
+      url = `${render}/api/v1/users/signup`
+    } else {
+      url = `http:/${IPADRESS}:3000/api/v1/users/signup`
+    }
 
     try {
-      const response = await fetch(url, {  
-      method: 'POST',
+      const response = await fetch(url, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: username, email: email, password: password }),
+        body: JSON.stringify({ 
+          username: username, 
+          email: email, 
+          password: password, 
+          newsletter: updatesChecked // Include the new field
+        }),
       });
+
       console.log(response);
 
       if (response.ok) {
@@ -56,7 +75,7 @@ const SignupForm = ({ onSubmit, navigation }) => {
         console.log("Registration successful ");
         _storeData(data.data.user);
         onSubmit();
-        
+
       } else {
         const errorData = await response.json();
         Alert.alert('Error', errorData.message);
@@ -68,8 +87,16 @@ const SignupForm = ({ onSubmit, navigation }) => {
     }
   };
 
+  const handlePrivacyPolicyPress = () => {
+    navigation.navigate('privacyPolicy'); // Zorg ervoor dat de naam hier overeenkomt met de naam in App.js
+  };
+
+  const handleTermsAndConditionsPress = () => {
+    navigation.navigate('termsAndConditions'); // Zorg ervoor dat de naam hier overeenkomt met de naam in App.js
+  };
+
   return (
-    <View style= {styles.container}>
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -97,6 +124,30 @@ const SignupForm = ({ onSubmit, navigation }) => {
         onChangeText={setRepeatPassword}
         secureTextEntry={true}
       />
+      {/* Checkbox for policy and conditions */}
+      <View style={styles.checkboxContainer}>
+        <Pressable
+          style={[styles.checkboxBase, isChecked && styles.checkboxChecked]}
+          onPress={() => setIsChecked(!isChecked)}>
+          {isChecked && <Ionicons name="checkmark" size={24} color="white" />}
+        </Pressable>
+        <Text style={styles.checkboxLabel}>
+          I accept the <Pressable onPress={handleTermsAndConditionsPress}>
+            <Text style={styles.link}>terms and conditions</Text>
+          </Pressable> as well as the <Pressable onPress={handlePrivacyPolicyPress}>
+            <Text style={styles.link}>privacy policy</Text>
+          </Pressable>
+        </Text>
+      </View>
+      {/* Checkbox for updates */}
+      <View style={styles.checkboxContainer}>
+        <Pressable
+          style={[styles.checkboxBase, updatesChecked && styles.checkboxChecked]}
+          onPress={() => setUpdatesChecked(!updatesChecked)}>
+          {updatesChecked && <Ionicons name="checkmark" size={24} color="white" />}
+        </Pressable>
+        <Text style={styles.checkboxLabel}>I would like to receive updates</Text>
+      </View>
       <CustomButton title="Sign up" onPress={handleSignup} style={styles.button} />
     </View>
   );
@@ -111,5 +162,34 @@ const styles = StyleSheet.create({
   },
   container: {
     ...theme.containerStyles.containerCenter,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8, // Add margin for better spacing
+  },
+  checkboxBase: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: 'coral',
+    backgroundColor: 'transparent',
+  },
+  checkboxChecked: {
+    backgroundColor: 'coral',
+  },
+  checkboxLabel: {
+    marginLeft: 8,
+    fontWeight: '500',
+    fontSize: 16,
+  },
+  link: {
+    textDecorationLine: 'underline',
+  },
+  button: {
+    marginTop: 16,
   },
 });
