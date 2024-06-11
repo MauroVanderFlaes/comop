@@ -21,9 +21,11 @@ import challengesCategoryOne from './screens/challengesCategoryOne';
 import newsfeedGymfeed from './screens/newsfeedGymfeed';
 import TermsAndConditions from './screens/TermsAndConditions';
 import PrivacyPolicy from './screens/PrivacyPolicy';
+import Newsletter from './screens/Newsletter';
 import ChallengesDetails from './screens/challengesDetail';
 import ChallengesCountdown from './screens/challengesCountdown';
 import ChallengesActive from './screens/challengesActive';
+import leaderboardInfo from './screens/leaderboardInfo';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +37,7 @@ export default function App() {
           <Stack.Screen name="Camera" component={cameraScreen} />
           <Stack.Screen name="gymConfirm" component={gymConfirm} />
           <Stack.Screen name="newsfeed" component={Newsfeed} />
+          <Stack.Screen name="leaderboardInfo" component={LeaderboardInfo} />
           <Stack.Screen name="challenges" component={Challenges} />
           <Stack.Screen name="fitpass" component={Fitpass} />
           <Stack.Screen name="profile" component={Profile} />
@@ -44,6 +47,7 @@ export default function App() {
           <Stack.Screen name="newsfeedGymfeed" component={newsfeedGymfeed} />
           <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
           <Stack.Screen name="privacyPolicy" component={PrivacyPolicy} />
+          <Stack.Screen name="newsletter" component={Newsletter} />
           <Stack.Screen name="challengesDetails" component={ChallengesDetails} />
           <Stack.Screen name="challengesCountdown" component={ChallengesCountdown} />
           <Stack.Screen name="challengesActive" component={ChallengesActive} />

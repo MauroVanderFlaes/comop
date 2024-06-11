@@ -1,6 +1,5 @@
-// SignupForm.js
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Alert, Pressable, Text } from 'react-native';
+import { View, TextInput, StyleSheet, Alert, Pressable, Text} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IPADRESS, prod, render } from '../config';
 import CustomButton from './button';
@@ -95,6 +94,10 @@ const SignupForm = ({ onSubmit }) => {
     navigation.navigate('termsAndConditions'); // Zorg ervoor dat de naam hier overeenkomt met de naam in App.js
   };
 
+  const handleNewsletter = () => {
+    navigation.navigate('newsletter'); // Zorg ervoor dat de naam hier overeenkomt met de naam in App.js
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -129,14 +132,10 @@ const SignupForm = ({ onSubmit }) => {
         <Pressable
           style={[styles.checkboxBase, isChecked && styles.checkboxChecked]}
           onPress={() => setIsChecked(!isChecked)}>
-          {isChecked && <Ionicons name="checkmark" size={24} color="white" />}
+          {isChecked && <Ionicons name="checkmark" size={24} style={styles.check} />}
         </Pressable>
-        <Text style={styles.checkboxLabel}>
-          I accept the <Pressable onPress={handleTermsAndConditionsPress}>
-            <Text style={styles.link}>terms and conditions</Text>
-          </Pressable> as well as the <Pressable onPress={handlePrivacyPolicyPress}>
-            <Text style={styles.link}>privacy policy</Text>
-          </Pressable>
+        <Text style={styles.checkboxLabelContainer}>
+          I accept the <Text onPress={handleTermsAndConditionsPress} style={styles.link}>terms and conditions</Text> as well as the <Text onPress={handlePrivacyPolicyPress} style={styles.link}>privacy policy</Text>
         </Text>
       </View>
       {/* Checkbox for updates */}
@@ -144,9 +143,11 @@ const SignupForm = ({ onSubmit }) => {
         <Pressable
           style={[styles.checkboxBase, updatesChecked && styles.checkboxChecked]}
           onPress={() => setUpdatesChecked(!updatesChecked)}>
-          {updatesChecked && <Ionicons name="checkmark" size={24} color="white" />}
+          {updatesChecked && <Ionicons name="checkmark" size={24} style={styles.check} />}
         </Pressable>
-        <Text style={styles.checkboxLabel}>I would like to receive updates</Text>
+        <Text style={styles.checkboxLabelContainer}>
+          Yes, I would like to stay informed and receive updates via the <Text onPress={handleNewsletter} style={styles.link}>newsletter</Text>
+        </Text>
       </View>
       <CustomButton title="Sign up" onPress={handleSignup} style={styles.button} />
     </View>
@@ -161,12 +162,16 @@ const styles = StyleSheet.create({
     ...theme.textStyles.customCaption,
   },
   container: {
-    ...theme.containerStyles.containerCenter,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 8, // Add margin for better spacing
+    justifyContent: 'space-between', // Voeg deze regel toe om de checkboxen gelijkmatig te verdelen
+    marginVertical: 8,
+    marginHorizontal: 30, // Margin toegevoegd om de checkboxen van de rand te centreren
   },
   checkboxBase: {
     width: 24,
@@ -175,19 +180,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: 'coral',
+    borderColor: theme.colors.blue_dark,
     backgroundColor: 'transparent',
   },
   checkboxChecked: {
-    backgroundColor: 'coral',
+    backgroundColor: theme.colors.blue_dark,
   },
-  checkboxLabel: {
+  checkboxLabelContainer: {
     marginLeft: 8,
-    fontWeight: '500',
     fontSize: 16,
+    lineHeight: 24,
+    flex: 1,
   },
+
+  check: {
+    color: theme.colors.offwhite,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 24,
+    width: 24,
+    
+  },
+
   link: {
     textDecorationLine: 'underline',
+    color: theme.colors.blue_dark,
+    fontSize: 16,
   },
   button: {
     marginTop: 16,

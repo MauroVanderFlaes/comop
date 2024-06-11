@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Pressable } from "react-native";
 import { IPADRESS, prod, render } from '../config';
 import { useNavigation } from '@react-navigation/native';
 import Nav from "../components/nav";
@@ -80,7 +80,7 @@ const Newsfeed = () => {
                 {selectedOption === "Newsfeed" ? (
                     <View style={styles.section}>
                         <Text style={styles.contentText}>Gym members</Text>
-                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                             <View style={styles.memberContainer}>
                                 {(gymMembers?.length ?? 0) > 0 ? (
                                     gymMembers.map(member => (
@@ -113,8 +113,96 @@ const Newsfeed = () => {
                     </View>
                 ) : (
                     <View style={styles.section}>
-                        <Text style={styles.contentText}>Leaderboard</Text>
-                        <Text style={styles.paragraph}>Leaderboard stuff</Text>
+                        <ScrollView style={styles.leagueList} horizontal={true} showsHorizontalScrollIndicator={false}>
+                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
+                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
+                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
+                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
+                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
+                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
+                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
+                        </ScrollView>
+                        <View style={styles.myLeague}>
+                            <Text style={styles.contentText}> "NUMBER KG" League</Text>
+                            <Pressable onPress={() => navigation.navigate('leaderboardInfo')}><Image style={styles.imgInfo} source={require("../assets/icons/blackIconInfo.png")} /></Pressable>
+                        </View>
+                        <View>
+                            <View style={styles.leaderboard}>
+                                <View style={styles.leaderboardItem}>
+                                    <Text style={styles.placeNumber2}>2</Text>
+                                    <Pressable style={styles.place2} onPress={() => navigation.navigate('')}><Image style={styles.placeImage2} source={require("../assets/noProfile.png")} /></Pressable>
+                                    <Text style={styles.placeName}>Username</Text>
+                                </View>
+                                <View style={styles.leaderboardItem}>
+                                    <Text style={styles.placeNumber1}>1</Text>
+                                    <Pressable style={styles.place1} onPress={() => navigation.navigate('')}><Image style={styles.placeImage1} source={require("../assets/noProfile.png")} /></Pressable>
+                                    <Text style={styles.placeName}>Username</Text>
+                                </View>
+                                <View style={styles.leaderboardItem}>
+                                    <Text style={styles.placeNumber3}>3</Text>
+                                    <Pressable style={styles.place3} onPress={() => navigation.navigate('')}><Image style={styles.placeImage3} source={require("../assets/noProfile.png")} /></Pressable>
+                                    <Text style={styles.placeName}>Username</Text>
+                                </View>
+                            </View>
+                            <ScrollView style={styles.leaderboardList} showsVerticalScrollIndicator={false}>
+                            <View style={styles.userFirst}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naamFirst}>Username</Text>
+                                    <Text style={styles.challengesFirst}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.userSecond}>
+                                    <Text style={styles.number}>2</Text>
+                                    <Text style={styles.naamSecond}>Username</Text>
+                                    <Text style={styles.challengesSecond}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.userThirth}>
+                                    <Text style={styles.number}>3</Text>
+                                    <Text style={styles.naamThirth}>Username</Text>
+                                    <Text style={styles.challengesThirth}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.user}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naam}>Username</Text>
+                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.user}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naam}>Username</Text>
+                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.user}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naam}>Username</Text>
+                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.user}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naam}>Username</Text>
+                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.user}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naam}>Username</Text>
+                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.user}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naam}>Username</Text>
+                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.user}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naam}>Username</Text>
+                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                </View>
+                                <View style={styles.user}>
+                                    <Text style={styles.number}>1</Text>
+                                    <Text style={styles.naam}>Username</Text>
+                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                </View>
+                                <View style={{ height: 300 }}></View>
+                            </ScrollView>
+                        </View>
                     </View>
                 )}
             </View>
@@ -197,6 +285,233 @@ const styles = StyleSheet.create({
 
     contentGymfeed: {
        color: "#F2F2F2",
+    },
+
+
+    imgInfo: {
+        width: 30,
+        height: 30,
+    },
+
+    leagueList: {
+        display: "flex",
+        flexDirection: "row",
+        gap: 10,
+    },
+
+    league: {
+        width: 70,
+        height: 70,
+        borderRadius: 50,
+        marginRight: 10,
+    },
+
+    myLeague: {
+        marginTop: 20,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        gap: 10,
+    },
+
+    leaderboard: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "flex-end",
+        textAlign: "center",
+    },
+
+    leaderboardItem: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "center",
+        textAlign: "center",
+        gap: 10,
+    },
+
+    placeNumber2: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customTitle,
+        fontSize: 24,
+    },
+
+    placeNumber1: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customTitle,
+        fontSize: 28,
+    },
+
+    placeNumber3: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
+    },
+
+    place2: {
+        borderColor: theme.colors.purple_dark,
+        borderWidth: 5,
+        backgroundColor: theme.colors.purple_dark,
+        borderRadius: 50,
+    },
+
+    place1: {
+        borderColor: theme.colors.orange_dark,
+        borderWidth: 5,
+        backgroundColor: theme.colors.orange_dark,
+        borderRadius: 50,
+    },
+
+    place3: {
+        borderColor: theme.colors.blue_dark,
+        borderWidth: 5,
+        backgroundColor: theme.colors.blue_dark,
+        borderRadius: 50,
+    },
+
+    placeImage2: {
+        width: 70,
+        height: 70,
+        borderRadius: 50,
+    },
+
+    placeImage1: {
+        width: 80,
+        height: 80,
+        borderRadius: 50,
+    },
+
+    placeImage3: {
+        width: 64,
+        height: 64,
+        borderRadius: 50,
+    },
+
+    placeName: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customSubtitle,
+        fontSize: 16,
+    },
+
+    leaderboardList: {
+        marginTop: 20,
+        height: '56%',
+    },
+
+    userFirst: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        textAlign: "center",
+        marginBottom: 10,
+        backgroundColor: theme.colors.orange_dark,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 50,
+    },
+
+    naamFirst: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
+    },
+
+    challengesFirst: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customDetail,
+        fontSize: 14,
+        paddingRight: 15,
+    },
+
+    userSecond: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        textAlign: "center",
+        marginBottom: 10,
+        backgroundColor: theme.colors.purple_dark,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 50,
+    },
+
+    naamSecond: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
+    },
+
+    challengesSecond: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customDetail,
+        fontSize: 14,
+        paddingRight: 15,
+    },
+
+    userThirth: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        textAlign: "center",
+        marginBottom: 10,
+        backgroundColor: theme.colors.blue_dark,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 50,
+    },
+
+    naamThirth: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
+    },
+
+    challengesThirth: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customDetail,
+        fontSize: 14,
+        paddingRight: 15,
+    },
+
+    user: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        textAlign: "center",
+        marginBottom: 10,
+        backgroundColor: theme.colors.offblack,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 50,
+    },
+
+    number: {
+        color: theme.colors.offblack,
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
+        backgroundColor: theme.colors.offwhite,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 50,
+    },
+
+    naam: {
+        color: theme.colors.offwhite,
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
+    },
+
+    challenges: {
+        color: theme.colors.offwhite,
+        ...theme.textStyles.customDetail,
+        fontSize: 14,
+        paddingRight: 15,
     },
 });
 

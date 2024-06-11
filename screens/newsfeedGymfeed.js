@@ -31,7 +31,7 @@ const NewsfeedGymfeed = () => {
             onPress={() => navigation.navigate('newsfeed')}
           />
           <View style= {styles.gymfeedContainer}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={styles.contentGymfeed}>placeholder voor gymfeed messages</Text>
             </ScrollView>
           </View>
