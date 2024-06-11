@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Alert, Pressable, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Alert, Pressable, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IPADRESS, prod, render } from '../config';
 import CustomButton from './button';
@@ -132,7 +132,7 @@ const SignupForm = ({ onSubmit }) => {
         <Pressable
           style={[styles.checkboxBase, isChecked && styles.checkboxChecked]}
           onPress={() => setIsChecked(!isChecked)}>
-          {isChecked && <Ionicons name="checkmark" size={24} color="white" />}
+          {isChecked && <Ionicons name="checkmark" size={24} style={styles.check} />}
         </Pressable>
         <Text style={styles.checkboxLabelContainer}>
           I accept the <Text onPress={handleTermsAndConditionsPress} style={styles.link}>terms and conditions</Text> as well as the <Text onPress={handlePrivacyPolicyPress} style={styles.link}>privacy policy</Text>
@@ -143,7 +143,7 @@ const SignupForm = ({ onSubmit }) => {
         <Pressable
           style={[styles.checkboxBase, updatesChecked && styles.checkboxChecked]}
           onPress={() => setUpdatesChecked(!updatesChecked)}>
-          {updatesChecked && <Ionicons name="checkmark" size={24} color="white" />}
+          {updatesChecked && <Ionicons name="checkmark" size={24} style={styles.check} />}
         </Pressable>
         <Text style={styles.checkboxLabelContainer}>
           Yes, I would like to stay informed and receive updates via the <Text onPress={handleNewsletter} style={styles.link}>newsletter</Text>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between', // Voeg deze regel toe om de checkboxen gelijkmatig te verdelen
     marginVertical: 8,
-    marginHorizontal: 30,
+    marginHorizontal: 30, // Margin toegevoegd om de checkboxen van de rand te centreren
   },
   checkboxBase: {
     width: 24,
@@ -190,6 +190,17 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     flex: 1,
   },
+
+  check: {
+    color: theme.colors.offwhite,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 24,
+    width: 24,
+    
+  },
+
   link: {
     textDecorationLine: 'underline',
     color: theme.colors.blue_dark,
@@ -199,4 +210,3 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
 });
-
