@@ -25,7 +25,7 @@ import Newsletter from './screens/Newsletter';
 import ChallengesDetails from './screens/challengesDetail';
 import ChallengesCountdown from './screens/challengesCountdown';
 import ChallengesActive from './screens/challengesActive';
-import leaderboardInfo from './screens/leaderboardInfo';
+import LeaderboardInfo from './screens/leaderboardInfo';
 
 const Stack = createStackNavigator();
 
