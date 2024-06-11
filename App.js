@@ -21,6 +21,7 @@ import challengesCategoryOne from './screens/challengesCategoryOne';
 import newsfeedGymfeed from './screens/newsfeedGymfeed';
 import TermsAndConditions from './screens/TermsAndConditions';
 import PrivacyPolicy from './screens/PrivacyPolicy';
+import Newsletter from './screens/Newsletter';
 import ChallengesDetails from './screens/challengesDetail';
 import ChallengesCountdown from './screens/challengesCountdown';
 import ChallengesActive from './screens/challengesActive';
@@ -44,6 +45,7 @@ export default function App() {
           <Stack.Screen name="newsfeedGymfeed" component={newsfeedGymfeed} />
           <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
           <Stack.Screen name="privacyPolicy" component={PrivacyPolicy} />
+          <Stack.Screen name="newsletter" component={Newsletter} />
           <Stack.Screen name="challengesDetails" component={ChallengesDetails} />
           <Stack.Screen name="challengesCountdown" component={ChallengesCountdown} />
           <Stack.Screen name="challengesActive" component={ChallengesActive} />
