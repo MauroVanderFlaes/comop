@@ -6,13 +6,41 @@ import UserGreeting from '../components/userGreeting';
 import theme from '../theme';
 import Nav from '../components/nav';
 import { IPADRESS, prod, render } from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChallengesActive = ({ route }) => {
-  const { challenge, userData } = route.params;
+  const { challenge } = route.params;
   const [challenges, setChallenges] = useState([]);
-//   console.log('Challengeeeee:', challenge);
+  const [userData, setUserData] = useState({});
+  console.log('Challengeeeee:', challenge);
   const navigation = useNavigation();
-//   console.log('User dataaaa:', userData);
+  console.log('User dataaaa:', userData);
+
+    useEffect(() => {
+        const retrieveUserData = async () => {
+            try {
+                const value = await AsyncStorage.getItem('userData');
+                if (value !== null) {
+                    const user = JSON.parse(value);
+                    console.log('User data retrieved:', user);
+                    setUserData(user);
+                }
+            } catch (error) {
+                console.error('Error retrieving user data:', error);
+            }
+        };
+
+        retrieveUserData();
+    }, []);
+            
+
+
+
+    const goToChallengeProof = () => {
+        navigation.navigate('challengesImage', { challenge, userData });
+    };
+
+
 
   const handleCancel = () => {
     // update the challenge to be inactive with a put request
@@ -87,7 +115,7 @@ const ChallengesActive = ({ route }) => {
       <View style={styles.titleBox}>
         <View style={styles.titleText}>
           <Text style={theme.textStyles.NameTitle}>{challenge.title}</Text>
-          <Text style={theme.textStyles.customSubtitle}> Go get it {userData?.username || 'User'}!</Text>
+          <Text style={theme.textStyles.customSubtitle}>Go get it {userData?.username || 'User'}!</Text>
         </View>
       </View>
         <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
@@ -114,8 +142,19 @@ const ChallengesActive = ({ route }) => {
         </View>
         <View style={styles.boxCredits}>
           <Text style={styles.textCredits}>Credits: {challenge.credits}</Text>
+
         </View>
+        <View style={styles.completed}>
+          <TouchableOpacity style={styles.boxButton} onPress={goToChallengeProof}>
+            <Text style={styles.textButton}>Completed</Text>
+          </TouchableOpacity>
+        </View>
+
+
       </View>
+        <View style={styles.warningBox}>
+            <Text style={styles.warningText}>Don't forget to take a picture while doing your challenge {userData.username}!</Text>
+        </View>
       <Nav />
     </View>
   );
@@ -136,7 +175,7 @@ const styles = StyleSheet.create({
     // right: 0, // Adjust this value according to your layout
     // zIndex: 1,
     position: 'relative',
-    top: 100,
+    top: 110,
     left: 144,
     zIndex: 1,
 
@@ -195,7 +234,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AzoSans-regular',
   },
   boxCredits: {
-    marginTop: 60,
+    marginTop: 48,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -261,7 +300,58 @@ const styles = StyleSheet.create({
 
   titleText: {
     
-  }
+  },
+
+  boxButton: {
+    width: 242,
+    height: 48,
+    backgroundColor: '#1C1B1B',
+    borderRadius: 24,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+
+  },
+
+    textButton: {
+        color: '#F2F2F2',
+        fontSize: 16,
+        fontFamily: 'AzoSans-bold',
+    },
+
+    completed: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+
+    warningBox: {
+        width: 340,
+        height: 68,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 16,
+        backgroundColor: '#6CC2FF',
+        borderRadius: 36,
+        padding: 12,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        position: 'absolute',
+        top: 36
+    },
+    
+    warningText: {
+        fontSize: 16,
+        color: '#1C1B1B',
+        fontFamily: 'AzoSans-regular',
+        textAlign: 'center',
+    },
+
 
 });
 

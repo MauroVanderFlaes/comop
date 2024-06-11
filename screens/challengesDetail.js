@@ -17,6 +17,7 @@ const ChallengesDetails = ({ route }) => {
 
     // console.log('Challenge:', challenge);
     const [userData, setUserData] = useState({});
+    console.log('User data detaill:', userData);
 
     useEffect(() => {
         const retrieveUserData = async () => {
@@ -71,8 +72,8 @@ const ChallengesDetails = ({ route }) => {
     return (
         <View style={styles.container}>
             <Logo />
+                <ArrowBack style={styles.arrowBack} />
                 <View style={styles.innerContainer}>
-            <ArrowBack style={styles.ArrowBack} />
 
                 <View style={styles.leftImageContainer}>
                     <Image source={require('../assets/images/linesLeftImg.png')} style={styles.leftImage} />
@@ -137,6 +138,11 @@ const styles = StyleSheet.create({
         height: 223,
         borderTopRightRadius: 20,
         borderBottomRightRadius: 20,
+    },
+
+    arrowBack: {
+        top: 80,
+        left: 20,
     },
 
     boxImg: {

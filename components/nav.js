@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
-        width: "90%",
+        width: 350,
         height: 60,
         borderRadius: 30,
         backgroundColor: theme.colors.offblack,

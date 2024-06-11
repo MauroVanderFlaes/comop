@@ -62,7 +62,7 @@ const ChallengesCategoryOne = () => {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-                <ArrowBack />
+                <ArrowBack style={styles.arrowBack}/>
                 <View style={styles.innerContainer}>
                     <Logo />
                     <View>
@@ -238,6 +238,10 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         padding: 5,
     },
+    arrowBack: {
+        top: 80,
+        left: 7,
+    }
 });
 
 export default ChallengesCategoryOne;
