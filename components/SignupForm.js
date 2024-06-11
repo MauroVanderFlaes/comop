@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Alert, Pressable, Text } from 'react-native';
+import { View, TextInput, StyleSheet, Alert, Pressable, Text} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IPADRESS, prod, render } from '../config';
 import CustomButton from './button';
@@ -162,7 +162,9 @@ const styles = StyleSheet.create({
     ...theme.textStyles.customCaption,
   },
   container: {
-    ...theme.containerStyles.containerCenter,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   checkboxContainer: {
     flexDirection: 'row',
