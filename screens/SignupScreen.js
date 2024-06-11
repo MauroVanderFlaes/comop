@@ -24,9 +24,11 @@ const SignupScreen = () => {
   return (
     <View style={styles.container}>
       <Logo />
+      <View style= {styles.content}>
       <Text style={styles.title}>Signup</Text>
       <SignupForm onSubmit={onSubmit} navigation={navigation} />
       <Text style={styles.text}>Already have an account? <Text style={{color: theme.colors.purple_dark}} onPress={goToLogin}>Login</Text></Text>
+      </View>
     </View>
   );
 }
@@ -49,10 +51,18 @@ const styles = {
   },
 
   container: {
-    flex: 1,
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 20,
+  },
+
+  content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+    marginTop: 200,
   },
 
   btn: {
