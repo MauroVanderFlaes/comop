@@ -44,12 +44,12 @@ const ChallengesFinish = ({ route }) => {
         </Text>
         <TouchableOpacity
           style={styles.finishButton}
-          onPress={() => navigation.navigate("GymFeed")}
+          onPress={() => navigation.navigate("newsfeed")}
         >
-          <Text style={styles.finishButtonText}>Go to Gym Feed</Text>
+          <Text style={styles.finishButtonText}>Go to Gymfeed</Text>
         </TouchableOpacity>
       </View>
-      <Nav />
+      {/* <Nav /> */}
     </View>
   );
 };
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: "center",
+    paddingTop: 130,
     alignItems: "center",
   },
   creditsBox: {
