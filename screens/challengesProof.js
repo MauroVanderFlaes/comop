@@ -14,10 +14,8 @@ const ChallengesProof = ({ route }) => {
     const [challenges, setChallenges] = useState([]);
     const navigation = useNavigation();
     const [userData, setUserData] = useState({});
-
-    console.log("challenge voor de proof", challenge);
-    console.log("array van challenges", challenge.imageDescriptions[1]);
-
+    const requiredImages = challenge.requiredImages;
+    
 
     useEffect(() => {
         const retrieveUserData = async () => {
@@ -36,7 +34,55 @@ const ChallengesProof = ({ route }) => {
         retrieveUserData();
     }, []);
 
-
+    const renderSteps = () => {
+        switch (requiredImages) {
+            case 1:
+                return (
+                    <View style={styles.stepsBox}>
+                        <View style={styles.circleOne}>
+                            <Text style={styles.circleOneText}>1</Text>
+                        </View>
+                        <View style={styles.lineOne}></View>
+                    </View>
+                );
+            case 2:
+                return (
+                    <View style={styles.stepsBox}>
+                        <View style={styles.circleOne}>
+                            <Text style={styles.circleOneText}>1</Text>
+                        </View>
+                        <View style={styles.lineOne}></View>
+                        <View style={styles.circleTwo}>
+                            <Text style={styles.circleTwoText}>2</Text>
+                        </View>
+                        <View style={styles.lineTwo}></View>
+                        <View style={[styles.lineThree, requiredImages === 2 && styles.lineThreeTopAdjusted]}></View>
+                    </View>
+                );
+                
+            case 3:
+                return (
+                    <View style={styles.stepsBox}>
+                        <View style={styles.circleOne}>
+                            <Text style={styles.circleOneText}>1</Text>
+                        </View>
+                        <View style={styles.lineOne}></View>
+                        <View style={styles.circleTwo}>
+                            <Text style={styles.circleTwoText}>2</Text>
+                        </View>
+                        <View style={styles.lineTwo}></View>
+                        <View style={styles.circleThree}>
+                            <Text style={styles.circleThreeText}>3</Text>
+                        </View>
+                        <View style={styles.lineThree}></View>
+                        <View style={styles.lineFour}></View>
+                        <View style={styles.lineFive}></View>
+                    </View>
+                );
+            default:
+                return null;
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -52,52 +98,33 @@ const ChallengesProof = ({ route }) => {
     
             <View style={styles.innerContainer}>
                 <View style={styles.imgBox}>
-                    <Image source={require('../assets/images/stepsImg1.png')} style={styles.challengeImg} />
+                <Image source={require('../assets/images/stepsImg1.png')} style={styles.challengeImg} />
                 </View>
 
-                <View style={styles.stepsBox}>
-                    <View style={styles.circleOne}>
-                        <Text style={styles.circleOneText}>1</Text>
-                    </View>
+                {renderSteps()}
 
-                    <View style={styles.lineOne}></View>
-
-                    <View style={styles.circleTwo}>
-                        <Text style={styles.circleTwoText}>2</Text>
-                    </View>
-
-                    <View style={styles.lineTwo}></View>
-
-                    <View style={styles.circleThree}>
-                        <Text style={styles.circleThreeText}>3</Text>
-                    </View>
-
-                    <View style={styles.lineThree}></View>
-
-                    <View style={styles.lineFour}></View>
-                    <View style={styles.lineFive}></View>
-
-                </View>
-                <View style={styles.boxTexts}>
+                <View style={[styles.boxTexts, requiredImages === 2 && { height: 120 }]}>
                     <View style={styles.boxTextOne}>
                         <Text style={styles.firstPic}>First, we need a picture of your:</Text>
                         <Text style={styles.firstPicText}>{challenge.imageDescriptions[0]}</Text>
                     </View>
-                    <View style={styles.boxTextTwo}>
-                        <Text style={styles.secondPic}>Second, we need a picture of your:</Text>
-                        <Text style={styles.secondPicText}>{challenge.imageDescriptions[1]}</Text>
-                    </View>
-                    <View style={styles.boxTextTree}>
-                        <Text style={styles.thirdPic}>And lastly, we need a picture of your:</Text>
-                        <Text style={styles.thirdPicText}>{challenge.imageDescriptions[3]}</Text>
-                    </View>
+                    {requiredImages >= 2 && (
+                        <View style={styles.boxTextTwo}>
+                            <Text style={styles.secondPic}>Second, we need a picture of your:</Text>
+                            <Text style={styles.secondPicText}>{challenge.imageDescriptions[1]}</Text>
+                        </View>
+                    )}
+                    {requiredImages === 3 && (
+                        <View style={styles.boxTextTree}>
+                            <Text style={styles.thirdPic}>And lastly, we need a picture of your:</Text>
+                            <Text style={styles.thirdPicText}>{challenge.imageDescriptions[2]}</Text>
+                        </View>
+                    )}
                 </View>
 
                 <View style={styles.boxDescription}>
                     
                 </View>
-
-
 
 
                 <TouchableOpacity style={styles.nextButton}>
@@ -157,7 +184,7 @@ const styles = StyleSheet.create({
 
         // line in the middle and to the right of circle 1
         lineOne: {
-            width: 26,
+            width: 22,
             height: 5,
             backgroundColor: '#80F075',
             position: 'relative',
@@ -182,7 +209,7 @@ const styles = StyleSheet.create({
             width: 28,
             height: 28,
             borderRadius: 14,
-            backgroundColor: '#E1F6DF',
+            backgroundColor: '#80F075',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -200,20 +227,24 @@ const styles = StyleSheet.create({
 
         // line in the middle and to the right of circle 2
         lineThree: {
-            width: 26,
+            width: 22,
             height: 5,
-            backgroundColor: '#E1F6DF',
+            backgroundColor: '#80F075',
             position: 'relative',
             top: -62,
             left: 14,
             borderRadius: 20,
         },
 
+        lineThreeTopAdjusted: {
+            top: -32,
+        },
+
         // line in the middle and bottom of circle 2
         lineFour: {
             width: 5,
             height: 56,
-            backgroundColor: '#E1F6DF',
+            backgroundColor: '#80F075',
             position: 'relative',
             top: -56,
             left: 12,
@@ -225,7 +256,7 @@ const styles = StyleSheet.create({
             width: 28,
             height: 28,
             borderRadius: 14,
-            backgroundColor: '#E1F6DF',
+            backgroundColor: '#80F075',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -243,9 +274,9 @@ const styles = StyleSheet.create({
 
         // line in the middle and to the right of circle 3
         lineFive: {
-            width: 26,
+            width: 22,
             height: 5,
-            backgroundColor: '#E1F6DF',
+            backgroundColor: '#80F075',
             position: 'relative',
             top: -50,
             left: 14,
@@ -258,6 +289,7 @@ const styles = StyleSheet.create({
             justifyContent: 'space-between',
             position: 'absolute',
             alignItems: 'center',
+            // height: requiredImages === 2 ? 100 : 184,
             height: 184,
             top: "60%",
         },  
