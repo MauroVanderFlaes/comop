@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import theme from "../theme";
 import Nav from "../components/nav";
+import { IPADRESS, prod, render } from '../config';
 
 const ChallengesFinish = ({ route }) => {
   const { challenge } = route.params;
@@ -27,6 +28,36 @@ const ChallengesFinish = ({ route }) => {
     retrieveUserData();
   }, []);
 
+  const handleGoToGymfeed = async () => {
+    let url;
+    if (prod) {
+        url = `${render}/api/v1/challenges/active/${challenge._id}`;
+    } else {
+        url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
+    }
+    console.log('Deactivating challenge:', url);
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ active: false }),
+        });
+
+        if (response.ok) {
+            console.log("Challenge deactivated successfully");
+            navigation.navigate("newsfeed");
+        } else {
+            const errorData = await response.json();
+            console.log("Error deactivating challenge:", errorData.message);
+        }
+    } catch (error) {
+        console.log("Error deactivating challenge:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Logo />
@@ -44,7 +75,7 @@ const ChallengesFinish = ({ route }) => {
         </Text>
         <TouchableOpacity
           style={styles.finishButton}
-          onPress={() => navigation.navigate("newsfeed")}
+          onPress={handleGoToGymfeed}
         >
           <Text style={styles.finishButtonText}>Go to Gymfeed</Text>
         </TouchableOpacity>
