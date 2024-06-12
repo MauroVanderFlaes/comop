@@ -56,7 +56,7 @@ const ChallengesImage = ({ route }) => {
                     <Image source={require('../assets/images/stepsImg1.png')} style={styles.challengeImg} />
                 </View>
                 <View style={styles.boxDescription}>
-                    <Text style={styles.challengeDescription}>Hey {userData?.username}, we need some confirmation that you have officially completed ever part of the challenge.</Text>
+                    <Text style={styles.challengeDescription}>Hey {userData?.username}, we need some confirmation that you have officially completed every part of the challenge.</Text>
                 </View>
 
                 <TouchableOpacity style={styles.nextButton} onPress={goToChallengesProof}>

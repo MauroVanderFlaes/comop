@@ -39,10 +39,42 @@ const ChallengesProof = ({ route }) => {
 
   const handleNextButtonPress = async () => {
 
-    if (uploadIndex >= requiredImages) {
-        navigation.navigate("challengesFinish", {challenge} ); // Navigate when all images are uploaded
-        return;
-      }
+    if (uploadIndex === requiredImages) {
+
+        // post the images to the newsfeed in the database
+        let url;
+        if (prod) {
+            url = `${render}/api/v1/gymfeed`;
+        } else {
+            url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userData._id,
+                    challengeId: challenge._id,
+                    requiredImages: requiredImages,
+                    uploadedImages: imageUrls,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            
+            const result = await response.json();
+            console.log('Newsfeed posted:', result);
+            navigation.navigate("challengesFinish", {challenge} ); // Navigate when all images are uploaded
+        } catch (error) {
+            console.error('Error posting newsfeed:', error);
+        }
+
+    } else {
   
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -63,6 +95,7 @@ const ChallengesProof = ({ route }) => {
       Alert.alert(`Error selecting image: ${error.message}`);
     }
   };
+};
 
   useEffect(() => {
     const retrieveUserData = async () => {
