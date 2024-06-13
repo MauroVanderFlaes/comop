@@ -28,10 +28,10 @@ const ChallengesProof = ({ route }) => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState({});
   const requiredImages = challenge.requiredImages;
-  // array of image urls
   const [imageUrls, setImageUrls] = useState([]);
   const [uploadIndex, setUploadIndex] = useState(0);
-  console.log("upload index", uploadIndex);
+  // console.log("upload index", uploadIndex);
+  const [skipped, setSkipped] = useState(false);
 
   const url = CLOUDINARY_URL;
   const preset = CLOUDINARY_PRESET;
@@ -60,6 +60,7 @@ const ChallengesProof = ({ route }) => {
                     challengeId: challenge._id,
                     requiredImages: requiredImages,
                     uploadedImages: imageUrls,
+                    skipped: false,
                 }),
             });
 
@@ -96,6 +97,75 @@ const ChallengesProof = ({ route }) => {
     }
   };
 };
+
+const deactivateChallenge = async () => {
+  let url;
+  if (prod) {
+    url = `${render}/api/v1/challenges/active/${challenge._id}`;
+  } else {
+    url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
+  }
+  console.log("Deactivating challenge:", url);
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ active: false }),
+    });
+
+    if (response.ok) {
+      console.log("Challenge deactivated successfully");
+    } else {
+      const errorData = await response.json();
+      console.log("Error deactivating challenge:", errorData.message);
+    }
+  } catch (error) {
+    console.log("Error deactivating challenge:", error);
+  }
+};
+
+const handleSkipButtonPress = async () => {
+  // post the skipped challenge to the newsfeed in the database
+  let url;
+  if (prod) {
+    url = `${render}/api/v1/gymfeed`;
+  } else {
+    url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userData._id,
+        challengeId: challenge._id,
+        requiredImages: requiredImages,
+        uploadedImages: [], // No images uploaded
+        skipped: true, // Mark as skipped
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const result = await response.json();
+    console.log('Newsfeed posted:', result);
+    await deactivateChallenge();
+    navigation.navigate("fitpass"); // Navigate when the challenge is skipped
+  } catch (error) {
+    console.error('Error posting newsfeed:', error);
+  }
+};
+
+
+
 
   useEffect(() => {
     const retrieveUserData = async () => {
@@ -295,7 +365,7 @@ const ChallengesProof = ({ route }) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleSkipButtonPress}>
           <Text style={styles.skipText}>Skip</Text>
         </TouchableOpacity>
       </View>

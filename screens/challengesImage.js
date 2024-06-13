@@ -63,9 +63,7 @@ const ChallengesImage = ({ route }) => {
                     <Text style={styles.nextText}>Next</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity>
-                    <Text style={styles.skipText}>Skip</Text>
-                </TouchableOpacity>
+                
                 
             </View>
           <Nav />
