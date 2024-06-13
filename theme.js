@@ -61,6 +61,7 @@ const theme = {
       buttonText: {
         color: '#F2F2F2',
         fontSize: 16,
+        fontFamily: 'AzoSans Medium',
       }
     },
     fieldStyles: {

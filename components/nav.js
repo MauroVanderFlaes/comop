@@ -10,6 +10,7 @@ const Nav = () => {
 
     const isChallengesRoute = routeName.startsWith("challenges");
     const isNewsfeedRoute = routeName.startsWith("newsfeed");
+    const isProfileRoute = routeName.startsWith("profile");
 
     return (
         <View style={styles.nav}>
@@ -33,8 +34,8 @@ const Nav = () => {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("profile")}>
                 <Image
-                    style={[styles.icon, routeName === "profile" && styles.selectedIcon]}
-                    source={routeName === "profile" ? require("../assets/images/ProfileWhite.png") : require("../assets/images/ProfileDark.png")}
+                    style={[styles.icon, isProfileRoute && styles.selectedIcon]}
+                    source={isProfileRoute ? require("../assets/images/ProfileWhite.png") : require("../assets/images/ProfileDark.png")}
                 />
             </TouchableOpacity>
         </View>

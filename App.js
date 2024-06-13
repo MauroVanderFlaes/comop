@@ -26,6 +26,7 @@ import ChallengesDetails from './screens/challengesDetail';
 import ChallengesCountdown from './screens/challengesCountdown';
 import ChallengesActive from './screens/challengesActive';
 import LeaderboardInfo from './screens/leaderboardInfo';
+import ProfileSettings from './screens/profileSettings';
 
 const Stack = createStackNavigator();
 
@@ -45,12 +46,14 @@ export default function App() {
           <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="challengesCategoryOne" component={challengesCategoryOne} />
           <Stack.Screen name="newsfeedGymfeed" component={newsfeedGymfeed} />
+          <Stack.Screen name="profileSettings" component={ProfileSettings} />
           <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
           <Stack.Screen name="privacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="newsletter" component={Newsletter} />
           <Stack.Screen name="challengesDetails" component={ChallengesDetails} />
           <Stack.Screen name="challengesCountdown" component={ChallengesCountdown} />
           <Stack.Screen name="challengesActive" component={ChallengesActive} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

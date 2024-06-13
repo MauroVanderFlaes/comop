@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, Alert, Pressable, ScrollView } from "react-native";
 import { IPADRESS, prod, render } from '../config';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from '@react-navigation/native';
 import Nav from "./nav";
 import Logo from "./logo";
 import theme from "../theme";
@@ -9,6 +10,7 @@ import UserGreeting from "./userGreeting";
 import * as ImagePicker from 'expo-image-picker';
 
 const Profile = () => {
+    const navigation = useNavigation();
     const [userData, setUserData] = useState(null);
     const [credits, setCredits] = useState(null);
     const [completedChallenges, setCompletedChallenges] = useState(null);
@@ -230,9 +232,9 @@ const Profile = () => {
                                             <Pressable onPress={''} style={styles.editDetails}><Text>Edit character</Text></Pressable>
                                         </View>
                                     </View>
+                                    <TouchableOpacity style={theme.buttonStyles.button} onPress={() => navigation.navigate('profileSettings')}><Text style={theme.buttonStyles.buttonText}>Settings</Text></TouchableOpacity>
+                                    <View style={styles.boxSpacing}></View>
 
-                                    <View style={styles.boxSpacing}>
-                                    </View>
                                 </>
                             )}
                         </View>
@@ -398,6 +400,7 @@ const styles = {
 
     boxCharacter: {
         marginTop: 20,
+        marginBottom: 24,
         width: "90%",
         backgroundColor: "#1C1B1B",
         borderRadius: 15,
