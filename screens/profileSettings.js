@@ -5,8 +5,12 @@ import UserGreeting from '../components/userGreeting';
 import ArrowBack from '../components/arrowBack';
 import Nav from '../components/nav';
 import theme from "../theme";
+import { useNavigation } from '@react-navigation/native';
 
 const ProfileSettings = () => {
+
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
             <ArrowBack />
@@ -20,7 +24,8 @@ const ProfileSettings = () => {
                         <TouchableOpacity style={theme.buttonStyles.button} onPress={() => navigation.navigate('')}><Text style={theme.buttonStyles.buttonText}>Change password</Text></TouchableOpacity>
                         <TouchableOpacity style={theme.buttonStyles.button} onPress={() => navigation.navigate('termsAndConditions')}><Text style={theme.buttonStyles.buttonText}>Terms & Conditions</Text></TouchableOpacity>
                         <TouchableOpacity style={theme.buttonStyles.button} onPress={() => navigation.navigate('privacyPolicy')}><Text style={theme.buttonStyles.buttonText}>Privacy policy</Text></TouchableOpacity>
-                        <TouchableOpacity style={theme.buttonStyles.button} onPress={() => navigation.navigate('privacyPolicy')}><Text style={theme.buttonStyles.buttonText}>About the app</Text></TouchableOpacity>
+                        <TouchableOpacity style={theme.buttonStyles.button} onPress={() => navigation.navigate('newsletter')}><Text style={theme.buttonStyles.buttonText}>Newsletter</Text></TouchableOpacity>
+                        <TouchableOpacity style={theme.buttonStyles.button} onPress={() => navigation.navigate('')}><Text style={theme.buttonStyles.buttonText}>About the app</Text></TouchableOpacity>
                         <TouchableOpacity onPress={() => navigation.navigate('')}><Text style={styles.delete}>Delete account</Text></TouchableOpacity>
                     </View>
             </View>
