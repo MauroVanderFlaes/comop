@@ -1,38 +1,63 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, Button, ActivityIndicator, Alert, Pressable , ScrollView} from "react-native";
+import { View, Text, Image, TouchableOpacity, Alert, Pressable, ScrollView } from "react-native";
+import { IPADRESS, prod, render } from '../config';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Nav from "./nav";
 import Logo from "./logo";
 import theme from "../theme";
 import UserGreeting from "./userGreeting";
-import axios from "axios";
-import { CLOUDINARY_URL, CLOUDINARY_PRESET, CLOUDINARY_CLOUD_NAME } from '../config';
 import * as ImagePicker from 'expo-image-picker';
-import { IPADRESS } from '../config';
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
+    const [credits, setCredits] = useState(null);
+    const [completedChallenges, setCompletedChallenges] = useState(null);
+    const [error, setError] = useState(null);
     const [image, setImage] = useState(null);
-    console.log("Image state:", image);
-    // console.log("userDAta url:", userData.imgUrl); 
-
-    const url = CLOUDINARY_URL;
-    const preset = CLOUDINARY_PRESET;
-    const cloudName = CLOUDINARY_CLOUD_NAME;
-
-
+    console.log('User data:', userData);
     useEffect(() => {
         const retrieveUserData = async () => {
             try {
                 const value = await AsyncStorage.getItem('userData');
                 if (value !== null) {
-                    setUserData(JSON.parse(value));
+                    const user = JSON.parse(value);
+                    setUserData(user);
+                    fetchUserCredits(user._id);
+                    fetchCompletedChallenges(user._id);
                 }
             } catch (error) {
-                // console.error('Error retrieving user data:', error);
                 Alert.alert(`Error retrieving user data: ${error.message}`);
             }
-            
+        };
+
+        const fetchUserCredits = async (userId) => {
+            try {
+                let url = prod ? `${render}/api/v1/users/credits/${userId}` : `http://${IPADRESS}:3000/api/v1/users/credits/${userId}`;
+                const response = await fetch(url);
+                const result = await response.json();
+                if (response.ok) {
+                    setCredits(result.data.credits);
+                } else {
+                    setError(result.message);
+                }
+            } catch (error) {
+                setError('Error fetching user credits');
+            }
+        };
+
+        const fetchCompletedChallenges = async (userId) => {
+            try {
+                let url = prod ? `${render}/api/v1/gymfeed/${userId}` : `http://${IPADRESS}:3000/api/v1/gymfeed/${userId}`;
+                const response = await fetch(url);
+                const result = await response.json();
+                if (response.ok) {
+                    setCompletedChallenges(result.data.length);
+                } else {
+                    setError(result.message);
+                }
+            } catch (error) {
+                setError('Error fetching completed challenges');
+            }
         };
 
         retrieveUserData();
@@ -40,47 +65,32 @@ const Profile = () => {
 
     useEffect(() => {
         if (userData && !image) {
-            console.log("fetching profile image...");
             fetchProfileImage(userData._id);
         }
     }, [userData, image]);
 
     const fetchProfileImage = async (userId) => {
-        // Fetch profile image from database using user ID
         try {
             const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`);
-            
-            // Check if response is successful
             if (!response.ok) {
                 throw new Error(`Failed to fetch profile image: ${response.statusText}`);
             }
-            
-            // Parse response as JSON
             const data = await response.json();
-            console.log("Profile image data:", data);
-            
-            // Check if data contains image URL
             if (data && data.data && data.data.imgUrl) {
                 setImage(data.data.imgUrl);
             } else {
-                // console.log("No profile image found, using default image");
-                setImage(null); // Explicitly set to null to use default image
+                setImage(null);
             }
         } catch (error) {
-            // console.error('Error fetching profile image:', error);
             Alert.alert(`Error fetching profile image: ${error.message}`);
-            setImage(null); 
+            setImage(null);
         }
     };
 
-    
     const buttonOnPress = () => {
         console.log("Edit button pressed");
     };
 
-    const profileEdit = () => {
-        console.log("Edit profile");
-    };
 
     const selectImage = async () => {
         try {
@@ -88,103 +98,72 @@ const Profile = () => {
             if (!result.cancelled && result.assets && result.assets.length > 0) {
                 const uploadedUrl = await uploadImage(result.assets[0].uri);
                 if (uploadedUrl) {
-                    console.log("Image uploaded successfully:", uploadedUrl);
                     setImage(result.assets[0].uri);
                     await storeImage(uploadedUrl);
-                } 
-                else {
+                } else {
                     const error = new Error("Failed to upload image");
                     Alert.alert(`Error uploading image: ${error.message}`);
-                    // Alert.alert(`Error uploading image: ${error.message}`);
-                    // Handle error, e.g., show an error message to the user
                 }
             }
         } catch (error) {
-            // console.error('Error selecting image:', error);
             Alert.alert(`Error selecting image: ${error.message}`);
-            // Handle error, e.g., show an error message to the user
         }
     };
-    
-    
+
     const uploadImage = async (imageUri) => {
         let formData = new FormData();
-    
         formData.append("file", {
             uri: imageUri,
-            type: "image/jpeg", // Adjust the type as needed based on the selected image type
-            name: "upload.jpg", // Adjust the name if needed
+            type: "image/jpeg",
+            name: "upload.jpg",
         });
-        formData.append("upload_preset", preset);
-    
-        try {
-            const response = await fetch(
-                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                {
-                    method: "POST",
-                    body: formData,
-                }
-            );
-    
-            const imgData = await response.json();
-            console.log("Image data:", imgData);
+        formData.append("upload_preset", CLOUDINARY_PRESET);
 
-            if(response.ok){
+        try {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: "POST", body: formData });
+            const imgData = await response.json();
+            if (response.ok) {
                 return imgData.secure_url;
-            }
-            else{
-                // Alert.alert(`Failed to upload image: ${imgData.message}`);
+            } else {
                 throw new Error(`Failed to upload image: ${imgData.error.message}`);
             }
         } catch (error) {
-            // console.error("Error uploading image:", error);
             Alert.alert(`Error uploading image: ${error.message}`);
             return null;
         }
     };
-    
+
     const storeImage = async (imgUrl) => {
         try {
-            const userId = userData._id; // assuming userData contains the user's ID
-            console.log("User ID:", userId);
-            const response = await fetch(
-                `http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`, 
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ imgUrl }),
-                }
-            );
-            
+            const userId = userData._id;
+            const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ imgUrl }),
+            });
             if (response.ok) {
                 const updateUserData = { ...userData, imgUrl };
                 setUserData(updateUserData);
-                console.log("updated user data:", updateUserData);
-                console.log("Image URL stored successfully");
             } else {
                 console.error("Failed to store image URL");
             }
         } catch (error) {
-            // console.error('Error storing image URL:', error);
             Alert.alert(`Error storing image URL: ${error.message}`);
         }
     };
-    
-    
-    
 
     return (
         <View style={styles.profileStyle}>
-            <Logo />
-            <ScrollView style={styles.container}>
-                <View>
-                    <UserGreeting style={theme.textStyles.NameTitle} />
-                    <Text style={theme.textStyles.customSubtitle}>What a progress you’ve made!</Text>
-                </View>
-                <View style={styles.contain}>
-                    {userData && (
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.con}>
+                    <Logo />
+                    <View style={styles.container}>
+                        <View style={styles.greeting}>
+                            <UserGreeting style={theme.textStyles.NameTitle} />
+                            <Text style={theme.textStyles.customSubtitle}>What a progress you’ve made!</Text>
+                        </View>
+                        <View style={styles.contain}>
+                        {userData && (
                     <>
                         <View style={styles.containerUpload}>
                         <TouchableOpacity onPress={selectImage}>
@@ -197,37 +176,68 @@ const Profile = () => {
                             <TouchableOpacity style={styles.editButton} onPress={buttonOnPress}>
                                 <Image
                                     source={require("../assets/upload.png")}
-                                    style={{ width: 30, height: 30, position: "absolute", top: 15, left: -35 }}
+                                    style={{ width: 30, height: 30, position: "absolute", top: 25, left: -40 }}
                                 />
-                            </TouchableOpacity>
-                        </View>
 
+                                        </TouchableOpacity>
+                                    </View>
 
-                        <View style={styles.boxFirstChallenges}>
-                            <View style={styles.box}>
-                                <Text style={styles.boxNumber}>Number 1</Text>
-                                <Text style={styles.boxTextTitle}>COMPLETED CHALLENGES</Text>
-                            </View>
-                            <View style={styles.box}>
-                                <Text style={styles.boxNumber}>Number 2</Text>
-                                <Text style={styles.boxTextTitle}>CREDITS</Text>
-                            </View>
-                        </View>
+                                    <View style={styles.boxFirstChallenges}>
+                                        <View style={styles.box}>
+                                            <Text style={styles.boxNumber}>{completedChallenges !== null ? `${completedChallenges}` : "Loading..."}</Text>
+                                            <Text style={styles.boxTextTitle}>COMPLETED CHALLENGES</Text>
+                                        </View>
+                                        <View style={styles.box}>
+                                            <Text style={styles.boxNumber}>{credits !== null ? `${credits}` : "Loading..."}</Text>
+                                            <Text style={styles.boxTextTitle}>CREDITS</Text>
+                                        </View>
+                                    </View>
 
-                        <View style={styles.boxProfileData}>
-                            <Text style={styles.Title}>Details</Text>
-                            <View>
-                                <Text style={styles.titleDetails}>Username</Text>
-                                <Text style={styles.textDetails}>{userData.username}</Text>
-                                <Text style={styles.titleDetails}>Age {userData.age}</Text>
-                                <Text style={styles.titleDetails}>Phone number</Text>
-                                <Text style={styles.titleDetails}>Email</Text>
-                                <Text style={styles.textDetails}>{userData.email}</Text>
-                            </View>
-                            <Pressable onPress={''} style={styles.editDetails}><Text>Edit details</Text></Pressable>
+                                    <View style={styles.boxProfileData}>
+                                        <Text style={styles.Title}>Details</Text>
+                                        <View>
+                                            <Text style={styles.titleDetails}>Username</Text>
+                                            <Text style={styles.textDetails}>{userData.username}</Text>
+                                            <Text style={styles.titleDetails}>Name</Text>
+                                            <Text style={styles.titleDetails}>{userData.name}</Text>
+                                            <Text style={styles.titleDetails}>Age</Text>
+                                            <Text style={styles.textDetails}>{userData.age}</Text>
+                                            <Text style={styles.titleDetails}>Email</Text>
+                                            <Text style={styles.textDetails}>{userData.email}</Text>
+                                        </View>
+                                        <Pressable style={styles.editDetails}><Text>Edit details</Text></Pressable>
+                                    </View>
+                                    <View>
+                                        <View style={styles.boxCharacter}>
+                                            <Text style={styles.Title}>Character</Text>
+                                            <View style={styles.Characters}>
+                                                <View style={styles.Character}>
+                                                    <Text style={styles.boxTitle}>Cheat meal</Text>
+                                                </View>
+                                                <View style={styles.Character}>
+                                                    <Text style={styles.boxTitle}>Fitness goal</Text>
+                                                </View>
+                                                <View style={styles.Character}>
+                                                    <Text style={styles.boxTitle}>Character</Text>
+                                                </View>
+                                                <View style={styles.Character}>
+                                                    <Text style={styles.boxTitle}>Favorite day</Text>
+                                                </View>
+                                                <View style={styles.Character}>
+                                                    <Text style={styles.boxTitle}>Favorite exercise</Text>
+                                                </View>
+                                            </View>
+                                            <Pressable onPress={''} style={styles.editDetails}><Text>Edit character</Text></Pressable>
+                                        </View>
+                                    </View>
+
+                                    <View style={styles.boxSpacing}>
+                                    </View>
+                                </>
+                            )}
                         </View>
-                    </>
-                    )}
+                    </View>
+
                 </View>
             </ScrollView>
             <Nav />
@@ -240,6 +250,17 @@ const styles = {
         backgroundColor: "#f5f5f5",
         flex: 1,
         alignItems: "center",
+        justifyContent: "center",
+    },
+
+    con: {
+        flex: 1,
+        alignItems: "center",
+    },
+
+    greeting: {
+        marginLeft: 40,
+        marginBottom: 20,
     },
 
     container: {
@@ -247,7 +268,8 @@ const styles = {
         width: "100%",
         gap: 20,
         marginTop: 150,
-        height: "20%",
+        height: "100%",
+
     },
 
     contain: {
@@ -296,14 +318,14 @@ const styles = {
     },
 
     box: {
-        backgroundColor: "#1C1B1B",
+        backgroundColor: theme.colors.green_dark,
         borderRadius: 15,
         width: 165,
         height: 107,
     },
 
     boxTextTitle: {
-        color: "#F2F2F2",
+        color: theme.colors.offblack,
         fontSize: 14,
         fontWeight: "light",
         textAlign: "center",
@@ -311,7 +333,15 @@ const styles = {
     },
 
     boxNumber: {
-        color: "#F2F2F2",
+        color: theme.colors.offblack,
+        fontSize: 24,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginTop: 20,
+    },
+
+    boxTitle: {
+        color: theme.colors.offblack,
         fontSize: 20,
         fontWeight: "bold",
         textAlign: "center",
@@ -364,6 +394,36 @@ const styles = {
         height: 50,
         marginHorizontal: 24,
         marginTop: 20,
+    },
+
+    boxCharacter: {
+        marginTop: 20,
+        width: "90%",
+        backgroundColor: "#1C1B1B",
+        borderRadius: 15,
+        marginRight: 20,
+        marginLeft: 20,
+        paddingBottom: 24,
+    },
+
+    Characters: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        marginTop: 20,
+        gap: 8,
+    },
+
+    Character: {
+        backgroundColor: theme.colors.orange_dark,
+        borderRadius: 15,
+        maxWidth: 200,
+        paddingHorizontal: 16,
+        height: 107,
+    },
+
+    boxSpacing: {
+        height: 120,
     },
 };
 
