@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, Button, ActivityIndicator, Alert } from "react-native";
+import { View, Text, Image, TouchableOpacity, Button, ActivityIndicator, Alert, Pressable , ScrollView} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Nav from "./nav";
 import Logo from "./logo";
@@ -178,12 +178,13 @@ const Profile = () => {
     return (
         <View style={styles.profileStyle}>
             <Logo />
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View>
                     <UserGreeting style={theme.textStyles.NameTitle} />
                     <Text style={theme.textStyles.customSubtitle}>What a progress you’ve made!</Text>
                 </View>
-                {userData && (
+                <View style={styles.contain}>
+                    {userData && (
                     <>
                         <View style={styles.containerUpload}>
                         <TouchableOpacity onPress={selectImage}>
@@ -214,19 +215,21 @@ const Profile = () => {
                         </View>
 
                         <View style={styles.boxProfileData}>
-                            <Text style={styles.textDetails}>Details</Text>
-                            <Button title="Edit" onPress={profileEdit} />
+                            <Text style={styles.Title}>Details</Text>
                             <View>
-                                <Text style={styles.textDetails}>First name {userData.username}</Text>
-                                <Text style={styles.textDetails}>Last name {userData.lastname}</Text>
-                                <Text style={styles.textDetails}>Age {userData.age}</Text>
-                                <Text style={styles.textDetails}>Phone number</Text>
-                                <Text style={styles.textDetails}>Email {userData.email}</Text>
+                                <Text style={styles.titleDetails}>Username</Text>
+                                <Text style={styles.textDetails}>{userData.username}</Text>
+                                <Text style={styles.titleDetails}>Age {userData.age}</Text>
+                                <Text style={styles.titleDetails}>Phone number</Text>
+                                <Text style={styles.titleDetails}>Email</Text>
+                                <Text style={styles.textDetails}>{userData.email}</Text>
                             </View>
+                            <Pressable onPress={''} style={styles.editDetails}><Text>Edit details</Text></Pressable>
                         </View>
                     </>
-                )}
-            </View>
+                    )}
+                </View>
+            </ScrollView>
             <Nav />
         </View>
     );
@@ -240,10 +243,18 @@ const styles = {
     },
 
     container: {
-        flex: 1,
+        display: "flex",
+        width: "100%",
+        gap: 20,
+        marginTop: 150,
+        height: "20%",
+    },
+
+    contain: {
+        display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        width: "100%",
+        marginTop: 20,
     },
 
     header: {
@@ -314,6 +325,7 @@ const styles = {
         borderRadius: 15,
         marginRight: 20,
         marginLeft: 20,
+        paddingBottom: 24,
     },
 
     textDetails: {
@@ -323,6 +335,35 @@ const styles = {
         textAlign: "left",
         marginTop: 10,
         marginLeft: 20,
+    },
+
+    Title: {
+        //use titleDetails here
+        color: "#F2F2F2",
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
+        textAlign: "center",
+        marginTop: 24,
+    },
+
+    titleDetails: {
+        color: "#F2F2F2",
+        ...theme.textStyles.customTitle,
+        fontSize: 18,
+        textAlign: "left",
+        marginTop: 10,
+        marginLeft: 20,
+    },
+
+    editDetails: {
+        backgroundColor: theme.colors.offwhite,
+        borderRadius: 50,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 50,
+        marginHorizontal: 24,
+        marginTop: 20,
     },
 };
 
