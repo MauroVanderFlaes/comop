@@ -65,158 +65,182 @@ const Newsfeed = () => {
     };
 
     return (
-        <View style={styles.feed}>
-            <Logo />
-            <View style={styles.greetingContainer}>
-                <UserGreeting />
-                <Text style={theme.textStyles.customSubtitle}>What happened in your gym today?</Text>
-            </View>
-            <ToggleButton
-                option1="Newsfeed"
-                option2="Leaderboard"
-                onOptionSelect={handleOptionSelect}
-            />
-            <View style={styles.content}>
-                {selectedOption === "Newsfeed" ? (
-                    <View style={styles.section}>
-                        <Text style={styles.contentText}>Gym members</Text>
-                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                            <View style={styles.memberContainer}>
-                                {(gymMembers?.length ?? 0) > 0 ? (
-                                    gymMembers.map(member => (
-                                        <View key={member._id} style={styles.member}>
-                                            <Image 
-                                                source={{ uri: member.imgUrl }} 
-                                                style={styles.memberImage} 
-                                            />
-                                            <Text style={styles.username}>{member.username}</Text>
+        <View style={styles.newsfeedStyle}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.con}>
+                    <Logo />
+                    <View style={styles.container}>
+                        <View style={styles.greetingContainer}>
+                            <UserGreeting />
+                            <Text style={theme.textStyles.customSubtitle}>What happened in your gym today?</Text>
+                        </View>
+                        <View style={styles.contain}>
+                            <ToggleButton
+                                option1="Newsfeed"
+                                option2="Leaderboard"
+                                onOptionSelect={handleOptionSelect}
+                            />
+                            <View style={styles.content}>
+                                {selectedOption === "Newsfeed" ? (
+                                    <View style={styles.section}>
+                                        <Text style={styles.contentText}>Gym members</Text>
+                                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                                            <View style={styles.memberContainer}>
+                                                {(gymMembers?.length ?? 0) > 0 ? (
+                                                    gymMembers.map(member => (
+                                                        <View key={member._id} style={styles.member}>
+                                                            <Image
+                                                                source={{ uri: member.imgUrl }}
+                                                                style={styles.memberImage}
+                                                            />
+                                                            <Text style={styles.username}>{member.username}</Text>
+                                                        </View>
+                                                    ))
+                                                ) : (
+                                                    <Text>No gym members available</Text>
+                                                )}
+                                            </View>
+                                        </ScrollView>
+                                        <View style={styles.containerFeed}>
+                                            <Text style={styles.contentText}>Gymfeed</Text>
+                                            <PanGestureHandler onGestureEvent={handleSwipe}>
+                                                <View style={styles.feedContainer}>
+                                                    <Text style={styles.contentGymfeed}>Tap or swipe up for more</Text>
+                                                    <TouchableOpacity style={styles.navigationRect} onPress={() => navigation.navigate('newsfeedGymfeed')}></TouchableOpacity>
+                                                    <View>
+
+                                                        <Text style={styles.contentGymfeed}>placeholder gym message with blur</Text>
+                                                    </View>
+                                                </View>
+                                            </PanGestureHandler>
                                         </View>
-                                    ))
+                                    </View>
                                 ) : (
-                                    <Text>No gym members available</Text>
+                                    <View style={styles.section}>
+                                        <View>
+                                        <ScrollView horizontal={true} style={styles.leagues} showsHorizontalScrollIndicator={false}>
+                                            <TouchableOpacity ><Image style={styles.league} source={require("../assets/images/league.png")}></Image></TouchableOpacity>
+                                            <TouchableOpacity ><Image style={styles.league} source={require("../assets/images/league.png")}></Image></TouchableOpacity>
+                                            <TouchableOpacity ><Image style={styles.league} source={require("../assets/images/league.png")}></Image></TouchableOpacity>
+                                           <TouchableOpacity ><Image style={styles.league} source={require("../assets/images/league.png")}></Image></TouchableOpacity>
+                                            <TouchableOpacity ><Image style={styles.league} source={require("../assets/images/league.png")}></Image></TouchableOpacity>
+                                            <TouchableOpacity ><Image style={styles.league} source={require("../assets/images/league.png")}></Image></TouchableOpacity>
+                                            <TouchableOpacity ><Image style={styles.league} source={require("../assets/images/league.png")}></Image></TouchableOpacity>
+                                        </ScrollView>
+                                        </View>
+
+                                        
+                                        <View style={styles.myLeague}>
+                                            <Text style={styles.contentText}> "NUMBER KG" League</Text>
+                                            <Pressable onPress={() => navigation.navigate('leaderboardInfo')}><Image style={styles.imgInfo} source={require("../assets/icons/blackIconInfo.png")} /></Pressable>
+                                        </View>
+                                        <View>
+                                            <View style={styles.leaderboard}>
+                                                <View style={styles.leaderboardItem}>
+                                                    <Text style={styles.placeNumber2}>2</Text>
+                                                    <Pressable style={styles.place2} onPress={() => navigation.navigate('')}><Image style={styles.placeImage2} source={require("../assets/noProfile.png")} /></Pressable>
+                                                    <Text style={styles.placeName}>Username</Text>
+                                                </View>
+                                                <View style={styles.leaderboardItem}>
+                                                    <Text style={styles.placeNumber1}>1</Text>
+                                                    <Pressable style={styles.place1} onPress={() => navigation.navigate('')}><Image style={styles.placeImage1} source={require("../assets/noProfile.png")} /></Pressable>
+                                                    <Text style={styles.placeName}>Username</Text>
+                                                </View>
+                                                <View style={styles.leaderboardItem}>
+                                                    <Text style={styles.placeNumber3}>3</Text>
+                                                    <Pressable style={styles.place3} onPress={() => navigation.navigate('')}><Image style={styles.placeImage3} source={require("../assets/noProfile.png")} /></Pressable>
+                                                    <Text style={styles.placeName}>Username</Text>
+                                                </View>
+                                            </View>
+                                            <View style={styles.leaderboardList}>
+                                                <View style={styles.userFirst}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naamFirst}>Username</Text>
+                                                    <Text style={styles.challengesFirst}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.userSecond}>
+                                                    <Text style={styles.number}>2</Text>
+                                                    <Text style={styles.naamSecond}>Username</Text>
+                                                    <Text style={styles.challengesSecond}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.userThirth}>
+                                                    <Text style={styles.number}>3</Text>
+                                                    <Text style={styles.naamThirth}>Username</Text>
+                                                    <Text style={styles.challengesThirth}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.user}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naam}>Username</Text>
+                                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.user}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naam}>Username</Text>
+                                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.user}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naam}>Username</Text>
+                                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.user}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naam}>Username</Text>
+                                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.user}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naam}>Username</Text>
+                                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.user}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naam}>Username</Text>
+                                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.user}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naam}>Username</Text>
+                                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                                </View>
+                                                <View style={styles.user}>
+                                                    <Text style={styles.number}>1</Text>
+                                                    <Text style={styles.naam}>Username</Text>
+                                                    <Text style={styles.challenges}>AANTAL challenges</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
                                 )}
                             </View>
-                        </ScrollView>
-                        <View style={styles.container}>
-                            <Text style={styles.contentText}>Gymfeed</Text>
-                            <PanGestureHandler onGestureEvent={handleSwipe}>
-                                <View style={styles.feedContainer}>
-                                <Text style={styles.contentGymfeed}>Tap or swipe up for more</Text>
-                                    <TouchableOpacity style={styles.navigationRect} onPress={() => navigation.navigate('newsfeedGymfeed')}></TouchableOpacity>
-                                    <View>
-                                        
-                                        <Text style={styles.contentGymfeed}>placeholder gym message with blur</Text>
-                                    </View>
-                                </View>
-                            </PanGestureHandler>
                         </View>
                     </View>
-                ) : (
-                    <View style={styles.section}>
-                        <ScrollView style={styles.leagueList} horizontal={true} showsHorizontalScrollIndicator={false}>
-                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
-                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
-                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
-                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
-                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
-                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
-                            <Pressable><Image source={require("../assets/images/league.png")} style={styles.league}></Image></Pressable>
-                        </ScrollView>
-                        <View style={styles.myLeague}>
-                            <Text style={styles.contentText}> "NUMBER KG" League</Text>
-                            <Pressable onPress={() => navigation.navigate('leaderboardInfo')}><Image style={styles.imgInfo} source={require("../assets/icons/blackIconInfo.png")} /></Pressable>
-                        </View>
-                        <View>
-                            <View style={styles.leaderboard}>
-                                <View style={styles.leaderboardItem}>
-                                    <Text style={styles.placeNumber2}>2</Text>
-                                    <Pressable style={styles.place2} onPress={() => navigation.navigate('')}><Image style={styles.placeImage2} source={require("../assets/noProfile.png")} /></Pressable>
-                                    <Text style={styles.placeName}>Username</Text>
-                                </View>
-                                <View style={styles.leaderboardItem}>
-                                    <Text style={styles.placeNumber1}>1</Text>
-                                    <Pressable style={styles.place1} onPress={() => navigation.navigate('')}><Image style={styles.placeImage1} source={require("../assets/noProfile.png")} /></Pressable>
-                                    <Text style={styles.placeName}>Username</Text>
-                                </View>
-                                <View style={styles.leaderboardItem}>
-                                    <Text style={styles.placeNumber3}>3</Text>
-                                    <Pressable style={styles.place3} onPress={() => navigation.navigate('')}><Image style={styles.placeImage3} source={require("../assets/noProfile.png")} /></Pressable>
-                                    <Text style={styles.placeName}>Username</Text>
-                                </View>
-                            </View>
-                            <ScrollView style={styles.leaderboardList} showsVerticalScrollIndicator={false}>
-                            <View style={styles.userFirst}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naamFirst}>Username</Text>
-                                    <Text style={styles.challengesFirst}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.userSecond}>
-                                    <Text style={styles.number}>2</Text>
-                                    <Text style={styles.naamSecond}>Username</Text>
-                                    <Text style={styles.challengesSecond}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.userThirth}>
-                                    <Text style={styles.number}>3</Text>
-                                    <Text style={styles.naamThirth}>Username</Text>
-                                    <Text style={styles.challengesThirth}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.user}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naam}>Username</Text>
-                                    <Text style={styles.challenges}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.user}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naam}>Username</Text>
-                                    <Text style={styles.challenges}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.user}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naam}>Username</Text>
-                                    <Text style={styles.challenges}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.user}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naam}>Username</Text>
-                                    <Text style={styles.challenges}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.user}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naam}>Username</Text>
-                                    <Text style={styles.challenges}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.user}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naam}>Username</Text>
-                                    <Text style={styles.challenges}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.user}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naam}>Username</Text>
-                                    <Text style={styles.challenges}>AANTAL challenges</Text>
-                                </View>
-                                <View style={styles.user}>
-                                    <Text style={styles.number}>1</Text>
-                                    <Text style={styles.naam}>Username</Text>
-                                    <Text style={styles.challenges}>AANTAL challenges</Text>
-                                </View>
-                                <View style={{ height: 300 }}></View>
-                            </ScrollView>
-                        </View>
-                    </View>
-                )}
-            </View>
+
+                </View>
+            </ScrollView>
             <Nav />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    feed: {
+
+    newsfeedStyle: {
+        backgroundColor: "#f5f5f5",
         flex: 1,
-        justifyContent: "flex-start",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    con: {
+        flex: 1,
         alignItems: "center",
     },
+
+    container: {
+        display: "flex",
+        gap: 20,
+        marginTop: 150,
     greetingContainer: {
         marginTop: 130,
         flexDirection: 'column',
@@ -224,9 +248,19 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginBottom: 20,
     },
+
+    greetingContainer: {
+        marginLeft: 40,
+    },
+
+    contain: {
+        display: "flex",
+        alignItems: "flex-center",
+        marginTop: 20
+    },
+
     content: {
         marginTop: 20,
-        width: '100%',
         paddingHorizontal: 20,
     },
     section: {
@@ -243,7 +277,6 @@ const styles = StyleSheet.create({
     },
     memberContainer: {
         flexDirection: 'row',
-        marginBottom: -50,
     },
     member: {
         alignItems: 'center',
@@ -258,20 +291,21 @@ const styles = StyleSheet.create({
     username: {
         ...theme.textStyles.customDetail,
     },
-    container: {
+    containerFeed: {
         marginTop: 24,
     },
     feedContainer: {
         width: "100%",
-        height: "62%",
         backgroundColor: "#343434",
         color: "#F2F2F2",
         borderRadius: 15,
-        padding: 10,
+        padding: 20,
+        paddingBottom: 160,
         display: "flex",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         alignItems: "center",
     },
+
     navigationRect: {
         backgroundColor: "#F2F2F2",
         width: "80%",
@@ -284,7 +318,7 @@ const styles = StyleSheet.create({
     },
 
     contentGymfeed: {
-       color: "#F2F2F2",
+        color: "#F2F2F2",
     },
 
 
@@ -293,25 +327,24 @@ const styles = StyleSheet.create({
         height: 30,
     },
 
-    leagueList: {
+    leagues: {
         display: "flex",
         flexDirection: "row",
-        gap: 10,
+        marginTop: 10,
+        marginBottom: 40,
     },
 
     league: {
-        width: 70,
-        height: 70,
+        width: 80,
+        height: 80,
         borderRadius: 50,
         marginRight: 10,
     },
 
     myLeague: {
-        marginTop: 20,
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
-        alignItems: "flex-start",
         gap: 10,
     },
 
@@ -397,7 +430,7 @@ const styles = StyleSheet.create({
 
     leaderboardList: {
         marginTop: 20,
-        height: '56%',
+        marginBottom: 80,
     },
 
     userFirst: {

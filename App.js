@@ -28,6 +28,8 @@ import ChallengesActive from './screens/challengesActive';
 import ChallengesImage from './screens/challengesImage';
 import ChallengesProof from './screens/challengesProof';
 import LeaderboardInfo from './screens/leaderboardInfo';
+import ProfileSettings from './screens/profileSettings';
+import About from './screens/about';
 import ChallengesFinish from './screens/challengesFinish';
 
 const Stack = createStackNavigator();
@@ -48,9 +50,12 @@ export default function App() {
           <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="challengesCategoryOne" component={challengesCategoryOne} />
           <Stack.Screen name="newsfeedGymfeed" component={newsfeedGymfeed} />
+          <Stack.Screen name="profileSettings" component={ProfileSettings} />
           <Stack.Screen name="termsAndConditions" component={TermsAndConditions} />
           <Stack.Screen name="privacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="newsletter" component={Newsletter} />
+          <Stack.Screen name="about" component={About} />
+          
           <Stack.Screen name="challengesDetails" component={ChallengesDetails} />
           <Stack.Screen name="challengesCountdown" component={ChallengesCountdown} />
           <Stack.Screen name="challengesActive" component={ChallengesActive} />

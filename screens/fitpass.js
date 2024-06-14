@@ -21,7 +21,7 @@ const Fitpass = () => {
                     console.log('User data retrieved:', user);
                     setUserData(user);
                     console.log('User ID:', user._id);
-                    fetchUserCredits(user._id); // Zorg ervoor dat je de juiste id-parameter doorgeeft
+                    fetchUserCredits(user._id);
                 }
             } catch (error) {
                 console.error('Error retrieving user data:', error);
