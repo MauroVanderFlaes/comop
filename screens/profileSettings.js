@@ -19,7 +19,6 @@ const ProfileSettings = () => {
                 const value = await AsyncStorage.getItem('userData');
                 if (value !== null) {
                     const user = JSON.parse(value);
-                    console.log('User data retrieved:', user);
                     setUserData(user);
                 }
             } catch (error) {
@@ -34,7 +33,6 @@ const ProfileSettings = () => {
         try {
             await AsyncStorage.removeItem('userData');
             const userDataAfterLogout = await AsyncStorage.getItem('userData');
-            console.log('AsyncStorage userData after logout:', userDataAfterLogout); // Should be null
             setUserData({}); // Clear userData state immediately
 
             console.log('User logged out successfully');
