@@ -110,10 +110,28 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
   const [isAccepted, setIsAccepted] = useState(null);
   const [isChoiceMade, setIsChoiceMade] = useState(false);
 
+  // useEffect(() => {
+  //   if (!challenge.userId || !userData._id) return; // Ensure userId and userData are defined
+  //   setIsCompletedByUser(challenge.userId._id === userData._id);
+  // }, [challenge, userData]);
+
+  // useEffect(() => {
+  //   if(challenge.isAccepted !== undefined) {
+  //     setIsAccepted(challenge.isAccepted);
+  //     console.log(challenge.isAccepted);
+  //   }
+  // }, [challenge]);
+
   useEffect(() => {
-    if (!challenge.userId || !userData._id) return; // Ensure userId and userData are defined
-    setIsCompletedByUser(challenge.userId._id === userData._id);
+    if (challenge.acceptances.includes(userData._id)) {
+      setIsAccepted(true);
+      setIsChoiceMade(true);
+    } else if (challenge.rejections.includes(userData._id)) {
+      setIsAccepted(false);
+      setIsChoiceMade(true);
+    }
   }, [challenge, userData]);
+
 
   const handleImagePress = (event) => {
     const { locationX, width } = event.nativeEvent;
@@ -124,23 +142,61 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
     }
   };
 
-  const handleAccept = () => {
-    if (isAccepted === true) {
-      setIsAccepted(null);
-      setIsChoiceMade(false);
-    } else {
+  const handleAccept = async () => {
+
+    let url;
+    if (prod) {
+      url = `${render}/api/v1/gymfeed/${challenge._id}/accept`;
+    }
+    else {
+      url = `http://${IPADRESS}:3000/api/v1/gymfeed/${challenge._id}/accept`;
+    }
+
+
+    try {
+      const userId = userData._id;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await response.json();
+      console.log("ff data laten zien", data); // Handle success or error response
       setIsAccepted(true);
       setIsChoiceMade(true);
+    } catch (error) {
+      console.error('Error accepting challenge:', error);
     }
   };
 
-  const handleReject = () => {
-    if (isAccepted === false) {
-      setIsAccepted(null);
-      setIsChoiceMade(false);
-    } else {
+  const handleReject = async () => {
+
+    let url;
+    if (prod) {
+      url = `${render}/api/v1/gymfeed/${challenge._id}/reject`;
+    }
+    else {
+      url = `http://${IPADRESS}:3000/api/v1/gymfeed/${challenge._id}/reject`;
+    }
+
+
+    try {
+      const userId = userData._id;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await response.json();
+      console.log(data); // Handle success or error response
       setIsAccepted(false);
       setIsChoiceMade(true);
+    } catch (error) {
+      console.error('Error rejecting challenge:', error);
     }
   };
 
