@@ -224,7 +224,6 @@ const Newsfeed = () => {
 };
 
 const styles = StyleSheet.create({
-
     newsfeedStyle: {
         backgroundColor: "#f5f5f5",
         flex: 1,
@@ -241,15 +240,14 @@ const styles = StyleSheet.create({
         display: "flex",
         gap: 20,
         marginTop: 150,
+    },
+
     greetingContainer: {
         marginTop: 130,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
         marginBottom: 20,
-    },
-
-    greetingContainer: {
         marginLeft: 40,
     },
 
@@ -320,7 +318,6 @@ const styles = StyleSheet.create({
     contentGymfeed: {
         color: "#F2F2F2",
     },
-
 
     imgInfo: {
         width: 30,
@@ -545,7 +542,7 @@ const styles = StyleSheet.create({
         ...theme.textStyles.customDetail,
         fontSize: 14,
         paddingRight: 15,
-    },
+    }
 });
 
 export default Newsfeed;
