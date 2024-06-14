@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     greetingContainer: {
-        marginTop: 150,
+        marginTop: 130,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',

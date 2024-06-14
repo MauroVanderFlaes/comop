@@ -107,6 +107,8 @@ const NewsfeedGymfeed = () => {
 const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isCompletedByUser, setIsCompletedByUser] = useState(false);  
+  const [isAccepted, setIsAccepted] = useState(null);
+  const [isChoiceMade, setIsChoiceMade] = useState(false);
 
   useEffect(() => {
     if (!challenge.userId || !userData._id) return; // Ensure userId and userData are defined
@@ -122,6 +124,26 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
     }
   };
 
+  const handleAccept = () => {
+    if (isAccepted === true) {
+      setIsAccepted(null);
+      setIsChoiceMade(false);
+    } else {
+      setIsAccepted(true);
+      setIsChoiceMade(true);
+    }
+  };
+
+  const handleReject = () => {
+    if (isAccepted === false) {
+      setIsAccepted(null);
+      setIsChoiceMade(false);
+    } else {
+      setIsAccepted(false);
+      setIsChoiceMade(true);
+    }
+  };
+
   return (
     <View style={[styles.challengeContainer, isCurrentUserChallenge ? styles.alignRight : styles.alignLeft, isCurrentUserChallenge && { borderTopRightRadius: 0, borderTopLeftRadius: 15 }
       , !isCurrentUserChallenge && { borderTopRightRadius: 15, borderTopLeftRadius: 0 }
@@ -134,20 +156,34 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
               source={{ uri: challenge.userId.imgUrl }}
             />
           </View>
-          <View style={styles.boxChoice}>
-            <TouchableOpacity>
-              <Image style={styles.acceptIcon} source={require('../assets/icons/acceptIcon.png')}></Image>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image style={styles.rejectIcon} source={require('../assets/icons/rejectIcon.png')}></Image>
-            </TouchableOpacity>
+          <View style={[styles.boxChoice, isAccepted !== null && { width: '100%', height: 50 }]}>
+            {!isChoiceMade ? (
+              <>
+                <TouchableOpacity onPress={handleAccept}>
+                  <Image style={styles.acceptIcon} source={require('../assets/icons/acceptIcon.png')}></Image>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleReject}>
+                  <Image style={styles.rejectIcon} source={require('../assets/icons/rejectIcon.png')}></Image>
+                </TouchableOpacity>
+              </>
+            ) : (
+              isAccepted === true ? (
+                <TouchableOpacity onPress={handleAccept}>
+                  <Image style={styles.acceptIcon} source={require('../assets/icons/acceptIcon.png')}></Image>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={handleReject}>
+                  <Image style={styles.rejectIcon} source={require('../assets/icons/rejectIcon.png')}></Image>
+                </TouchableOpacity>
+              )
+            )}
           </View>
         </View>
       )}
       {isCurrentUserChallenge ? (
         <View style={[styles.boxChallenge, styles.completedChallenge]}>
           {/* Render completed challenge template */}
-          <View style={styles.boxAchievement}>
+          <View style={[styles.boxAchievement, styles.completedAchievement]}>
             <Image style={styles.imgAchievement} source={require('../assets/icons/achievementIcon.png')}></Image>
             <Text style={styles.textAchievement}>Achievement</Text>
           </View>
@@ -166,41 +202,41 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
             ))}
           </View>
           <View style={styles.boxUserText}>
-            <Text style={styles.textUserChallenge}>
-              <Text style={styles.userNameText}>{challenge.userId.username}</Text> did the challenge <Text style={styles.userChallengeText}>"{challenge.challengeId.title}"</Text>
+            <Text style={[styles.textUserChallenge, styles.textUserCompleted]}>
+              <Text style={[styles.userNameText, styles.userNameCompleted]}>{challenge.userId.username}</Text> did the challenge <Text style={[styles.userChallengeText, styles.userChallengeCompleted]}>"{challenge.challengeId.title}"</Text>
             </Text>
           </View>
           <View style={styles.boxEmojis}>
             <View style={styles.boxEmoji1}>
               <TouchableOpacity>
-                <Image style={styles.firstEmoji} source={require('../assets/icons/firstEmoji.png')}></Image>
+                <Image style={styles.firstEmoji} source={require('../assets/icons/firstEmojiBlack.png')}></Image>
               </TouchableOpacity>
               <View style={styles.boxEmo1}>
-                <Text style={styles.firstEmojiText}>1</Text>
+                <Text style={[styles.firstEmojiText, styles.firstEmojiTextCompleted]}>1</Text>
               </View>
             </View>
             <View style={styles.boxEmoji2}>
               <TouchableOpacity>
-                <Image style={styles.secondEmoji} source={require('../assets/icons/secondEmoji.png')}></Image>
+                <Image style={styles.secondEmoji} source={require('../assets/icons/secondEmojiBlack.png')}></Image>
               </TouchableOpacity>
               <View style={styles.boxEmo2}>
-                <Text style={styles.secondEmojiText}>2</Text>
+                <Text style={[styles.secondEmojiText, styles.secondEmojiTextCompleted]}>2</Text>
               </View>
             </View> 
             <View style={styles.boxEmoji3}>
               <TouchableOpacity>
-                <Image style={styles.thirdEmoji} source={require('../assets/icons/thirdEmoji.png')}></Image>
+                <Image style={styles.thirdEmoji} source={require('../assets/icons/thirdEmojiBlack.png')}></Image>
               </TouchableOpacity>
               <View style={styles.boxEmo3}>
-                <Text style={styles.thirdEmojiText}>3</Text>
+                <Text style={[styles.thirdEmojiText, styles.thirdEmojiTextCompleted]}>3</Text>
               </View>
             </View>
             <View style={styles.boxEmoji4}>
               <TouchableOpacity>
-                <Image style={styles.fourthEmoji} source={require('../assets/icons/fourthEmoji.png')}></Image>
+                <Image style={styles.fourthEmoji} source={require('../assets/icons/fourthEmojiBlack.png')}></Image>
               </TouchableOpacity>
               <View style={styles.boxEmo4}>
-                <Text style={styles.fourthEmojiText}>4</Text>
+                <Text style={[styles.fourthEmojiText, styles.fourthEmojiTextCompleted]}>4</Text>
               </View>
             </View>
           </View>
@@ -278,7 +314,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   greetingContainer: {
-    marginTop: 150,
+    marginTop: 130,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -286,7 +322,7 @@ const styles = StyleSheet.create({
   },
   feedContainer: {
     width: "100%",
-    height: "80%",
+    height: "84%",
     backgroundColor: "#343434",
     color: "#F2F2F2",
     borderRadius: 15,
@@ -335,12 +371,12 @@ const styles = StyleSheet.create({
   acceptIcon: {
     width: 44,
     height: 44,
-    marginBottom: 2,
+    marginBottom: 1,
   },
   rejectIcon: {
     width: 44,
     height: 44,
-    marginTop: 2,
+    marginTop: 1,
   },
   profileImgUser: {
     display: "flex",
@@ -536,10 +572,41 @@ const styles = StyleSheet.create({
   },
 
   completedChallenge: {
-    // backgroundColor: '#79ECEC',
+    backgroundColor: '#1C1B1B',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 0,
+  },
 
+  completedAchievement: {
+    backgroundColor: '#f2f2f2',
+  },
+
+  textUserCompleted: {
+    color: '#f2f2f2',
+  },
+
+  userNameCompleted: {
+    color: '#f2f2f2',
+  },
+
+  userChallengeCompleted: {
+    color: '#f2f2f2',
+  },
+
+  firstEmojiTextCompleted: {
+    color: '#f2f2f2',
+  },
+
+  secondEmojiTextCompleted: {
+    color: '#f2f2f2',
+  },
+
+  thirdEmojiTextCompleted: {
+    color: '#f2f2f2',
+  },
+
+  fourthEmojiTextCompleted: {
+    color: '#f2f2f2',
   },
 
   // containerFeed: {
