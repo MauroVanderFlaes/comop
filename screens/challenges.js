@@ -7,12 +7,16 @@ import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
 import { IPADRESS, prod, render } from '../config';
 import ChallengesActive from "./challengesActive";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Challenges = () => {
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
     const [activeChallengesExist, setActiveChallengesExist] = useState(false);
     const [challenges, setChallenges] = useState([]);
+    const [userData, setUserData] = useState({});
     const navigation = useNavigation();
+
+
 
     const fetchData = useCallback(async () => {
         let url;
@@ -59,7 +63,7 @@ const Challenges = () => {
 
     const goToActiveChallenge = (activeChallenge) => {
         console.log("Navigating to active challenge");
-        navigation.navigate('challengesActive', { challenge: activeChallenge });
+        navigation.navigate('challengesActive', { challenge: activeChallenge, userData });
     }
 
     const handlePress = () => {

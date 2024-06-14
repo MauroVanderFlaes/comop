@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import Nav from "../components/nav";
 import Logo from "../components/logo";
@@ -7,17 +7,35 @@ import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
 import { IPADRESS, prod, render } from '../config';
 import { useNavigation } from "@react-navigation/native";
-import ChallengesActive from "./challengesActive";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChallengesCategoryOne = () => {
     const [challenges, setChallenges] = useState([]);
+    const [completedChallenges, setCompletedChallenges] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("Community Challenges");
     const navigation = useNavigation();
-
-   
+    const [userId, setUserId] = useState(null);
+    console.log("userId", userId);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const retrieveUserData = async () => {
+            try {
+                const value = await AsyncStorage.getItem('userData');
+                if (value !== null) {
+                    const user = JSON.parse(value);
+                    console.log('User data retrieved:', user);
+                    setUserId(user._id);
+                }
+            } catch (error) {
+                console.error('Error retrieving user data:', error);
+            }
+        };
+    
+        retrieveUserData();
+    }, []);
+
+    useEffect(() => {
+        const fetchChallenges = async () => {
             let url;
             if (prod) {
                 url = `${render}/api/v1/challenges`;
@@ -26,7 +44,6 @@ const ChallengesCategoryOne = () => {
             }
 
             try {
-                console.log(url);
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: {
@@ -36,9 +53,7 @@ const ChallengesCategoryOne = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data.data);
-                    setChallenges(data.data);
-
+                    setChallenges(data.data || []);
                 } else {
                     const errorData = await response.json();
                     console.log("Error fetching challenges:", errorData.message);
@@ -46,23 +61,55 @@ const ChallengesCategoryOne = () => {
             } catch (error) {
                 console.error("Error fetching challenges:", error);
             }
-        }
-        fetchData();
-    }, []);
+        };
 
+        const fetchCompletedChallenges = async () => {
+            if (!userId) return; // If userId is not set yet, do not proceed
 
+            let url;
+            if (prod) {
+                url = `${render}/api/v1/gymfeed/${userId}`;
+            } else {
+                url = `http://${IPADRESS}:3000/api/v1/gymfeed/${userId}`;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setCompletedChallenges(data.data || []);
+                    console.log("Completed challenges:", data.data);
+                } else {
+                    const errorData = await response.json();
+                    console.log("Error fetching completed challenges:", errorData.message);
+                }
+            } catch (error) {
+                console.error("Error fetching completed challenges:", error);
+            }
+        };
+
+        fetchChallenges();
+        fetchCompletedChallenges();
+    }, [userId]);
 
     const filterChallengesByCategory = (category) => {
         return challenges.filter(challenge => challenge.category === category);
     };
 
     const filteredChallenges = filterChallengesByCategory(selectedCategory);
-    const completedChallengesCount = filteredChallenges.filter(challenge => challenge.completed).length;
+    const completedChallengeIds = new Set(completedChallenges.map(completed => completed.challengeId._id));
+    const completedChallengesCount = filteredChallenges.filter(challenge => completedChallengeIds.has(challenge._id)).length;
 
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-                <ArrowBack />
+                <ArrowBack style={styles.arrowBack}/>
                 <View style={styles.innerContainer}>
                     <Logo />
                     <View>
@@ -90,12 +137,30 @@ const ChallengesCategoryOne = () => {
                     </View>
                     {filteredChallenges.length > 0 ? (
                         filteredChallenges.map((challenge) => (
-                            <TouchableOpacity key={challenge._id} style={styles.boxChallenge} onPress={() => navigation.navigate('challengesDetails', { challenge })}>
+                            <TouchableOpacity
+                                key={challenge._id}
+                                style={[
+                                    styles.boxChallenge,
+                                    completedChallengeIds.has(challenge._id) && styles.completedChallenge
+                                ]}
+                                onPress={() => !completedChallengeIds.has(challenge._id) && navigation.navigate('challengesDetails', { challenge })}
+                                disabled={completedChallengeIds.has(challenge._id)}
+                            >
                                 <Image source={{ uri: challenge.imageUrl }} style={styles.challengeImg} />
                                 <View style={styles.contentChallenge}>
                                     <View style={styles.boxTextAbove}>
                                         <Text style={styles.challengeTitle}>{challenge.title}</Text>
-                                        <View style={styles.boxHrs}><Text style={styles.challengeHrs}>{challenge.time} hrs left</Text></View>
+                                        <View style={[
+                                            styles.boxHrs,
+                                            completedChallengeIds.has(challenge._id) && styles.completedChallengeHrs
+                                        ]}>
+                                            <Text style={[
+                                                styles.challengeHrs,
+                                                completedChallengeIds.has(challenge._id) && styles.completedChallengeText
+                                            ]}>
+                                                {completedChallengeIds.has(challenge._id) ? "Completed" : `${challenge.time} hrs left`}
+                                            </Text>
+                                        </View>
                                     </View>
                                     <Text style={styles.textDescription}>{challenge.description.split(' ').slice(0, 8).join(' ')}{challenge.description.split(' ').length > 8 ? '...' : ''}</Text>
                                 </View>
@@ -195,6 +260,15 @@ const styles = StyleSheet.create({
         paddingLeft: 12,
         paddingRight: 12,
     },
+    completedChallenge: {
+        backgroundColor: "#80F075",
+    },
+    completedChallengeHrs: {
+        backgroundColor: "#1C1B1B",
+    },
+    completedChallengeText: {
+        color: "#f2f2f2",
+    },
     challengeImg: {
         width: 100,
         height: 100,
@@ -236,8 +310,22 @@ const styles = StyleSheet.create({
     boxHrs: {
         backgroundColor: "#FFB952",
         borderRadius: 15,
-        padding: 5,
+        // padding: 5,
+        paddingLeft: 8,
+        paddingRight: 8,
+        paddingTop: 4,
+        paddingBottom: 4,
     },
+    arrowBack: {
+        top: 80,
+        left: 7,
+    },
+    completedText: {
+        color: "#1C1B1B",
+        fontWeight: "bold",
+        paddingLeft: 8,
+        paddingTop: 8,
+    }
 });
 
 export default ChallengesCategoryOne;

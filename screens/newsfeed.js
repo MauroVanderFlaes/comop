@@ -241,6 +241,12 @@ const styles = StyleSheet.create({
         display: "flex",
         gap: 20,
         marginTop: 150,
+    greetingContainer: {
+        marginTop: 130,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        marginBottom: 20,
     },
 
     greetingContainer: {
