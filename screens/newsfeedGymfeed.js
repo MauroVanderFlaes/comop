@@ -7,12 +7,14 @@ import theme from "../theme";
 import { useNavigation } from '@react-navigation/native';
 import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 import { IPADRESS, prod, render } from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NewsfeedGymfeed = () => {
   const navigation = useNavigation();
   const [challenges, setChallenges] = useState([]);
+  const [userData, setUserData] = useState({});
 
-  const handleSwipe = ({ nativeEvent }) => {
+  const handleSwipeDown = ({ nativeEvent }) => {
     if (nativeEvent.translationY > 50) {
       navigation.navigate('newsfeed');
     }
@@ -21,6 +23,25 @@ const NewsfeedGymfeed = () => {
   useEffect(() => {
     getGymfeedChallenges();
   }, []);
+
+
+  // get async storage
+  useEffect(() => {
+    const retrieveUserData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("userData");
+        if (value !== null) {
+          const user = JSON.parse(value);
+          setUserData(user);
+        }
+      } catch (error) {
+        console.error("Error retrieving user data:", error);
+      }
+    };
+
+    retrieveUserData();
+  }, []);
+
 
   const getGymfeedChallenges = async () => {
     let url;
@@ -46,9 +67,10 @@ const NewsfeedGymfeed = () => {
       console.error(error);
     }
   };
+  
 
   return (
-    <PanGestureHandler onGestureEvent={handleSwipe}>
+    <PanGestureHandler onGestureEvent={handleSwipeDown}>
       <View style={styles.container}>
         <Logo />
         <View style={styles.greetingContainer}>
@@ -61,80 +83,191 @@ const NewsfeedGymfeed = () => {
             style={styles.navigationRect} 
             onPress={() => navigation.navigate('newsfeed')}
           />
-          <View style={styles.gymfeedContainer}>
+           <View style={styles.gymfeedContainer}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              {challenges.map((challenge, index) => (
-                <View key={index} style={styles.challengeContainer}>
-                  <View style={styles.profileImgUser}>
-                    <View>
-                      <Image
-                        style={styles.profileImg}
-                        source={{ uri: challenge.userId.imgUrl }}
-                      />
-                    </View>
-                    <View style={styles.boxChoice}>
-                      <TouchableOpacity>
-                        <Image style={styles.acceptIcon} source={require('../assets/icons/acceptIcon.png')}></Image>
-                      </TouchableOpacity>
-                      <TouchableOpacity>
-                        <Image style={styles.rejectIcon} source={require('../assets/icons/rejectIcon.png')}></Image>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View style={styles.boxChallenge}>
-                    <View style={styles.boxAchievement}>
-                      <Image style={styles.imgAchievement} source={require('../assets/icons/achievementIcon.png')}></Image>
-                      <Text style={styles.textAchievement}>Achievement</Text>
-                    </View>
-                    <Image style={styles.imgUserProof} source={{ uri: challenge.uploadedImages[0] }}></Image>
-                    <View style={styles.boxUserText}>
-                      <Text style={styles.textUserChallenge}>
-                        <Text style={styles.userNameText}>{challenge.userId.username}</Text> did the challenge <Text style={styles.userChallengeText}>"{challenge.challengeId.title}"</Text>
-                      </Text>
-                    </View>
-                    <View style={styles.boxEmojis}>
-                      <View style={styles.boxEmoji1}>
-                        <TouchableOpacity>
-                          <Image style={styles.firstEmoji} source={require('../assets/icons/firstEmoji.png')}></Image>
-                        </TouchableOpacity>
-                        <View style={styles.boxEmo1}>
-                          <Text style={styles.firstEmojiText}>1</Text>
-                        </View>
-                      </View>
-                      <View style={styles.boxEmoji2}>
-                        <TouchableOpacity>
-                          <Image style={styles.secondEmoji} source={require('../assets/icons/secondEmoji.png')}></Image>
-                        </TouchableOpacity>
-                        <View style={styles.boxEmo2}>
-                          <Text style={styles.secondEmojiText}>2</Text>
-                        </View>
-                      </View> 
-                      <View style={styles.boxEmoji3}>
-                        <TouchableOpacity>
-                          <Image style={styles.thirdEmoji} source={require('../assets/icons/thirdEmoji.png')}></Image>
-                        </TouchableOpacity>
-                        <View style={styles.boxEmo3}>
-                          <Text style={styles.thirdEmojiText}>3</Text>
-                        </View>
-                      </View>
-                      <View style={styles.boxEmoji4}>
-                        <TouchableOpacity>
-                          <Image style={styles.fourthEmoji} source={require('../assets/icons/fourthEmoji.png')}></Image>
-                        </TouchableOpacity>
-                        <View style={styles.boxEmo4}>
-                          <Text style={styles.fourthEmojiText}>4</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              ))}
+              
+                {challenges.map((challenge, index) => (
+                  <ChallengeCard
+                    key={index}
+                    challenge={challenge}
+                    userData={userData}
+                    isCurrentUserChallenge={challenge.userId._id === userData._id}
+                  />
+                ))}
+              
             </ScrollView>
           </View>
         </View>
         <Nav />
       </View>
     </PanGestureHandler>
+  );
+};
+
+const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isCompletedByUser, setIsCompletedByUser] = useState(false);  
+
+  useEffect(() => {
+    if (!challenge.userId || !userData._id) return; // Ensure userId and userData are defined
+    setIsCompletedByUser(challenge.userId._id === userData._id);
+  }, [challenge, userData]);
+
+  const handleImagePress = (event) => {
+    const { locationX, width } = event.nativeEvent;
+    if (locationX > width / 2) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % challenge.uploadedImages.length);
+    } else {
+      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + challenge.uploadedImages.length) % challenge.uploadedImages.length);
+    }
+  };
+
+  return (
+    <View style={[styles.challengeContainer, isCurrentUserChallenge ? styles.alignRight : styles.alignLeft, isCurrentUserChallenge && { borderTopRightRadius: 0, borderTopLeftRadius: 15 }
+      , !isCurrentUserChallenge && { borderTopRightRadius: 15, borderTopLeftRadius: 0 }
+    ]}>
+      {!isCurrentUserChallenge && (
+        <View style={styles.profileImgUser}>
+          <View>
+            <Image
+              style={styles.profileImg}
+              source={{ uri: challenge.userId.imgUrl }}
+            />
+          </View>
+          <View style={styles.boxChoice}>
+            <TouchableOpacity>
+              <Image style={styles.acceptIcon} source={require('../assets/icons/acceptIcon.png')}></Image>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image style={styles.rejectIcon} source={require('../assets/icons/rejectIcon.png')}></Image>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+      {isCurrentUserChallenge ? (
+        <View style={[styles.boxChallenge, styles.completedChallenge]}>
+          {/* Render completed challenge template */}
+          <View style={styles.boxAchievement}>
+            <Image style={styles.imgAchievement} source={require('../assets/icons/achievementIcon.png')}></Image>
+            <Text style={styles.textAchievement}>Achievement</Text>
+          </View>
+          <TouchableOpacity onPress={handleImagePress}>
+            <Image style={styles.imgUserProof} source={{ uri: challenge.uploadedImages[currentImageIndex] }}></Image>
+          </TouchableOpacity>
+          <View style={styles.circlesContainer}>
+            {challenge.uploadedImages.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.circle,
+                  { backgroundColor: index === currentImageIndex ? '#6CC2FF' : '#C7E6FC' }
+                ]}
+              />
+            ))}
+          </View>
+          <View style={styles.boxUserText}>
+            <Text style={styles.textUserChallenge}>
+              <Text style={styles.userNameText}>{challenge.userId.username}</Text> did the challenge <Text style={styles.userChallengeText}>"{challenge.challengeId.title}"</Text>
+            </Text>
+          </View>
+          <View style={styles.boxEmojis}>
+            <View style={styles.boxEmoji1}>
+              <TouchableOpacity>
+                <Image style={styles.firstEmoji} source={require('../assets/icons/firstEmoji.png')}></Image>
+              </TouchableOpacity>
+              <View style={styles.boxEmo1}>
+                <Text style={styles.firstEmojiText}>1</Text>
+              </View>
+            </View>
+            <View style={styles.boxEmoji2}>
+              <TouchableOpacity>
+                <Image style={styles.secondEmoji} source={require('../assets/icons/secondEmoji.png')}></Image>
+              </TouchableOpacity>
+              <View style={styles.boxEmo2}>
+                <Text style={styles.secondEmojiText}>2</Text>
+              </View>
+            </View> 
+            <View style={styles.boxEmoji3}>
+              <TouchableOpacity>
+                <Image style={styles.thirdEmoji} source={require('../assets/icons/thirdEmoji.png')}></Image>
+              </TouchableOpacity>
+              <View style={styles.boxEmo3}>
+                <Text style={styles.thirdEmojiText}>3</Text>
+              </View>
+            </View>
+            <View style={styles.boxEmoji4}>
+              <TouchableOpacity>
+                <Image style={styles.fourthEmoji} source={require('../assets/icons/fourthEmoji.png')}></Image>
+              </TouchableOpacity>
+              <View style={styles.boxEmo4}>
+                <Text style={styles.fourthEmojiText}>4</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      ) : (
+        <View style={styles.boxChallenge}>
+          {/* Render standard challenge template */}
+          <View style={styles.boxAchievement}>
+            <Image style={styles.imgAchievement} source={require('../assets/icons/achievementIcon.png')}></Image>
+            <Text style={styles.textAchievement}>Achievement</Text>
+          </View>
+          <TouchableOpacity onPress={handleImagePress}>
+            <Image style={styles.imgUserProof} source={{ uri: challenge.uploadedImages[currentImageIndex] }}></Image>
+          </TouchableOpacity>
+          <View style={styles.circlesContainer}>
+            {challenge.uploadedImages.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.circle,
+                  { backgroundColor: index === currentImageIndex ? '#6CC2FF' : '#C7E6FC' }
+                ]}
+              />
+            ))}
+          </View>
+          <View style={styles.boxUserText}>
+            <Text style={styles.textUserChallenge}>
+              <Text style={styles.userNameText}>{challenge.userId.username}</Text> did the challenge <Text style={styles.userChallengeText}>"{challenge.challengeId.title}"</Text>
+            </Text>
+          </View>
+          <View style={styles.boxEmojis}>
+            <View style={styles.boxEmoji1}>
+              <TouchableOpacity>
+                <Image style={styles.firstEmoji} source={require('../assets/icons/firstEmoji.png')}></Image>
+              </TouchableOpacity>
+              <View style={styles.boxEmo1}>
+                <Text style={styles.firstEmojiText}>1</Text>
+              </View>
+            </View>
+            <View style={styles.boxEmoji2}>
+              <TouchableOpacity>
+                <Image style={styles.secondEmoji} source={require('../assets/icons/secondEmoji.png')}></Image>
+              </TouchableOpacity>
+              <View style={styles.boxEmo2}>
+                <Text style={styles.secondEmojiText}>2</Text>
+              </View>
+            </View> 
+            <View style={styles.boxEmoji3}>
+              <TouchableOpacity>
+                <Image style={styles.thirdEmoji} source={require('../assets/icons/thirdEmoji.png')}></Image>
+              </TouchableOpacity>
+              <View style={styles.boxEmo3}>
+                <Text style={styles.thirdEmojiText}>3</Text>
+              </View>
+            </View>
+            <View style={styles.boxEmoji4}>
+              <TouchableOpacity>
+                <Image style={styles.fourthEmoji} source={require('../assets/icons/fourthEmoji.png')}></Image>
+              </TouchableOpacity>
+              <View style={styles.boxEmo4}>
+                <Text style={styles.fourthEmojiText}>4</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -179,19 +312,16 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "70%",
     display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "left",
+    // justifyContent: "space-between",
+    // alignItems: "flex-end",
     padding: 8,
     marginTop: 20,
   },
-
   profileImg: {
     width: 50,
     height: 50,
     borderRadius: 50,
-
   },
-
   boxChoice: {
     display: "flex",
     flexDirection: "column",
@@ -202,46 +332,55 @@ const styles = StyleSheet.create({
     width: 50,
     height: 100,
   },
-
   acceptIcon: {
     width: 44,
     height: 44,
-    marginBottom: 2
-    
+    marginBottom: 2,
   },
-
   rejectIcon: {
     width: 44,
     height: 44,
-    marginTop: 2
+    marginTop: 2,
   },
-
   profileImgUser: {
     display: "flex",
     flexDirection: "column",
     height: 160,
     justifyContent: "space-between",
+    marginRight: 10,
   },
-
   boxChallenge: {
     width: 240,
-    height: 284,
+    height: 320, // increased height to accommodate circles
     backgroundColor: "#F2F2F2",
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 15,
     display: "flex",
     alignItems: "center",
-
+    
   },
-
   challengeContainer: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 300,
+    // alignItems: "flex-start",
+    // alignContent: "flex-end",
+    width: 240,
     marginBottom: 14,
     marginTop: 14,
+    borderBottomRightRadius: 15,
+    borderBottomLeftRadius: 15,
+  },
+
+  alignRight: {
+    alignSelf: 'flex-end',
+    marginLeft: "auto",
+  },
+
+  alignLeft: {
+    alignSelf: 'flex-start',
+    marginRight: "auto",
   },
 
   boxAchievement: {
@@ -257,20 +396,16 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginTop: 12,
   },
-
   imgAchievement: {
     width: 20,
     height: 20,
     marginRight: 8,
   },
-
   textAchievement: {
     color: "#1C1B1B",
     fontSize: 14,
     fontFamily: "AzoSans-Bold",
-
   },
-
   imgUserProof: {
     width: 200,
     height: 130,
@@ -278,7 +413,18 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 6,
   },
-
+  circlesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  circle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 4,
+  },
   boxUserText: {
     width: 200,
     height: 40,
@@ -286,25 +432,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   textUserChallenge: {
     color: "#1C1B1B",
     fontSize: 14,
     fontFamily: "AzoSans-regular",
   },
-
   userNameText: {
     color: "#1C1B1B",
     fontSize: 14,
     fontFamily: "AzoSans-Bold",
   },
-
   userChallengeText: {
     color: "#1C1B1B",
     fontSize: 14,
     fontFamily: "AzoSans-regular",
   },
-
   boxEmojis: {
     display: "flex",
     flexDirection: "row",
@@ -314,57 +456,46 @@ const styles = StyleSheet.create({
     marginTop: 16,
     height: 20,
   },
-
   firstEmoji: {
     width: 21,
     height: 20,
   },
-
   firstEmojiText: {
     color: "#1C1B1B",
     fontSize: 14,
     fontFamily: "AzoSans-Bold",
   },
-
   boxEmoji1: {
     display: "flex",
     flexDirection: "row",
-    
   },
-
   boxEmoji2: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
   },
-
   secondEmoji: {
     width: 18,
     height: 23,
   },
-
   secondEmojiText: {
     color: "#1C1B1B",
     fontSize: 14,
     fontFamily: "AzoSans-Bold",
   },
-
   boxEmoji3: {
     display: "flex",
     flexDirection: "row",
   },
-
   thirdEmoji: {
     width: 21,
     height: 27,
   },
-
   thirdEmojiText: {
     color: "#1C1B1B",
     fontSize: 14,
     fontFamily: "AzoSans-Bold",
   },
-
   boxEmoji4: {
     display: "flex",
     flexDirection: "row",
@@ -374,35 +505,29 @@ const styles = StyleSheet.create({
     width: 14,
     height: 24,
   },
-
   fourthEmojiText: {
     color: "#1C1B1B",
     fontSize: 14,
     fontFamily: "AzoSans-Bold",
   },
-
-
   boxEmo1: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 4,
   },
-
   boxEmo2: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 4,
   },
-
   boxEmo3: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 4,
   },
-
   boxEmo4: {
     display: "flex",
     justifyContent: "center",
@@ -410,6 +535,18 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
 
+  completedChallenge: {
+    // backgroundColor: '#79ECEC',
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 0,
+
+  },
+
+  // containerFeed: {
+  //   display: 'flex',
+  //   alignItems: "flex-end",
+  //   width: 390,
+  // }
 });
 
 export default NewsfeedGymfeed;
