@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Alert, StyleSheet } from 'react-native';
 import { IPADRESS, prod, render } from '../config';
 import { useNavigation } from '@react-navigation/native';
@@ -7,15 +7,25 @@ import CustomButton from './button';
 import theme from '../theme';
 
 const LoginForm = ({ onSubmit }) => {
-  const [identifier, setIdentifier] = useState(''); // Combineert e-mail en gebruikersnaam in één veld
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [inputKey, setInputKey] = useState(0);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    // Forceer her-rendering na initiale render
+    const timer = setTimeout(() => {
+      setInputKey(prevKey => prevKey + 1);
+    }, 100); // Korte vertraging
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const _storeData = async (userData) => {
     try {
       await AsyncStorage.setItem(
-        'userData', // Key
-        JSON.stringify(userData) // Store user data received from server response
+        'userData',
+        JSON.stringify(userData)
       );
       console.log('Login data saved successfully');
       navigation.navigate('challenges');
@@ -28,30 +38,30 @@ const LoginForm = ({ onSubmit }) => {
   const handleLogin = async () => {
     console.log(prod);
     let url;
-      if (prod) {
-        url = `${render}/api/v1/users/login`
-      }
-      else {
-        url = `http:/${IPADRESS}:3000/api/v1/users/login`
-      }
+    if (prod) {
+      url = `${render}/api/v1/users/login`;
+    } else {
+      url = `http:/${IPADRESS}:3000/api/v1/users/login`;
+    }
 
     try {
-      // Fetch request to login
       console.log(url);
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ identifier: identifier, password: password }),
+        body: JSON.stringify({ identifier, password }),
       });
       if (response.ok) {
-        // Voer een callbackfunctie uit die is doorgegeven aan onSubmit
         const data = await response.json();
         console.log(data.data.user);
         console.log("Login successful");
         _storeData(data.data.user);
         onSubmit();
+
+        setIdentifier('');
+        setPassword('');
       } else {
         const errorData = await response.json();
         Alert.alert('Error', errorData.message);
@@ -66,13 +76,15 @@ const LoginForm = ({ onSubmit }) => {
   return (
     <View style={styles.container}>
       <TextInput
+        key={`${inputKey}-identifier`}
         style={styles.input}
         placeholder="Email or Username"
         value={identifier}
         onChangeText={setIdentifier}
-        keyboardType="default" // Verandert naar default zodat zowel e-mail als username ingevoerd kan worden
+        keyboardType="default"
       />
       <TextInput
+        key={`${inputKey}-password`}
         style={styles.input}
         placeholder="Password"
         value={password}
