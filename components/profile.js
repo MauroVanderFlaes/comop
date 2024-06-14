@@ -8,6 +8,7 @@ import Logo from "./logo";
 import theme from "../theme";
 import UserGreeting from "./userGreeting";
 import * as ImagePicker from 'expo-image-picker';
+import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_PRESET } from '../config';
 
 const Profile = () => {
     const navigation = useNavigation();
@@ -72,8 +73,18 @@ const Profile = () => {
     }, [userData, image]);
 
     const fetchProfileImage = async (userId) => {
+
+        console.log(prod);
+        let url;
+        if (prod) {
+            url = `${render}/api/v1/users/profileImg/${userId}`;
+        } else {
+            url = `http:/${IPADRESS}:3000/api/v1/users/profileImg/${userId}`;
+        }
+
         try {
-            const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`);
+            console.log(url);
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Failed to fetch profile image: ${response.statusText}`);
             }
@@ -136,9 +147,18 @@ const Profile = () => {
     };
 
     const storeImage = async (imgUrl) => {
+
+        console.log(prod);
+        let url;
+        if (prod) {
+            url = `${render}/api/v1/users/profileImg/${userId}`;
+        } else {
+            url = `http:/${IPADRESS}:3000/api/v1/users/profileImg/${userId}`;
+        }
+
         try {
             const userId = userData._id;
-            const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`, {
+            const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ imgUrl }),
@@ -165,21 +185,21 @@ const Profile = () => {
                             <Text style={theme.textStyles.customSubtitle}>What a progress you’ve made!</Text>
                         </View>
                         <View style={styles.contain}>
-                        {userData && (
-                    <>
-                        <View style={styles.containerUpload}>
-                        <TouchableOpacity onPress={selectImage}>
-                            <Image
-                                source={image ? { uri: image } : require("../assets/noProfile.png")}
-                                style={styles.image}
-                            />
-                        </TouchableOpacity>
+                            {userData && (
+                                <>
+                                    <View style={styles.containerUpload}>
+                                        <TouchableOpacity onPress={selectImage}>
+                                            <Image
+                                                source={image ? { uri: image } : require("../assets/noProfile.png")}
+                                                style={styles.image}
+                                            />
+                                        </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.editButton} onPress={buttonOnPress}>
-                                <Image
-                                    source={require("../assets/upload.png")}
-                                    style={{ width: 30, height: 30, position: "absolute", top: 25, left: -40 }}
-                                />
+                                        <TouchableOpacity style={styles.editButton} onPress={buttonOnPress}>
+                                            <Image
+                                                source={require("../assets/upload.png")}
+                                                style={{ width: 30, height: 30, position: "absolute", top: 25, left: -40 }}
+                                            />
 
                                         </TouchableOpacity>
                                     </View>
