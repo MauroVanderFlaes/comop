@@ -8,8 +8,15 @@ import Logo from "./logo";
 import theme from "../theme";
 import UserGreeting from "./userGreeting";
 import * as ImagePicker from 'expo-image-picker';
+import { CLOUDINARY_URL, CLOUDINARY_PRESET, CLOUDINARY_CLOUD_NAME } from '../config';
+
 
 const Profile = () => {
+
+    const url = CLOUDINARY_URL;
+    const preset = CLOUDINARY_PRESET;
+    const cloudName = CLOUDINARY_CLOUD_NAME;
+
     const navigation = useNavigation();
     const [userData, setUserData] = useState(null);
     const [credits, setCredits] = useState(null);
