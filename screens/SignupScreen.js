@@ -36,6 +36,7 @@ export default SignupScreen;
 const styles = {
   title: {
     ...theme.textStyles.customTitle,
+    marginTop: 20,
   },
   logo: { 
     width: 140, 
@@ -46,6 +47,7 @@ const styles = {
 
   text: {
     ...theme.textStyles.customText,
+    marginTop: 16,
   },
 
   container: {

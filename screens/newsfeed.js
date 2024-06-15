@@ -84,23 +84,25 @@ const Newsfeed = () => {
                                 {selectedOption === "Newsfeed" ? (
                                     <View style={styles.section}>
                                         <Text style={styles.contentText}>Gym members</Text>
-                                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                                            <View style={styles.memberContainer}>
-                                                {(gymMembers?.length ?? 0) > 0 ? (
-                                                    gymMembers.map(member => (
-                                                        <View key={member._id} style={styles.member}>
-                                                            <Image
-                                                                source={{ uri: member.imgUrl }}
-                                                                style={styles.memberImage}
-                                                            />
-                                                            <Text style={styles.username}>{member.username}</Text>
-                                                        </View>
-                                                    ))
-                                                ) : (
-                                                    <Text>No gym members available</Text>
-                                                )}
-                                            </View>
-                                        </ScrollView>
+                                        <View>
+                                            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.membersScroll}>
+                                                <View style={styles.memberContainer}>
+                                                    {(gymMembers?.length ?? 0) > 0 ? (
+                                                        gymMembers.map(member => (
+                                                            <View key={member._id} style={styles.member}>
+                                                                <Image
+                                                                    source={{ uri: member.imgUrl }}
+                                                                    style={styles.memberImage}
+                                                                />
+                                                                <Text style={styles.username}>{member.username}</Text>
+                                                            </View>
+                                                        ))
+                                                    ) : (
+                                                        <Text>No gym members available</Text>
+                                                    )}
+                                                </View>
+                                            </ScrollView>
+                                        </View>
                                         <View style={styles.containerFeed}>
                                             <Text style={styles.contentText}>Gymfeed</Text>
                                             <PanGestureHandler onGestureEvent={handleSwipe}>
@@ -154,57 +156,79 @@ const Newsfeed = () => {
                                             </View>
                                             <View style={styles.leaderboardList}>
                                                 <View style={styles.userFirst}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naamFirst}>Username</Text>
                                                     <Text style={styles.challengesFirst}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.userSecond}>
-                                                    <Text style={styles.number}>2</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>2</Text>
+                                                    </View>
                                                     <Text style={styles.naamSecond}>Username</Text>
                                                     <Text style={styles.challengesSecond}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.userThirth}>
-                                                    <Text style={styles.number}>3</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>3</Text>
+                                                    </View>
                                                     <Text style={styles.naamThirth}>Username</Text>
                                                     <Text style={styles.challengesThirth}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.user}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naam}>Username</Text>
                                                     <Text style={styles.challenges}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.user}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naam}>Username</Text>
                                                     <Text style={styles.challenges}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.user}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naam}>Username</Text>
                                                     <Text style={styles.challenges}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.user}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naam}>Username</Text>
                                                     <Text style={styles.challenges}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.user}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naam}>Username</Text>
                                                     <Text style={styles.challenges}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.user}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naam}>Username</Text>
                                                     <Text style={styles.challenges}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.user}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naam}>Username</Text>
                                                     <Text style={styles.challenges}>AANTAL challenges</Text>
                                                 </View>
                                                 <View style={styles.user}>
-                                                    <Text style={styles.number}>1</Text>
+                                                    <View style={styles.boxNumbers}>
+                                                        <Text style={styles.number}>1</Text>
+                                                    </View>
                                                     <Text style={styles.naam}>Username</Text>
                                                     <Text style={styles.challenges}>AANTAL challenges</Text>
                                                 </View>
@@ -243,17 +267,18 @@ const styles = StyleSheet.create({
     },
 
     greetingContainer: {
-        marginTop: 140,
+        marginTop: 100,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
-        marginBottom: 20,
+        // marginBottom: 20,
+        marginLeft: 20,
     },
 
     contain: {
         display: "flex",
         alignItems: "flex-center",
-        marginTop: 20
+        // marginTop: 20
     },
 
     content: {
@@ -290,6 +315,7 @@ const styles = StyleSheet.create({
     },
     containerFeed: {
         marginTop: 24,
+
     },
     feedContainer: {
         width: "100%",
@@ -331,8 +357,8 @@ const styles = StyleSheet.create({
     },
 
     league: {
-        width: 80,
-        height: 80,
+        width: 65,
+        height: 65,
         borderRadius: 50,
         marginRight: 10,
     },
@@ -413,8 +439,8 @@ const styles = StyleSheet.create({
     },
 
     placeImage3: {
-        width: 64,
-        height: 64,
+        width: 60,
+        height: 60,
         borderRadius: 50,
     },
 
@@ -438,7 +464,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: theme.colors.orange_dark,
         paddingHorizontal: 10,
-        paddingVertical: 10,
+        paddingVertical: 8,
         borderRadius: 50,
     },
 
@@ -525,9 +551,9 @@ const styles = StyleSheet.create({
         ...theme.textStyles.customTitle,
         fontSize: 20,
         backgroundColor: theme.colors.offwhite,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 50,
+        // paddingHorizontal: 20,
+        // paddingVertical: 10,
+        // borderRadius: 50,
     },
 
     naam: {
@@ -541,7 +567,18 @@ const styles = StyleSheet.create({
         ...theme.textStyles.customDetail,
         fontSize: 14,
         paddingRight: 15,
+    },
+
+    boxNumbers: {
+        borderRadius: 50,
+        backgroundColor: theme.colors.offwhite,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: 40,
+        height: 40,
     }
+    
 });
 
 export default Newsfeed;
