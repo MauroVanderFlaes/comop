@@ -85,23 +85,23 @@ const Newsfeed = () => {
                                     <View style={styles.section}>
                                         <Text style={styles.contentText}>Gym members</Text>
                                         <View>
-                                            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.membersScroll}>
-                                                <View style={styles.memberContainer}>
-                                                    {(gymMembers?.length ?? 0) > 0 ? (
-                                                        gymMembers.map(member => (
-                                                            <View key={member._id} style={styles.member}>
-                                                                <Image
-                                                                    source={{ uri: member.imgUrl }}
-                                                                    style={styles.memberImage}
-                                                                />
-                                                                <Text style={styles.username}>{member.username}</Text>
-                                                            </View>
-                                                        ))
-                                                    ) : (
-                                                        <Text>No gym members available</Text>
-                                                    )}
-                                                </View>
-                                            </ScrollView>
+                                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.membersScroll}>
+    <View style={styles.memberContainer}>
+        {(gymMembers?.length ?? 0) > 0 ? (
+            gymMembers.map(member => (
+                <View key={member._id} style={styles.member}>
+                    <Image
+                        source={member.imgUrl ? { uri: member.imgUrl } : require("../assets/noProfile.png")}
+                        style={styles.memberImage}
+                    />
+                    <Text style={styles.username}>{member.username}</Text>
+                </View>
+            ))
+        ) : (
+            <Text>No gym members available</Text>
+        )}
+    </View>
+</ScrollView>
                                         </View>
                                         <View style={styles.containerFeed}>
                                             <Text style={styles.contentText}>Gymfeed</Text>
