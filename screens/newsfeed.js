@@ -271,8 +271,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
-        // marginBottom: 20,
+        marginBottom: 20,
         marginLeft: 20,
+        marginRight: 20,
     },
 
     contain: {

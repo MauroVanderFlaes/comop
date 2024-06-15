@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const NewsfeedGymfeed = () => {
   const navigation = useNavigation();
   const [challenges, setChallenges] = useState([]);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState(null);  // initialize as null to check for loading state
 
   const handleSwipeDown = ({ nativeEvent }) => {
     if (nativeEvent.translationY > 50) {
@@ -20,12 +20,7 @@ const NewsfeedGymfeed = () => {
     }
   };
 
-  useEffect(() => {
-    getGymfeedChallenges();
-  }, []);
-
-
-  // get async storage
+  // get async storage and then fetch challenges
   useEffect(() => {
     const retrieveUserData = async () => {
       try {
@@ -42,6 +37,11 @@ const NewsfeedGymfeed = () => {
     retrieveUserData();
   }, []);
 
+  useEffect(() => {
+    if (userData) {
+      getGymfeedChallenges();
+    }
+  }, [userData]);
 
   const getGymfeedChallenges = async () => {
     let url;
@@ -59,15 +59,19 @@ const NewsfeedGymfeed = () => {
         },
       });
       const data = await response.json();
-
-      const completedChallenges = data.data.filter(challenge => !challenge.skipped);
-      console.log(completedChallenges);
+      const gymId = userData.gymId;
+      console.log("userId", userData._id);
+      console.log("gymId", gymId);
+      
+      const completedChallenges = data.data.filter(challenge => 
+        !challenge.skipped && challenge.userId.gymId === gymId
+      );
+      console.log("completed challenges ", completedChallenges);
       setChallenges(completedChallenges);
     } catch (error) {
       console.error(error);
     }
   };
-  
 
   return (
     <PanGestureHandler onGestureEvent={handleSwipeDown}>
@@ -375,6 +379,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     marginBottom: 20,
+    marginLeft: 20,
+    marginRight: 20,
   },
   feedContainer: {
     width: "100%",
