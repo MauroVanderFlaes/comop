@@ -65,7 +65,7 @@ const ChallengesCategoryOne = () => {
 
         const fetchCompletedChallenges = async () => {
             if (!userId) return; // If userId is not set yet, do not proceed
-
+            console.log("Fetching completed challenges for user:", userId);
             let url;
             if (prod) {
                 url = `${render}/api/v1/gymfeed/${userId}`;

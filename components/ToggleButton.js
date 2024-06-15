@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.offblack,
         height: 50,
         borderWidth: 4,
-        marginLeft: 60,
-        marginRight: 60,
+        marginLeft: 20,
+        marginRight: 20,
     },
     button: {
         flex: 1,
