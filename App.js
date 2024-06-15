@@ -35,6 +35,7 @@ import FitpassInfo from './screens/fitpassInfo';
 import FitpassMyRewards from './screens/fitpassMyRewards';
 import FitpassMyReward from './screens/fitpassMyReward';
 import FitpassReward from './screens/fitpassReward';
+import LoadingScreen from './screens/loadingScreen';
 
 const Stack = createStackNavigator();
 
@@ -69,6 +70,7 @@ export default function App() {
           <Stack.Screen name="challengesImage" component={ChallengesImage} />
           <Stack.Screen name="challengesProof" component={ChallengesProof} />
           <Stack.Screen name="challengesFinish" component={ChallengesFinish} />
+          <Stack.Screen name="loadingScreen" component={LoadingScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
