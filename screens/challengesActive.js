@@ -181,9 +181,10 @@ const styles = StyleSheet.create({
 
   },
   cancelButtonText: {
+    
+    color: theme.colors.offblack,
+    ...theme.textStyles.customTitle,
     fontSize: 16,
-    color: '#1C1B1B',
-    fontFamily: 'AzoSans-Bold',
   },
   challengeImg: {
     width: 350,
@@ -214,24 +215,23 @@ const styles = StyleSheet.create({
   verticalText: {
     textAlign: 'center',
     width: 223,
+    ...theme.textStyles.customTitle,
     fontSize: 20,
     color: '#1C1B1B',
-    fontWeight: 'bold',
-    fontFamily: 'AzoSans-bold',
   },
   challengeDescription: {
     width: 350,
+    ...theme.textStyles.customText,
     fontSize: 16,
     color: '#1C1B1B',
     textAlign: 'center',
-    fontFamily: 'AzoSans-regular',
     marginBottom: 10,
   },
   
   challengeTime: {
+    ...theme.textStyles.customText,
     fontSize: 16,
     color: '#f2f2f2',
-    fontFamily: 'AzoSans-regular',
   },
   boxCredits: {
     marginTop: 48,
@@ -239,8 +239,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textCredits: {
-    fontFamily: 'AzoSans-regular',
-    fontWeight: 'bold',
+    ...theme.textStyles.customTitle,
     fontSize: 20,
   },
   leftImageContainer: {
@@ -273,9 +272,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   completingText: {
+    ...theme.textStyles.customSubtitle,
     fontSize: 20,
     color: '#1C1B1B',
-    fontFamily: 'AzoSans-Bold',
   },
 
   imgBox: {
@@ -316,8 +315,8 @@ const styles = StyleSheet.create({
 
     textButton: {
         color: '#F2F2F2',
+        ...theme.textStyles.customSubtitle,
         fontSize: 16,
-        fontFamily: 'AzoSans-bold',
     },
 
     completed: {
@@ -346,9 +345,9 @@ const styles = StyleSheet.create({
     },
     
     warningText: {
+      ...theme.textStyles.customText,
         fontSize: 16,
         color: '#1C1B1B',
-        fontFamily: 'AzoSans-regular',
         textAlign: 'center',
     },
 

@@ -106,20 +106,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   creditsText: {
+    ...theme.textStyles.customText,
     fontSize: 18,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-regular",
   },
   creditsAmount: {
+    ...theme.textStyles.customTitle,
     fontSize: 24,
     color: "#80F075",
-    fontFamily: "AzoSans-bold",
     marginVertical: 10,
   },
   feedText: {
+    ...theme.textStyles.customText,
     fontSize: 16,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-regular",
     textAlign: "center",
     marginHorizontal: 40,
     marginVertical: 20,
@@ -134,9 +134,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   finishButtonText: {
+    ...theme.textStyles.customSubtitle,
     color: "#F2F2F2",
     fontSize: 16,
-    fontFamily: "AzoSans-bold",
   },
 });
 

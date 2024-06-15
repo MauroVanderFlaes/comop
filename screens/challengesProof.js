@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
 
   circleOneText: {
     color: "#1C1B1B",
-    fontFamily: "AzoSans-Bold",
+    ...theme.textStyles.customTitle,
     fontSize: 14,
   },
 
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
 
   circleTwoText: {
     color: "#1C1B1B",
-    fontFamily: "AzoSans-Bold",
+    ...theme.textStyles.customTitle,
     fontSize: 14,
   },
 
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
 
   circleThreeText: {
     color: "#1C1B1B",
-    fontFamily: "AzoSans-Bold",
+    ...theme.textStyles.customTitle,
     fontSize: 14,
   },
 
@@ -547,44 +547,44 @@ const styles = StyleSheet.create({
   },
 
   firstPic: {
-    fontSize: 16,
+    ...theme.textStyles.customTitle,
+    fontSize: 17,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-regular",
     marginBottom: 4,
   },
 
   firstPicText: {
-    fontSize: 16,
+    ...theme.textStyles.customText,
+    fontSize: 20,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-bold",
     marginBottom: 4,
   },
 
   secondPic: {
-    fontSize: 16,
+    ...theme.textStyles.customTitle,
+    fontSize: 17,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-regular",
     marginBottom: 4,
   },
 
   secondPicText: {
-    fontSize: 16,
+    ...theme.textStyles.customText,
+    fontSize: 20,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-bold",
     marginBottom: 4,
   },
 
   thirdPic: {
-    fontSize: 16,
+    ...theme.textStyles.customTitle,
+    fontSize: 17,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-regular",
     marginBottom: 4,
   },
 
   thirdPicText: {
-    fontSize: 16,
+    ...theme.textStyles.customText,
+    fontSize: 20,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-bold",
     marginBottom: 4,
   },
 
@@ -599,9 +599,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   cancelButtonText: {
+    ...theme.textStyles.customTitle,
     fontSize: 16,
     color: "#1C1B1B",
-    fontFamily: "AzoSans-Bold",
   },
   challengeImg: {
     width: 200,
@@ -633,10 +633,10 @@ const styles = StyleSheet.create({
 
   challengeDescription: {
     width: 350,
+    ...theme.textStyles.customText,
     fontSize: 16,
     color: "#1C1B1B",
     textAlign: "center",
-    fontFamily: "AzoSans-regular",
     marginBottom: 10,
   },
 
@@ -661,7 +661,8 @@ const styles = StyleSheet.create({
   },
 
   nextButton: {
-    width: 242,
+    width: "auto",
+    paddingHorizontal: 20,
     height: 48,
     backgroundColor: "#1C1B1B",
     borderRadius: 24,
@@ -673,14 +674,14 @@ const styles = StyleSheet.create({
 
   nextText: {
     color: "#F2F2F2",
+    ...theme.textStyles.customSubtitle,
     fontSize: 16,
-    fontFamily: "AzoSans-bold",
   },
 
   skipText: {
     color: "#1C1B1B",
+    ...theme.textStyles.customSubtitle,
     fontSize: 16,
-    fontFamily: "AzoSans-bold",
     marginTop: 20,
   },
 

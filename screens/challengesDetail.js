@@ -167,10 +167,9 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '270deg' }],
         textAlign: 'center',
         width: 223,
-        fontSize: 20,
         color: '#1C1B1B',
-        fontWeight: 'bold',
-        fontFamily: 'AzoSans-bold',
+        ...theme.textStyles.customTitle,
+        fontSize: 20,
     },
 
     titleBox: {
@@ -179,11 +178,12 @@ const styles = StyleSheet.create({
 
     challengeDescription: {
         width: 350,
-        fontSize: 16,
+        
         color: '#1C1B1B',
         textAlign: 'center',
-        fontFamily: 'AzoSans-regular',
+        ...theme.textStyles.customText,
         marginBottom: 10,
+        fontSize: 16,
     },
 
     hrsBox: {
@@ -197,16 +197,14 @@ const styles = StyleSheet.create({
     },
 
     challengeTime: {
-        fontSize: 16,
         color: '#f2f2f2',
-        fontWeight: 'regular',
-        fontFamily: 'AzoSans-regular',
+        ...theme.textStyles.customText,
     },
 
     customSubtitle: {
-        fontSize: 16,
         color: '#1C1B1B',
-        fontFamily: 'AzoSans-regular',
+        ...theme.textStyles.customSubtitle,
+        fontSize: 16,
     },
 
     boxCredits: {
@@ -217,8 +215,7 @@ const styles = StyleSheet.create({
     },
 
     textCredits: {
-        fontFamily: 'AzoSans-regular',
-        fontWeight: 'bold',
+        ...theme.textStyles.customTitle,
         fontSize: 20,
     },
 
@@ -235,8 +232,8 @@ const styles = StyleSheet.create({
 
     buttonText: {
         color: '#F2F2F2',
+        ...theme.textStyles.customSubtitle,
         fontSize: 16,
-        fontFamily: 'AzoSans-bold',
     },
 
     ButtonContainer: {
