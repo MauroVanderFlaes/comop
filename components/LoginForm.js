@@ -9,17 +9,7 @@ import theme from '../theme';
 const LoginForm = ({ onSubmit }) => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const [inputKey, setInputKey] = useState(0);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    // Forceer her-rendering na initiale render
-    const timer = setTimeout(() => {
-      setInputKey(prevKey => prevKey + 1);
-    }, 100); // Korte vertraging
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const _storeData = async (userData) => {
     try {
@@ -76,7 +66,6 @@ const LoginForm = ({ onSubmit }) => {
   return (
     <View style={styles.container}>
       <TextInput
-        key={`${inputKey}-identifier`}
         style={styles.input}
         placeholder="Email or Username"
         value={identifier}
@@ -84,7 +73,6 @@ const LoginForm = ({ onSubmit }) => {
         keyboardType="default"
       />
       <TextInput
-        key={`${inputKey}-password`}
         style={styles.input}
         placeholder="Password"
         value={password}
