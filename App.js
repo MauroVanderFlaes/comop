@@ -31,6 +31,10 @@ import LeaderboardInfo from './screens/leaderboardInfo';
 import ProfileSettings from './screens/profileSettings';
 import About from './screens/about';
 import ChallengesFinish from './screens/challengesFinish';
+import FitpassInfo from './screens/fitpassInfo';
+import FitpassMyRewards from './screens/fitpassMyRewards';
+import FitpassMyReward from './screens/fitpassMyReward';
+import FitpassReward from './screens/fitpassReward';
 
 const Stack = createStackNavigator();
 
@@ -55,7 +59,10 @@ export default function App() {
           <Stack.Screen name="privacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="newsletter" component={Newsletter} />
           <Stack.Screen name="about" component={About} />
-          
+          <Stack.Screen name="fitpassReward" component={FitpassReward} />
+          <Stack.Screen name="fitpassInfo" component={FitpassInfo} />
+          <Stack.Screen name="fitpassMyRewards" component={FitpassMyRewards} />
+          <Stack.Screen name="fitpassMyReward" component={FitpassMyReward} />
           <Stack.Screen name="challengesDetails" component={ChallengesDetails} />
           <Stack.Screen name="challengesCountdown" component={ChallengesCountdown} />
           <Stack.Screen name="challengesActive" component={ChallengesActive} />

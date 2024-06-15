@@ -11,6 +11,7 @@ const Nav = () => {
     const isChallengesRoute = routeName.startsWith("challenges");
     const isNewsfeedRoute = routeName.startsWith("newsfeed");
     const isProfileRoute = routeName.startsWith("profile");
+    const isFitpassRoute = routeName.startsWith("fitpass");
 
     return (
         <View style={styles.nav}>
@@ -28,8 +29,8 @@ const Nav = () => {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("fitpass")}>
                 <Image
-                    style={[styles.icon, routeName === "fitpass" && styles.selectedIcon]}
-                    source={routeName === "fitpass" ? require("../assets/images/FitpassWhite.png") : require("../assets/images/FitpassDark.png")}
+                    style={[styles.icon, isFitpassRoute && styles.selectedIcon]}
+                    source={isFitpassRoute ? require("../assets/images/FitpassWhite.png") : require("../assets/images/FitpassDark.png")}
                 />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("profile")}>

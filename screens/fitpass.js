@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Nav from "../components/nav";
 import { IPADRESS, prod, render } from '../config';
 import Logo from "../components/logo";
@@ -11,6 +13,8 @@ const Fitpass = () => {
     const [userData, setUserData] = useState(null);
     const [credits, setCredits] = useState(null);
     const [error, setError] = useState(null);
+    const scrollViewRef = useRef(null);
+    const navigation = useNavigation();
 
     useEffect(() => {
         const retrieveUserData = async () => {
@@ -55,8 +59,20 @@ const Fitpass = () => {
         retrieveUserData();
     }, []);
 
+    useFocusEffect(
+        React.useCallback(() => {
+            if (scrollViewRef.current) {
+                scrollViewRef.current.scrollToEnd({ animated: false });
+            }
+        }, [])
+    );
+
     return (
         <View style={styles.fitpassStyle}>
+            <View style={styles.Icons}>
+                <TouchableOpacity onPress={() => navigation.navigate("fitpassInfo")}><Image source={require("../assets/icons/blackIconInfo.png")} style={styles.Icon}/></TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("fitpassMyRewards")}><Image source={require("../assets/icons/myRewards.png")} style={styles.Icon2}/></TouchableOpacity>
+            </View>
             <Logo />
             <View style={styles.boxFitpass}>
                 {error ? (
@@ -66,8 +82,94 @@ const Fitpass = () => {
                         {credits !== null ? `${credits} Credits` : "Loading..."}
                     </Text>
                 )}
-                <ScrollView>
-                    
+                <ScrollView ref={scrollViewRef}>
+                    <View style={styles.containers}>
+                        <View style={styles.container}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward9.png")}
+                                    style={styles.image8}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container2}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward8.png")}
+                                    style={styles.image7}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward7.png")}
+                                    style={styles.image6}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container2}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward6.png")}
+                                    style={styles.image5}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward5.png")}
+                                    style={styles.image4}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container2}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward4.png")}
+                                    style={styles.image4}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward3.png")}
+                                    style={styles.image3}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container2}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward2.png")}
+                                    style={styles.image2}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container}>
+                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
+                                <Image
+                                    source={require("../assets/icons/placeholderReward1.png")}
+                                    style={styles.image}
+                                />
+                                <View style={styles.circleBig}></View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={styles.start}>
+                        <View style={styles.circle}></View>
+                        <Text style={styles.Text}>Start</Text>
+                    </View>
                 </ScrollView>
             </View>
             <Nav />
@@ -80,6 +182,26 @@ const styles = {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+
+    Icons: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "90%",
+        //marginTop: -60,
+        marginBottom: 20,
+    },
+
+    Icon: {
+        width: 40,
+        height: 40,
+    },
+
+    Icon2: {
+        width: 40,
+        height: 52,
     },
 
     Text: {
@@ -97,6 +219,133 @@ const styles = {
         marginRight: 20,
         marginLeft: 20,
         padding: 10,
+    },
+
+    circle: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        backgroundColor: theme.colors.blue_light,
+    },
+
+    container: {
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "flex-start",
+        marginLeft: 20,
+    },
+
+    container2: {
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "flex-end",
+        marginRight: 20,
+    },
+
+    start: {
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    circleBig: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: theme.colors.blue_light,
+    },
+
+    reward: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    image: {
+        position: 'absolute',
+        width: 80, // Pas de afmetingen naar wens aan
+        height: 70, // Pas de afmetingen naar wens aan
+        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    image2: {
+        position: 'absolute',
+        width: 30,
+        height: 70, // Pas de afmetingen naar wens aan
+        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    image3: {
+        position: 'absolute',
+        width: 45,
+        height: 75, // Pas de afmetingen naar wens aan
+        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    image4: {
+        position: 'absolute',
+        width: 62,
+        height: 75, // Pas de afmetingen naar wens aan
+        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    image5: {
+        position: 'absolute',
+        width: 62,
+        height: 82, // Pas de afmetingen naar wens aan
+        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    image6: {
+        position: 'absolute',
+        width: 62,
+        height: 86, // Pas de afmetingen naar wens aan
+        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    image7: {
+        position: 'absolute',
+        width: 80,
+        height: 36, // Pas de afmetingen naar wens aan
+        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    image8: {
+        position: 'absolute',
+        width: 80,
+        height: 56, // Pas de afmetingen naar wens aan
+        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    circleBig: {
+        width: 120,
+        height: 120,
+        borderRadius: 80,
+        backgroundColor: theme.colors.offwhite,
     },
 };
 
