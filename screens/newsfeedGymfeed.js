@@ -501,8 +501,8 @@ const styles = StyleSheet.create({
   },
   textAchievement: {
     color: "#1C1B1B",
+    ...theme.textStyles.customTitle,
     fontSize: 14,
-    fontFamily: "AzoSans-Bold",
   },
   imgUserProof: {
     width: 200,
@@ -531,19 +531,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textUserChallenge: {
+    ...theme.textStyles.customText,
     color: "#1C1B1B",
     fontSize: 14,
-    fontFamily: "AzoSans-regular",
   },
   userNameText: {
+    ...theme.textStyles.customTitle,
     color: "#1C1B1B",
     fontSize: 14,
-    fontFamily: "AzoSans-Bold",
   },
   userChallengeText: {
+    ...theme.textStyles.customText,
     color: "#1C1B1B",
     fontSize: 14,
-    fontFamily: "AzoSans-regular",
   },
   boxEmojis: {
     display: "flex",
@@ -559,9 +559,9 @@ const styles = StyleSheet.create({
     height: 20,
   },
   firstEmojiText: {
+    ...theme.textStyles.customText,
     color: "#1C1B1B",
     fontSize: 14,
-    fontFamily: "AzoSans-Bold",
   },
   boxEmoji1: {
     display: "flex",
@@ -577,9 +577,9 @@ const styles = StyleSheet.create({
     height: 23,
   },
   secondEmojiText: {
+    ...theme.textStyles.customTitle,
     color: "#1C1B1B",
     fontSize: 14,
-    fontFamily: "AzoSans-Bold",
   },
   boxEmoji3: {
     display: "flex",
@@ -590,9 +590,9 @@ const styles = StyleSheet.create({
     height: 27,
   },
   thirdEmojiText: {
+    ...theme.textStyles.customTitle,
     color: "#1C1B1B",
     fontSize: 14,
-    fontFamily: "AzoSans-Bold",
   },
   boxEmoji4: {
     display: "flex",
@@ -604,9 +604,9 @@ const styles = StyleSheet.create({
     height: 24,
   },
   fourthEmojiText: {
+    ...theme.textStyles.customTitle,
     color: "#1C1B1B",
     fontSize: 14,
-    fontFamily: "AzoSans-Bold",
   },
   boxEmo1: {
     display: "flex",
