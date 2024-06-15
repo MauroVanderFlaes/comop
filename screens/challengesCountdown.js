@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from "../components/logo";
 import { useNavigation } from '@react-navigation/native';
+import theme from '../theme';
 
 const ChallengesCountdown = ({ route }) => {
   const { challenge } = route.params;
@@ -89,21 +90,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   challengeTitle: {
-    fontSize: 36,
     fontWeight: "bold",
     marginBottom: 10,
-    fontFamily: 'AzoSans-Bold'
+    ...theme.textStyles.customTitle,
+    fontSize: 36,
   },
   officiallyStarts: {
+    ...theme.textStyles.customSubtitle,
     fontSize: 18,
     marginBottom: 5,
-    fontFamily: 'AzoSans-Regular'
   },
   countdownNumber: {
+    ...theme.textStyles.customTitle,
     fontSize: 128,
-    fontWeight: "bold",
     marginTop: 100,
-    fontFamily: 'AzoSans-Bold'
   },
   leftImageContainer: {
     position: 'absolute',
@@ -126,9 +126,9 @@ const styles = StyleSheet.create({
     width: 216,
   },
   letsGetItText: {
+    ...theme.textStyles.customTitle,
     fontSize: 24,
     marginTop: 20,
-    fontFamily: 'AzoSans-bold'
   },
 });
 

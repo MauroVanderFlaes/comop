@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         color: "#1C1B1B",
         textAlign: "left",
-        fontWeight: "bold",
+        ...theme.textStyles.customTitle,
         fontSize: 20,
     },
 
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
 
     overlayTitle: {
         color: "#1C1B1B",
-        fontWeight: "bold",
+        ...theme.textStyles.customTitle,
         fontSize: 20,
         marginBottom: 20,
     },
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
     overlayBody: {
         color: "#1C1B1B",
         textAlign: "center",
+        ...theme.textStyles.customText,
         fontSize: 16,
         paddingLeft: 20,
         paddingRight: 20,

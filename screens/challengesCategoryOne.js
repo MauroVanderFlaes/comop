@@ -219,11 +219,13 @@ const styles = StyleSheet.create({
     },
     textBox1: {
         paddingLeft: 8,
-        fontFamily: "AzoSans-Light",
+        ...theme.textStyles.customText,
+        fontSize: 16,
     },
     textBox2: {
         paddingLeft: 8,
-        fontFamily: "AzoSans-Light",
+        ...theme.textStyles.customText,
+        fontSize: 16,
     },
     completeBox: {
         marginTop: 24,
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 15,
     },
     textComplete: {
-        fontFamily: "AzoSans-Regular",
+        ...theme.textStyles.customText,
         fontSize: 16,
     },
     boxAmount: {
@@ -292,20 +294,28 @@ const styles = StyleSheet.create({
         height: 100,
     },
     textDescription: {
-        fontFamily: "AzoSans-Regular",
+        ...theme.textStyles.customText,
         fontSize: 16,
-        paddingLeft: 8,
+        paddingLeft: 16,
         paddingRight: 8,
         paddingTop: 16,
+        marginTop: 10,
+        width: "90%",
     },
     challengeTitle: {
-        fontFamily: "AzoSans-Bold",
+        ...theme.textStyles.customTitle,
         fontSize: 16,
         paddingTop: 4,
+        paddingLeft: 10,
+        width: "60%",
+        height: "200%",
+        textAlign: "start",
     },
     challengeHrs: {
-        fontFamily: "AzoSans-Regular",
-        fontSize: 14,
+        ...theme.textStyles.customText,
+        fontSize: 13,
+        textAlign: "center",
+        textAlignVertical: "center",
     },
     boxHrs: {
         backgroundColor: "#FFB952",
@@ -322,7 +332,7 @@ const styles = StyleSheet.create({
     },
     completedText: {
         color: "#1C1B1B",
-        fontWeight: "bold",
+        ...theme.textStyles.customText,
         paddingLeft: 8,
         paddingTop: 8,
     }
