@@ -163,7 +163,12 @@ const Profile = () => {
 
     return (
         <View style={styles.profileStyle}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+                scrollEnabled={true}
+                nestedScrollEnabled={true}
+                style={{ width: "100%" }}
+                showsVerticalScrollIndicator={false}
+            >
                 <View style={styles.con}>
                     <Logo />
                     <View style={styles.container}>
@@ -268,15 +273,15 @@ const styles = {
     },
 
     greeting: {
-        marginLeft: 40,
+        marginLeft: 20,
         marginBottom: 20,
     },
 
     container: {
         display: "flex",
         width: "100%",
-        gap: 20,
-        marginTop: 150,
+        // gap: 20,
+        marginTop: 130,
         height: "100%",
 
     },
@@ -285,7 +290,7 @@ const styles = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 20,
+        // marginTop: 20,
     },
 
     header: {
@@ -324,12 +329,13 @@ const styles = {
         gap: 20,
         marginTop: 20,
         height: 125,
+        
     },
 
     box: {
         backgroundColor: theme.colors.green_dark,
         borderRadius: 15,
-        width: 165,
+        width: 160,
         height: 107,
     },
 

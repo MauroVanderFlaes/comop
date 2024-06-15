@@ -105,4 +105,8 @@ const styles = StyleSheet.create({
   container: {
     ...theme.containerStyles.containerCenter,
   },
+
+  button: {
+    marginTop: 12,
+  },
 });

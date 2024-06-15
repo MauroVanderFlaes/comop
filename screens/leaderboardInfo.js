@@ -8,7 +8,7 @@ import theme from "../theme";
 const LeaderboardInfo = () => {
     return (
         <View style={styles.container}>
-            <ArrowBack />
+            <ArrowBack style={styles.arrowBack} />
             <Logo />
             <View style={styles.content}>
                 <ScrollView>
@@ -59,9 +59,15 @@ const styles = StyleSheet.create({
 
     Text: {
         ...theme.textStyles.customText,
-        marginTop: 20,
+        marginTop: 28,
         marginLeft: 20,
         marginRight: 20,
+        marginBottom: 40,
+    },
+
+    arrowBack: {
+        top: 80,
+        left: 20,
     },
 
 });
