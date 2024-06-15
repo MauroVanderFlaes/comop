@@ -70,8 +70,8 @@ const Fitpass = () => {
     return (
         <View style={styles.fitpassStyle}>
             <View style={styles.Icons}>
-                <TouchableOpacity onPress={() => navigation.navigate("fitpassInfo")}><Image source={require("../assets/icons/blackIconInfo.png")} style={styles.Icon}/></TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("fitpassMyRewards")}><Image source={require("../assets/icons/myRewards.png")} style={styles.Icon2}/></TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("fitpassInfo")}><Image source={require("../assets/icons/blackIconInfo.png")} style={styles.Icon} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("fitpassMyRewards")}><Image source={require("../assets/icons/myRewards.png")} style={styles.Icon2} /></TouchableOpacity>
             </View>
             <Logo />
             <View style={styles.boxFitpass}>
@@ -93,6 +93,7 @@ const Fitpass = () => {
                                 <View style={styles.circleBig}></View>
                             </TouchableOpacity>
                         </View>
+
                         <View style={styles.container2}>
                             <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
                                 <Image
@@ -110,6 +111,9 @@ const Fitpass = () => {
                                 />
                                 <View style={styles.circleBig}></View>
                             </TouchableOpacity>
+                        </View>
+                        <View style={styles.rightImageContainer2}>
+                            <Image source={require('../assets/images/linesRightImg.png')} style={styles.rightImage} />
                         </View>
                         <View style={styles.container2}>
                             <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
@@ -129,6 +133,9 @@ const Fitpass = () => {
                                 <View style={styles.circleBig}></View>
                             </TouchableOpacity>
                         </View>
+                        <View style={styles.leftImageContainer1}>
+        <Image source={require('../assets/images/linesLeftImg.png')} style={styles.leftImage} />
+      </View>
                         <View style={styles.container2}>
                             <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
                                 <Image
@@ -155,6 +162,9 @@ const Fitpass = () => {
                                 />
                                 <View style={styles.circleBig}></View>
                             </TouchableOpacity>
+                        </View>
+                        <View style={styles.rightImageContainer1}>
+                            <Image source={require('../assets/images/linesRightImg.png')} style={styles.rightImage} />
                         </View>
                         <View style={styles.container}>
                             <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
@@ -226,6 +236,12 @@ const styles = {
         height: 50,
         borderRadius: 50,
         backgroundColor: theme.colors.blue_light,
+    },
+
+    containers: {
+        display: "flex",
+        justifyContent: "space-around",
+        gap: 20,
     },
 
     container: {
@@ -347,6 +363,38 @@ const styles = {
         borderRadius: 80,
         backgroundColor: theme.colors.offwhite,
     },
+
+    leftImageContainer1: {
+        position: 'absolute',
+        top: 720,
+        left: -80,
+        zIndex: 1,
+      },
+      leftImage: {
+        height: 56,
+        width: 160,
+      },
+
+    rightImageContainer1: {
+        position: 'absolute',
+        top: 1150,
+        right: -110,
+        zIndex: 1,
+    },
+
+    rightImageContainer2: {
+        position: 'absolute',
+        top: 320,
+        right: -110,
+        zIndex: 1,
+    },
+
+    rightImage: {
+        height: 40,
+        width: 216,
+    },
+
+
 };
 
 export default Fitpass;
