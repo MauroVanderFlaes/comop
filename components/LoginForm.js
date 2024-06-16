@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Alert, StyleSheet } from 'react-native';
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from './button';
@@ -40,6 +40,7 @@ const LoginForm = ({ onSubmit }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'comop-api-key': COMOP_API_KEY,
         },
         body: JSON.stringify({ identifier, password }),
       });
@@ -56,6 +57,7 @@ const LoginForm = ({ onSubmit }) => {
         const errorData = await response.json();
         Alert.alert('Error', errorData.message);
         console.log("Login failed:", errorData.message);
+    
       }
     } catch (error) {
       console.error('Error:', error);

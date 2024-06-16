@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
-import { IPADRESS, prod, render } from "../config";
+import { IPADRESS, prod, render, COMOP_API_KEY } from "../config";
 import { useNavigation } from "@react-navigation/native";
 import Nav from "../components/nav";
 import Logo from "../components/logo";
@@ -56,6 +56,7 @@ const Newsfeed = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          'comop-api-key': COMOP_API_KEY,
         },
       });
 
