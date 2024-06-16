@@ -9,7 +9,7 @@ import theme from "../theme";
 const FitpassInfo = () => {
     return (
         <View style={styles.container}>
-            <ArrowBack />
+            <ArrowBack style={styles.arrowBack} />
             <Logo />
             <View style={styles.content}>
                 <ScrollView>
@@ -68,6 +68,11 @@ const styles = StyleSheet.create({
         marginRight: 20,
         paddingBottom: 120,
     },
+
+    arrowBack: {
+        top: 80,
+        left: 20,
+    }
 
 });
 
