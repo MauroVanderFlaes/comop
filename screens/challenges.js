@@ -5,7 +5,7 @@ import Nav from "../components/nav";
 import Logo from "../components/logo";
 import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import ChallengesActive from "./challengesActive";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -32,6 +32,7 @@ const Challenges = () => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'comop-api-key': COMOP_API_KEY,
                 },
             });
     

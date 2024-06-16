@@ -5,7 +5,7 @@ import Logo from "../components/logo";
 import ArrowBack from "../components/arrowBack";
 import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -48,6 +48,7 @@ const ChallengesCategoryOne = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'comop-api-key': COMOP_API_KEY,
                     },
                 });
 
@@ -78,6 +79,7 @@ const ChallengesCategoryOne = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'comop-api-key': COMOP_API_KEY,
                     },
                 });
 

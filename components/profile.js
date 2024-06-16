@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, Alert, Pressable, ScrollView } from "react-native";
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native';
 import Nav from "./nav";
@@ -42,7 +42,7 @@ const Profile = () => {
         const fetchUserCredits = async (userId) => {
             try {
                 let url = prod ? `${render}/api/v1/users/credits/${userId}` : `http://${IPADRESS}:3000/api/v1/users/credits/${userId}`;
-                const response = await fetch(url);
+                const response = await fetch(url, { headers:{'comop-api-key': COMOP_API_KEY,} });
                 const result = await response.json();
                 if (response.ok) {
                     setCredits(result.data.credits);
@@ -57,7 +57,7 @@ const Profile = () => {
         const fetchCompletedChallenges = async (userId) => {
             try {
                 let url = prod ? `${render}/api/v1/gymfeed/${userId}` : `http://${IPADRESS}:3000/api/v1/gymfeed/${userId}`;
-                const response = await fetch(url);
+                const response = await fetch(url, { headers:{'comop-api-key': COMOP_API_KEY,} });
                 const result = await response.json();
                 if (response.ok) {
                     setCompletedChallenges(result.data.length);
@@ -80,7 +80,7 @@ const Profile = () => {
 
     const fetchProfileImage = async (userId) => {
         try {
-            const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`);
+            const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`, { headers:{'comop-api-key': COMOP_API_KEY,} });
             if (!response.ok) {
                 throw new Error(`Failed to fetch profile image: ${response.statusText}`);
             }
@@ -129,7 +129,7 @@ const Profile = () => {
         formData.append("upload_preset", CLOUDINARY_PRESET);
 
         try {
-            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: "POST", body: formData });
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: "POST", headers: {'comop-api-key': COMOP_API_KEY,}, body: formData });
             const imgData = await response.json();
             if (response.ok) {
                 return imgData.secure_url;
@@ -147,7 +147,7 @@ const Profile = () => {
             const userId = userData._id;
             const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", 'comop-api-key': COMOP_API_KEY, },
                 body: JSON.stringify({ imgUrl }),
             });
             if (response.ok) {

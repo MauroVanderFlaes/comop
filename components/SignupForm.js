@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Alert, Pressable, Text} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import CustomButton from './button';
 import theme from '../theme';
 import { useNavigation } from '@react-navigation/native';
@@ -52,10 +52,12 @@ const SignupForm = ({ onSubmit }) => {
     }
 
     try {
+
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'comop-api-key': COMOP_API_KEY,
         },
         body: JSON.stringify({ 
           username: username, 
@@ -79,6 +81,7 @@ const SignupForm = ({ onSubmit }) => {
         const errorData = await response.json();
         Alert.alert('Error', errorData.message);
         console.log("Signup failed:", errorData.message);
+        
       }
     } catch (error) {
       console.error('Error:', error);

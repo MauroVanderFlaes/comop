@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import UserGreeting from '../components/userGreeting';
 import theme from '../theme';
 import Nav from '../components/nav';
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChallengesActive = ({ route }) => {
@@ -55,6 +55,7 @@ const ChallengesActive = ({ route }) => {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'comop-api-key': COMOP_API_KEY,
         },
         body: JSON.stringify({ active: false }),
     })
@@ -86,6 +87,7 @@ const ChallengesActive = ({ route }) => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'comop-api-key': COMOP_API_KEY,
                     },
                 });
     

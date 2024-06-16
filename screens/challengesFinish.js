@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import theme from "../theme";
 import Nav from "../components/nav";
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 
 const ChallengesFinish = ({ route }) => {
   const { challenge } = route.params;
@@ -42,6 +42,7 @@ const ChallengesFinish = ({ route }) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'comop-api-key': COMOP_API_KEY,
             },
             body: JSON.stringify({ active: false }),
         });
