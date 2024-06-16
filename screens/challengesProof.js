@@ -286,10 +286,7 @@ const handleSkipButtonPress = async () => {
 
       <View style={styles.innerContainer}>
         <View style={styles.imgBox}>
-          <Image
-            source={require("../assets/images/stepsImg1.png")}
-            style={styles.challengeImg}
-          />
+          <Image source={require("../assets/images/stepsMiddle.png")} style={styles.challengeImg}></Image>
         </View>
 
         {renderSteps()}
