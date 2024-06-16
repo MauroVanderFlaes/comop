@@ -1,38 +1,79 @@
-import React, { useEffect, useState, useRef } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { View, Text, TouchableOpacity, Image, ScrollView, RefreshControl } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import Nav from "../components/nav";
 import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import Logo from "../components/logo";
 import theme from "../theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScrollView } from "react-native-gesture-handler";
 
 const Fitpass = () => {
     const [userData, setUserData] = useState(null);
     const [credits, setCredits] = useState(null);
     const [error, setError] = useState(null);
+    const [refreshing, setRefreshing] = useState(false);
     const scrollViewRef = useRef(null);
     const [rewards, setRewards] = useState([]); 
     const navigation = useNavigation();
 
-    useEffect(() => {
-        const retrieveUserData = async () => {
-            try {
-                const value = await AsyncStorage.getItem('userData');
-                if (value !== null) {
-                    const user = JSON.parse(value);
-                    console.log('User data retrieved:', user);
-                    setUserData(user);
-                    console.log('User ID:', user._id);
-                    fetchUserCredits(user._id);
-                    // Call fetchRewards after retrieving user data
-                    fetchRewards(user.gymId); // Assuming user.gymId is available
-                }
-            } catch (error) {
-                console.error('Error retrieving user data:', error);
+    const fetchUserCredits = useCallback(async (userId) => {
+        console.log('Fetching user credits for user ID:', userId);
+        try {
+            let url;
+            if (prod) {
+                url = `${render}/api/v1/users/credits/${userId}`;
+            } else {
+                url = `http://${IPADRESS}:3000/api/v1/users/credits/${userId}`;
             }
+
+            const response = await fetch(url);
+            const result = await response.json();
+            if (response.ok) {
+                setCredits(result.data.credits);
+            } else {
+                console.error('Failed to fetch credits:', result.message);
+                setError(result.message);
+            }
+        } catch (error) {
+            console.error('Error fetching user credits:', error);
+            setError('Error fetching user credits');
+        }
+    }, []);
+
+    const fetchRewards = useCallback(async (gymId) => {
+        try {
+            let url;
+            if (prod) {
+                url = `${render}/api/v1/rewards/${gymId}`;
+            } else {
+                url = `http://${IPADRESS}:3000/api/v1/rewards/${gymId}`;
+            }
+
+            const response = await fetch(url);
+            const result = await response.json();
+            if (response.ok) {
+                console.log('Fetched rewards:', result.data.rewards);
+                setRewards(result.data.rewards);
+            } else {
+                console.error('Failed to fetch rewards:', result.message);
+                setError(result.message);
+            }
+        } catch (error) {
+            console.error('Error fetching rewards:', error);
+            setError('Error fetching rewards');
+        }
+    }, []);
+
+    const retrieveUserData = useCallback(async () => {
+        try {
+            const value = await AsyncStorage.getItem('userData');
+            if (value !== null) {
+                const user = JSON.parse(value);
+                console.log('User data retrieved:', user);
+                setUserData(user);
+                console.log('User ID:', user._id);
+                await fetchUserCredits(user._id);
+                fetchRewards(user.gymId); // Assuming user.gymId is available
         };
 
         const fetchRewards = async (gymId) => {
@@ -89,18 +130,35 @@ const Fitpass = () => {
                 console.error('Error fetching user credits:', error);
                 setError('Error fetching user credits');
             }
-        };
+        } catch (error) {
+            console.error('Error retrieving user data:', error);
+        }
+    }, [fetchUserCredits, fetchRewards]);
 
+    useEffect(() => {
         retrieveUserData();
-    }, []); // Empty dependency array ensures it runs once on mount
+    }, [retrieveUserData]);
 
-    useFocusEffect(
-        React.useCallback(() => {
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            if (userData) {
+                fetchUserCredits(userData._id);
+            }
             if (scrollViewRef.current) {
                 scrollViewRef.current.scrollToEnd({ animated: false });
             }
-        }, [])
-    );
+        });
+
+        return unsubscribe;
+    }, [navigation, userData, fetchUserCredits]);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        if (userData) {
+            await fetchUserCredits(userData._id);
+        }
+        setRefreshing(false);
+    };
 
     return (
         <View style={styles.fitpassStyle}>
@@ -117,7 +175,12 @@ const Fitpass = () => {
                         {credits !== null ? `${credits} Credits` : "Loading..."}
                     </Text>
                 )}
-                <ScrollView ref={scrollViewRef}>
+                <ScrollView 
+                    ref={scrollViewRef}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
+                >
                     <View style={styles.containers}>
                         {rewards
                             .slice() // create a copy to avoid mutating state directly
@@ -125,7 +188,7 @@ const Fitpass = () => {
                             .map((reward, index) => (
                                 <View key={reward._id}>
                                     <View style={index % 2 === 0 ? styles.container : styles.container2}>
-                                        <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward", {reward})}>
+                                        <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward", { reward })}>
                                             <Image
                                                 source={{ uri: reward.imageUrl }}
                                                 style={styles.image}
@@ -275,76 +338,6 @@ const styles = {
         position: 'absolute',
         width: 120, // Pas de afmetingen naar wens aan
         height: 120, // Pas de afmetingen naar wens aan
-        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    image2: {
-        position: 'absolute',
-        width: 30,
-        height: 70, // Pas de afmetingen naar wens aan
-        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    image3: {
-        position: 'absolute',
-        width: 45,
-        height: 75, // Pas de afmetingen naar wens aan
-        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    image4: {
-        position: 'absolute',
-        width: 62,
-        height: 75, // Pas de afmetingen naar wens aan
-        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    image5: {
-        position: 'absolute',
-        width: 62,
-        height: 82, // Pas de afmetingen naar wens aan
-        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    image6: {
-        position: 'absolute',
-        width: 62,
-        height: 86, // Pas de afmetingen naar wens aan
-        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    image7: {
-        position: 'absolute',
-        width: 80,
-        height: 36, // Pas de afmetingen naar wens aan
-        zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    image8: {
-        position: 'absolute',
-        width: 80,
-        height: 56, // Pas de afmetingen naar wens aan
         zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
         display: 'flex',
         justifyContent: 'center',
