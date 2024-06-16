@@ -14,6 +14,7 @@ const Fitpass = () => {
     const [credits, setCredits] = useState(null);
     const [error, setError] = useState(null);
     const scrollViewRef = useRef(null);
+    const [rewards, setRewards] = useState([]); 
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -26,9 +27,35 @@ const Fitpass = () => {
                     setUserData(user);
                     console.log('User ID:', user._id);
                     fetchUserCredits(user._id);
+                    // Call fetchRewards after retrieving user data
+                    fetchRewards(user.gymId); // Assuming user.gymId is available
                 }
             } catch (error) {
                 console.error('Error retrieving user data:', error);
+            }
+        };
+
+        const fetchRewards = async (gymId) => {
+            try {
+                let url;
+                if (prod) {
+                    url = `${render}/api/v1/rewards/${gymId}`;
+                } else {
+                    url = `http://${IPADRESS}:3000/api/v1/rewards/${gymId}`;
+                }
+    
+                const response = await fetch(url);
+                const result = await response.json();
+                if (response.ok) {
+                    console.log('Fetched rewards:', result.data.rewards);
+                    setRewards(result.data.rewards);
+                } else {
+                    console.error('Failed to fetch rewards:', result.message);
+                    setError(result.message);
+                }
+            } catch (error) {
+                console.error('Error fetching rewards:', error);
+                setError('Error fetching rewards');
             }
         };
 
@@ -57,7 +84,7 @@ const Fitpass = () => {
         };
 
         retrieveUserData();
-    }, []);
+    }, []); // Empty dependency array ensures it runs once on mount
 
     useFocusEffect(
         React.useCallback(() => {
@@ -84,109 +111,28 @@ const Fitpass = () => {
                 )}
                 <ScrollView ref={scrollViewRef}>
                     <View style={styles.containers}>
-                        <View style={styles.container}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward9.png")}
-                                    style={styles.image8}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
+                        {rewards
+                            .slice() // create a copy to avoid mutating state directly
+                            .sort((a, b) => b.credits - a.credits) // sort by credits descending
+                            .map((reward, index) => (
+                                <View key={reward._id}>
+                                    <View style={index % 2 === 0 ? styles.container : styles.container2}>
+                                        <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward", {reward})}>
+                                            <Image
+                                                source={{ uri: reward.imageUrl }}
+                                                style={styles.image}
+                                            />
+                                            <View style={styles.circleBig}></View>
+                                        </TouchableOpacity>
+                                    </View>
+                                    {index < rewards.length - 1 && <View style={index % 2 === 0 ? styles.line3 : styles.line2} />}
+                                    {index === rewards.length - 1 && <View style={styles.line1} />}
+                                </View>
+                            ))}
+                        <View style={styles.start}>
+                            <View style={styles.circle}></View>
+                            <Text style={styles.Text}>Start</Text>
                         </View>
-                        <View style={styles.line3} />
-                        <View style={styles.container2}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward8.png")}
-                                    style={styles.image7}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.line2} />
-                        <View style={styles.container}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward7.png")}
-                                    style={styles.image6}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.rightImageContainer2}>
-                            <Image source={require('../assets/images/linesRightImg.png')} style={styles.rightImage} />
-                        </View>
-                        <View style={styles.line3} />
-                        <View style={styles.container2}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward6.png")}
-                                    style={styles.image5}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.line2} />
-                        <View style={styles.container}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward5.png")}
-                                    style={styles.image4}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.leftImageContainer1}>
-        <Image source={require('../assets/images/linesLeftImg.png')} style={styles.leftImage} />
-                        </View>
-                        <View style={styles.line3} />
-                        <View style={styles.container2}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward4.png")}
-                                    style={styles.image4}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.line2} />
-                        <View style={styles.container}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward3.png")}
-                                    style={styles.image3}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.line3} />
-                        <View style={styles.container2}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward2.png")}
-                                    style={styles.image2}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.rightImageContainer1}>
-                            <Image source={require('../assets/images/linesRightImg.png')} style={styles.rightImage} />
-                        </View>
-                        <View style={styles.line2} />
-                        <View style={styles.container}>
-                            <TouchableOpacity style={styles.reward} onPress={() => navigation.navigate("fitpassReward")}>
-                                <Image
-                                    source={require("../assets/icons/placeholderReward1.png")}
-                                    style={styles.image}
-                                />
-                                <View style={styles.circleBig}></View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.line1} />
-                    <View style={styles.start}>
-                        <View style={styles.circle}></View>
-                        <Text style={styles.Text}>Start</Text>
                     </View>
                 </ScrollView>
             </View>
@@ -255,7 +201,7 @@ const styles = {
     line1: {
         height: 10,
         marginLeft: 60,
-        marginBottom: 60,
+        marginBottom: 50,
         width: '45%',
         backgroundColor: theme.colors.blue_light,
         transform: [{ rotate: '65deg' }],
@@ -319,8 +265,8 @@ const styles = {
 
     image: {
         position: 'absolute',
-        width: 80, // Pas de afmetingen naar wens aan
-        height: 70, // Pas de afmetingen naar wens aan
+        width: 120, // Pas de afmetingen naar wens aan
+        height: 120, // Pas de afmetingen naar wens aan
         zIndex: 1, // Zorgt ervoor dat de Image bovenop de View wordt getoond
         display: 'flex',
         justifyContent: 'center',
