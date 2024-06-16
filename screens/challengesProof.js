@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import UserGreeting from "../components/userGreeting";
 import theme from "../theme";
 import Nav from "../components/nav";
-import { IPADRESS, prod, render } from "../config";
+import { IPADRESS, prod, render, COMOP_API_KEY } from "../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ArrowBack from "../components/arrowBack";
 import * as ImagePicker from "expo-image-picker";
@@ -54,6 +54,7 @@ const ChallengesProof = ({ route }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'comop-api-key': COMOP_API_KEY,
                 },
                 body: JSON.stringify({
                     userId: userData._id,
@@ -112,6 +113,7 @@ const deactivateChallenge = async () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        'comop-api-key': COMOP_API_KEY,
       },
       body: JSON.stringify({ active: false }),
     });
@@ -141,6 +143,7 @@ const handleSkipButtonPress = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'comop-api-key': COMOP_API_KEY,
       },
       body: JSON.stringify({
         userId: userData._id,
@@ -198,6 +201,9 @@ const handleSkipButtonPress = async () => {
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
         {
           method: "POST",
+          headers: {
+            'comop-api-key': COMOP_API_KEY,
+          },
           body: formData,
         }
       );
@@ -286,10 +292,7 @@ const handleSkipButtonPress = async () => {
 
       <View style={styles.innerContainer}>
         <View style={styles.imgBox}>
-          <Image
-            source={require("../assets/images/stepsImg1.png")}
-            style={styles.challengeImg}
-          />
+          <Image source={require("../assets/images/stepsMiddle.png")} style={styles.challengeImg}></Image>
         </View>
 
         {renderSteps()}

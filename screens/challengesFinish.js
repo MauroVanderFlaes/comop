@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from "react-native";
 import Logo from "../components/logo";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import theme from "../theme";
 import Nav from "../components/nav";
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 
 const ChallengesFinish = ({ route }) => {
   const { challenge } = route.params;
@@ -42,6 +42,7 @@ const ChallengesFinish = ({ route }) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'comop-api-key': COMOP_API_KEY,
             },
             body: JSON.stringify({ active: false }),
         });
@@ -62,6 +63,9 @@ const ChallengesFinish = ({ route }) => {
     <View style={styles.container}>
       <Logo />
       <View style={styles.contentContainer}>
+      <View style={styles.imgBox}>
+          <Image source={require("../assets/images/stepsEnd.png")} style={styles.challengeImg}></Image>
+        </View>
         <Text style={theme.textStyles.NameTitle}>Challenge Completed!</Text>
         <Text style={theme.textStyles.customSubtitle}>
           Congratulations, {userData?.username || "User"}!
@@ -91,6 +95,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 60,
   },
+  
+  imgBox: {
+    marginTop: 10,
+    width: 200,
+    height: 100,
+    marginBottom: 40,
+  },
+
+  challengeImg: {
+    width: 200,
+    height: 100,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderTopLeftRadius: 20,
+    resizeMode: "contain",
+  },
+
+
   arrowBack: {
     position: "absolute",
     top: 40,

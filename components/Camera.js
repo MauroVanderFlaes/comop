@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import { Camera } from 'expo-camera/legacy';
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import theme from '../theme';
@@ -86,6 +86,7 @@ const CameraComponent = ({ navigation }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'comop-api-key': COMOP_API_KEY,
         },
         body: JSON.stringify({ qrCode: data }),
       });

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView, RefreshControl } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import Nav from "../components/nav";
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import Logo from "../components/logo";
 import theme from "../theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -74,6 +74,61 @@ const Fitpass = () => {
                 console.log('User ID:', user._id);
                 await fetchUserCredits(user._id);
                 fetchRewards(user.gymId); // Assuming user.gymId is available
+        };
+
+        const fetchRewards = async (gymId) => {
+            console.log('Api key', COMOP_API_KEY);
+        
+            try {
+                let url;
+                if (prod) {
+                    url = `${render}/api/v1/rewards/${gymId}`;
+                } else {
+                    url = `http://${IPADRESS}:3000/api/v1/rewards/${gymId}`;
+                }
+        
+                const response = await fetch(url);
+                console.log('Response:', response);
+                
+                if (!response.ok) {
+                    // Log extra informatie bij een foutstatus
+                    const errorText = await response.text();
+                    console.error('Failed to fetch rewards:', response.status, errorText);
+                    setError(`Failed to fetch rewards: ${response.status}`);
+                    return;
+                }
+        
+                const result = await response.json();
+                console.log('Fetched rewards:', result.data.rewards);
+                setRewards(result.data.rewards);
+            } catch (error) {
+                console.error('Error fetching rewards:', error);
+                setError('Error fetching rewards');
+            }
+        };
+        
+
+        const fetchUserCredits = async (userId) => {
+            console.log('Fetching user credits for user ID:', userId);
+            try {
+                let url;
+                if (prod) {
+                    url = `${render}/api/v1/users/credits/${userId}`;
+                } else {
+                    url = `http://${IPADRESS}:3000/api/v1/users/credits/${userId}`;
+                }
+
+                const response = await fetch(url, { headers:{'comop-api-key': COMOP_API_KEY,} });
+                const result = await response.json();
+                if (response.ok) {
+                    setCredits(result.data.credits);
+                } else {
+                    console.error('Failed to fetch credits:', result.message);
+                    setError(result.message);
+                }
+            } catch (error) {
+                console.error('Error fetching user credits:', error);
+                setError('Error fetching user credits');
             }
         } catch (error) {
             console.error('Error retrieving user data:', error);

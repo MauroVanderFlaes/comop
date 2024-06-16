@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, } from 'react-native';
 import Nav from "../components/nav";
 import Logo from "../components/logo";
 import UserGreeting from '../components/userGreeting';
 import theme from "../theme";
 import { useNavigation } from '@react-navigation/native';
 import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NewsfeedGymfeed = () => {
@@ -56,6 +56,7 @@ const NewsfeedGymfeed = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'comop-api-key': COMOP_API_KEY,
         },
       });
       const data = await response.json();
@@ -163,6 +164,7 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'comop-api-key': COMOP_API_KEY,
         },
         body: JSON.stringify({ userId }),
       });
@@ -192,6 +194,7 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'comop-api-key': COMOP_API_KEY,
         },
         body: JSON.stringify({ userId }),
       });

@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import Logo from '../components/logo';
 import CustomButton from '../components/button';
 import { useNavigation } from '@react-navigation/native';
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import theme from '../theme';
 
 const { width } = Dimensions.get('window'); // Get the width of the screen
@@ -26,6 +26,7 @@ export default function GymConfirm({ route }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'comop-api-key': COMOP_API_KEY,
         },
         body: JSON.stringify({ qrCode: scannedQrCode }),
       });
