@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     },
     innerContainer: {
         paddingTop: 130,
+        width: 375,
         // alignItems: "center",
     },
     arrowBack: {

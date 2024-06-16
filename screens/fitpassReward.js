@@ -84,7 +84,7 @@ const FitpassMyReward = () => {
                 <ArrowBack style={styles.arrowBack}/>
                 <View style={styles.innerContainer}>
                     <Logo />
-                    <View>
+                    <View style={styles.greeting}>
                         <UserGreeting style={theme.textStyles.NameTitle} />
                         <Text style={theme.textStyles.customSubtitle}>This is a great choice!</Text>
                     </View>
@@ -129,9 +129,15 @@ const styles = StyleSheet.create({
         paddingBottom: 100,
         alignItems: "center",
     },
+
+    greeting: {
+        marginLeft: -100,
+    },
+
     innerContainer: {
         paddingTop: 130,
         alignItems: "center",
+        width: 380,
     },
     arrowBack: {
         top: 80,
@@ -141,14 +147,14 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 40,
-        gap: 20,
+        marginTop: 15,
+        gap: 10,
     },
     reward: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 10,
     },
     goal: {
         justifyContent: 'flex-start',
