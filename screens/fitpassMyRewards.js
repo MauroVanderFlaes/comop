@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     innerContainer: {
         paddingTop: 130,
         // alignItems: "center",
+        width: 350,
     },
     arrowBack: {
         top: 80,
