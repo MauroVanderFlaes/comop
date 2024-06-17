@@ -44,12 +44,7 @@ const NewsfeedGymfeed = () => {
   }, [userData]);
 
   const getGymfeedChallenges = async () => {
-    let url;
-    if (prod) {
-      url = `${render}/api/v1/gymfeed`;
-    } else {
-      url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
-    }
+    let url = `${render}/api/v1/gymfeed`;
 
     try {
       const response = await fetch(url, {
@@ -149,13 +144,7 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
 
   const handleAccept = async () => {
 
-    let url;
-    if (prod) {
-      url = `${render}/api/v1/gymfeed/${challenge._id}/accept`;
-    }
-    else {
-      url = `http://${IPADRESS}:3000/api/v1/gymfeed/${challenge._id}/accept`;
-    }
+    let url = `${render}/api/v1/gymfeed/${challenge._id}/accept`;
 
 
     try {
@@ -179,15 +168,7 @@ const ChallengeCard = ({ challenge, userData, isCurrentUserChallenge }) => {
 
   const handleReject = async () => {
 
-    let url;
-    if (prod) {
-      url = `${render}/api/v1/gymfeed/${challenge._id}/reject`;
-    }
-    else {
-      url = `http://${IPADRESS}:3000/api/v1/gymfeed/${challenge._id}/reject`;
-    }
-
-
+    let url = `${render}/api/v1/gymfeed/${challenge._id}/reject`;
     try {
       const userId = userData._id;
       const response = await fetch(url, {

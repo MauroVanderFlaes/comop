@@ -41,7 +41,7 @@ const Profile = () => {
 
         const fetchUserCredits = async (userId) => {
             try {
-                let url = prod ? `${render}/api/v1/users/credits/${userId}` : `http://${IPADRESS}:3000/api/v1/users/credits/${userId}`;
+                let url = `${render}/api/v1/users/credits/${userId}`;
                 const response = await fetch(url, { headers:{'comop-api-key': COMOP_API_KEY,} });
                 const result = await response.json();
                 if (response.ok) {
@@ -56,7 +56,7 @@ const Profile = () => {
 
         const fetchCompletedChallenges = async (userId) => {
             try {
-                let url = prod ? `${render}/api/v1/gymfeed/${userId}` : `http://${IPADRESS}:3000/api/v1/gymfeed/${userId}`;
+                let url = `${render}/api/v1/gymfeed/${userId}`;
                 const response = await fetch(url, { headers:{'comop-api-key': COMOP_API_KEY,} });
                 const result = await response.json();
                 if (response.ok) {
@@ -80,7 +80,7 @@ const Profile = () => {
 
     const fetchProfileImage = async (userId) => {
         try {
-            let url = prod ? `${render}/api/v1/users/profileImg/${userId}` : `http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`;
+            let url = `${render}/api/v1/users/profileImg/${userId}`;
             const response = await fetch(url, { headers:{'comop-api-key': COMOP_API_KEY,} });
             if (!response.ok) {
                 throw new Error(`Failed to fetch profile image: ${response.statusText}`);
@@ -146,7 +146,7 @@ const Profile = () => {
     const storeImage = async (imgUrl) => {
         try {
             const userId = userData._id;
-            let url = prod ? `${render}/api/v1/users/profileImg/${userId}` : `http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`;
+            let url = `${render}/api/v1/users/profileImg/${userId}`;
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", 'comop-api-key': COMOP_API_KEY, },

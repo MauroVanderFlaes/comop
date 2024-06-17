@@ -25,12 +25,7 @@ const FitpassMyRewards = () => {
     const fetchUserData = async (userId) => {
         console.log('Fetching user data with rewards for user ID:', userId);
         try {
-            let url;
-            if (prod) {
-                url = `${render}/api/v1/users/rewards/${userId}`;
-            } else {
-                url = `http://${IPADRESS}:3000/api/v1/users/rewards/${userId}`;
-            }
+            let url = `${render}/api/v1/users/rewards/${userId}`;
 
             const response = await fetch(url, { headers: { 'comop-api-key': COMOP_API_KEY } });
             const result = await response.json();

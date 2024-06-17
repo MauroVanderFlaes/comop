@@ -29,12 +29,7 @@ const ChallengesFinish = ({ route }) => {
   }, []);
 
   const handleGoToGymfeed = async () => {
-    let url;
-    if (prod) {
-        url = `${render}/api/v1/challenges/active/${challenge._id}`;
-    } else {
-        url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
-    }
+    let url = `${render}/api/v1/challenges/active/${challenge._id}`;
     console.log('Deactivating challenge:', url);
 
     try {

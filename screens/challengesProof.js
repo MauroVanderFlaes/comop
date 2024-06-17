@@ -37,19 +37,16 @@ const ChallengesProof = ({ route }) => {
   const [loading, setLoading] = useState(false);
 
 
-  const url = CLOUDINARY_URL;
+  //const url = CLOUDINARY_URL;
   const preset = CLOUDINARY_PRESET;
   const cloudName = CLOUDINARY_CLOUD_NAME;
 
   const handleNextButtonPress = async () => {
     if (uploadIndex === requiredImages) {
       // post the images to the newsfeed in the database
-      let url;
-      if (prod) {
-        url = `${render}/api/v1/gymfeed`;
-      } else {
-        url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
-      }
+      let url = `${render}/api/v1/gymfeed`;
+
+      console.log("Posting newsfeed:", url);
   
       try {
         // Start het uploaden, toon het loading screen
@@ -134,12 +131,7 @@ const ChallengesProof = ({ route }) => {
 
 
   const deactivateChallenge = async () => {
-    let url;
-    if (prod) {
-      url = `${render}/api/v1/challenges/active/${challenge._id}`;
-    } else {
-      url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
-    }
+    let url = `${render}/api/v1/challenges/active/${challenge._id}`;
     console.log("Deactivating challenge:", url);
 
     try {
@@ -165,12 +157,7 @@ const ChallengesProof = ({ route }) => {
 
   const handleSkipButtonPress = async () => {
     // post the skipped challenge to the newsfeed in the database
-    let url;
-    if (prod) {
-      url = `${render}/api/v1/gymfeed`;
-    } else {
-      url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
-    }
+    let url = `${render}/api/v1/gymfeed`;
 
     try {
       const response = await fetch(url, {

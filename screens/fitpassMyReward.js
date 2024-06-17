@@ -46,12 +46,7 @@ const FitpassReward = () => {
         }
 
         try {
-            let url;
-            if (prod) {
-                url = `${render}/api/v1/users/rewards/${userId}/${reward._id}`;
-            } else {
-                url = `http://${IPADRESS}:3000/api/v1/users/rewards/${userId}/${reward._id}`;
-            }
+            let url = `${render}/api/v1/users/rewards/${userId}/${reward._id}`;
 
             const response = await fetch(url, {
                 method: 'DELETE',

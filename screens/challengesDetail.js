@@ -38,12 +38,7 @@ const ChallengesDetails = ({ route }) => {
 
     const handleStartChallenge = async () => {
         console.log('Starting challenge');
-        let url;
-        if (prod) {
-            url = `${render}/api/v1/challenges/active/${challenge._id}`;
-        } else {
-            url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
-        }
+        let url = `${render}/api/v1/challenges/active/${challenge._id}`;
         try {
             const response = await fetch(url, {
                 method: 'PUT',

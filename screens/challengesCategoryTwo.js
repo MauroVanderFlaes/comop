@@ -37,12 +37,7 @@ const ChallengesCategoryTwo = () => {
 
     useEffect(() => {
         const fetchChallenges = async () => {
-            let url;
-            if (prod) {
-                url = `${render}/api/v1/challenges`;
-            } else {
-                url = `http://${IPADRESS}:3000/api/v1/challenges`;
-            }
+            let url = `${render}/api/v1/challenges`;
 
             try {
                 const response = await fetch(url, {
@@ -68,12 +63,7 @@ const ChallengesCategoryTwo = () => {
         const fetchCompletedChallenges = async () => {
             if (!userId) return; // If userId is not set yet, do not proceed
             console.log("Fetching completed challenges for user:", userId);
-            let url;
-            if (prod) {
-                url = `${render}/api/v1/gymfeed/${userId}`;
-            } else {
-                url = `http://${IPADRESS}:3000/api/v1/gymfeed/${userId}`;
-            }
+            let url = `${render}/api/v1/gymfeed/${userId}`;
 
             try {
                 const response = await fetch(url, {

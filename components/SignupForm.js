@@ -44,12 +44,7 @@ const SignupForm = ({ onSubmit }) => {
       return;
     }
 
-    let url;
-    if (prod) {
-      url = `${render}/api/v1/users/signup`
-    } else {
-      url = `http:/${IPADRESS}:3000/api/v1/users/signup`
-    }
+    let url = `${render}/api/v1/users/signup`;
 
     try {
 

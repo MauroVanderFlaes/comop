@@ -78,12 +78,7 @@ const Newsfeed = () => {
   };
 
   const getCompletedChallenges = async (gymId) => {
-    let url;
-    if (prod) {
-      url = `${render}/api/v1/gymfeed/completed/${gymId}`;
-    } else {
-      url = `http://${IPADRESS}:3000/api/v1/gymfeed/completed/${gymId}`;
-    }
+    let url = `${render}/api/v1/gymfeed/completed/${gymId}`;
 
     try {
       const response = await fetch(url, {

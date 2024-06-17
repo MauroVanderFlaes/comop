@@ -44,12 +44,7 @@ const ChallengesActive = ({ route }) => {
 
   const handleCancel = () => {
     // update the challenge to be inactive with a put request
-    let url;
-    if (prod) {
-        url = `${render}/api/v1/challenges/active/${challenge._id}`;
-    } else {
-        url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
-    }
+    let url = `${render}/api/v1/challenges/active/${challenge._id}`;
     console.log('Canceling challenge:', url);
     fetch(url, {
         method: 'PUT',
@@ -73,12 +68,7 @@ const ChallengesActive = ({ route }) => {
 //   do an api call to get the active challenge and display it in challenge variable
     useEffect(() => {
         const fetchData = async () => {
-            let url;
-            if (prod) {
-                url = `${render}/api/v1/challenges/active/`;
-            } else {
-                url = `http://${IPADRESS}:3000/api/v1/challenges/active/`;
-            }
+            let url = `${render}/api/v1/challenges/active/`;
 
 
             try {

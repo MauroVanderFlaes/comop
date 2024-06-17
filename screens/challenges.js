@@ -19,12 +19,7 @@ const Challenges = () => {
     const navigation = useNavigation();
 
     const fetchData = useCallback(async () => {
-        let url;
-        if (prod) {
-            url = `${render}/api/v1/challenges/active`;
-        } else {
-            url = `http://${IPADRESS}:3000/api/v1/challenges/active`;
-        }
+        let url = `${render}/api/v1/challenges/active`;
     
         try {
             console.log(url);

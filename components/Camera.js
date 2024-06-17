@@ -73,13 +73,8 @@ const CameraComponent = ({ navigation }) => {
   }
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    let url;
-      if (prod) {
-        url = `${render}/api/v1/gyms/compareQrCode`
-      }
-      else {
-        url = `http:/${IPADRESS}:3000/api/v1/gyms/compareQrCode`
-      }
+    let url = `${render}/api/v1/gyms/compareQrCode`;
+
 
     try {
       const response = await fetch(url, {

@@ -44,12 +44,7 @@ const FitpassMyReward = () => {
 
             const rewardId = reward._id;
 
-            let url;
-            if (prod) {
-                url = `${render}/api/v1/rewards/buy/${rewardId}`;
-            } else {
-                url = `http://${IPADRESS}:3000/api/v1/rewards/buy/${rewardId}`;
-            }
+            let url = `${render}/api/v1/rewards/buy/${rewardId}`;
 
             const response = await fetch(url, {
                 method: 'POST',

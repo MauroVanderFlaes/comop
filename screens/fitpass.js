@@ -19,12 +19,7 @@ const Fitpass = () => {
     const fetchUserCredits = useCallback(async (userId) => {
         console.log('Fetching user credits for user ID:', userId);
         try {
-            let url;
-            if (prod) {
-                url = `${render}/api/v1/users/credits/${userId}`;
-            } else {
-                url = `http://${IPADRESS}:3000/api/v1/users/credits/${userId}`;
-            }
+            let url = `${render}/api/v1/users/credits/${userId}`;
 
             const response = await fetch(url, { headers: { 'comop-api-key': COMOP_API_KEY } });
             const result = await response.json();
@@ -43,12 +38,7 @@ const Fitpass = () => {
     const fetchRewards = useCallback(async (gymId) => {
         console.log('Api key', COMOP_API_KEY);
         try {
-            let url;
-            if (prod) {
-                url = `${render}/api/v1/rewards/${gymId}`;
-            } else {
-                url = `http://${IPADRESS}:3000/api/v1/rewards/${gymId}`;
-            }
+            let url = `${render}/api/v1/rewards/${gymId}`;
 
             const response = await fetch(url, { headers: { 'comop-api-key': COMOP_API_KEY } });
             console.log('Response:', response);
