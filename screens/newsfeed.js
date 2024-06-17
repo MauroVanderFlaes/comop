@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Pressable,
 } from "react-native";
 import { IPADRESS, prod, render, COMOP_API_KEY } from "../config";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Nav from "../components/nav";
 import Logo from "../components/logo";
 import theme from "../theme";
@@ -21,23 +21,32 @@ import { PanGestureHandler } from "react-native-gesture-handler";
 const Newsfeed = () => {
   const [selectedOption, setSelectedOption] = useState("Newsfeed");
   const [gymMembers, setGymMembers] = useState([]);
+  const [orderedGymMembers, setOrderedGymMembers] = useState([]); 
+  const [completedChallenges, setCompletedChallenges] = useState([]);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const userData = await AsyncStorage.getItem("userData");
-        const parsedUserData = JSON.parse(userData);
-        // console.log("Userdata", parsedUserData);
-        getGymMembers(parsedUserData.gymId);
-        console.log("gym members", gymMembers);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const userData = await AsyncStorage.getItem("userData");
+      const parsedUserData = JSON.parse(userData);
+      const gymId = parsedUserData.gymId;
+      await getGymMembers(gymId);
+      await getCompletedChallenges(gymId);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
-    getUserData();
+  useEffect(() => {
+    fetchData();
   }, []);
+
+  // Re-fetch data when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -56,13 +65,42 @@ const Newsfeed = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          'comop-api-key': COMOP_API_KEY,
+          "comop-api-key": COMOP_API_KEY,
         },
       });
 
       const json = await response.json();
       console.log(json);
       setGymMembers(json.data.users);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getCompletedChallenges = async (gymId) => {
+    let url;
+    if (prod) {
+      url = `${render}/api/v1/gymfeed/completed/${gymId}`;
+    } else {
+      url = `http://${IPADRESS}:3000/api/v1/gymfeed/completed/${gymId}`;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "comop-api-key": COMOP_API_KEY,
+        },
+      });
+
+      const json = await response.json();
+      const completedChallenges = json.data;
+      const sortedMembers = completedChallenges.sort(
+        (a, b) => b.completedChallenges - a.completedChallenges
+      );
+      setOrderedGymMembers(sortedMembers);
+      console.log("orderedGymMembers", sortedMembers)
     } catch (error) {
       console.error("Error:", error);
     }
@@ -139,9 +177,9 @@ const Newsfeed = () => {
                             }
                           ></TouchableOpacity>
                           <View>
-                            <Text style={styles.contentGymfeed}>
+                            {/* <Text style={styles.contentGymfeed}>
                               placeholder gym message with blur
-                            </Text>
+                            </Text> */}
                           </View>
                         </View>
                       </PanGestureHandler>
@@ -199,12 +237,9 @@ const Newsfeed = () => {
                         </TouchableOpacity>
                       </ScrollView>
                     </View>
-
+  
                     <View style={styles.myLeague}>
-                      <Text style={styles.contentText}>
-                        {" "}
-                        "NUMBER KG" League
-                      </Text>
+                      <Text style={styles.contentText}> "NUMBER KG" League </Text>
                       <Pressable
                         onPress={() => navigation.navigate("leaderboardInfo")}
                       >
@@ -215,53 +250,59 @@ const Newsfeed = () => {
                       </Pressable>
                     </View>
                     <View>
-                    <View style={styles.leaderboard}>
-  {gymMembers.slice(0, 3).map((member, index) => (
-    <View key={member._id} style={styles.leaderboardItem}>
-      <Text
-        style={
-          index === 0
-            ? styles.placeNumber2 // Display first place as second place
-            : index === 1
-            ? styles.placeNumber1 // Display second place as first place
-            : styles.placeNumber3 // Display third place as third place
-        }
-      >
-        {index === 0 ? 2 : index === 1 ? 1 : 3} {/* Corrected logic here */}
-      </Text>
-      <Pressable
-        style={
-          index === 0
-            ? styles.place2 // Display first place style as second place
-            : index === 1
-            ? styles.place1 // Display second place style as first place
-            : styles.place3 // Display third place style as third place
-        }
-        onPress={() => navigation.navigate("")}
-      >
-        <Image
-          style={
-            index === 0
-              ? styles.placeImage2 // Display first place image as second place
-              : index === 1
-              ? styles.placeImage1 // Display second place image as first place
-              : styles.placeImage3 // Display third place image as third place
-          }
-          source={
-            member.imgUrl
-              ? { uri: member.imgUrl }
-              : require("../assets/noProfile.png")
-          }
-        />
-      </Pressable>
-      <Text style={styles.placeName}>{member.username}</Text>
-    </View>
-  ))}
-</View>
-                      <View style={styles.leaderboardList}>
-                        {gymMembers.slice(0, 10).map((member, index) => (
+                      <View style={styles.leaderboard}>
+                        {orderedGymMembers.slice(0, 3).map((member, index) => (
                           <View
-                            key={member._id}
+                            key={`${member._id}-${index}`}
+                            style={styles.leaderboardItem}
+                          >
+                            <Text
+                              style={
+                                index === 0
+                                ? styles.placeNumber1 // Display second place as first place
+                                : index === 1
+                                ? styles.placeNumber2 // Display first place as second place
+                                  : styles.placeNumber3 // Display third place as third place
+                              }
+                            >
+                              {index === 0 ? 1 : index === 1 ? 2 : 3}{" "}
+                              {/* Corrected logic here */}
+                            </Text>
+                            <Pressable
+                              style={
+                                index === 0
+                                ? styles.place1 // Display second place style as first place
+                                : index === 1
+                                ? styles.place2 // Display first place style as second place
+                                  : styles.place3 // Display third place style as third place
+                              }
+                              onPress={() => navigation.navigate("")}
+                            >
+                              <Image
+                                style={
+                                  index === 0
+                                  ? styles.placeImage1 // Display second place image as first place
+                                  : index === 1
+                                  ? styles.placeImage2 // Display first place image as second place
+                                    : styles.placeImage3 // Display third place image as third place
+                                }
+                                source={
+                                  member.imgUrl
+                                    ? { uri: member.imgUrl }
+                                    : require("../assets/noProfile.png")
+                                }
+                              />
+                            </Pressable>
+                            <Text style={styles.placeName}>
+                              {member.username}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                      <View style={styles.leaderboardList}>
+                        {orderedGymMembers.slice(0, 10).map((member, index) => (
+                          <View
+                            key={`${member._id}-${index}`}
                             style={
                               index === 0
                                 ? styles.userFirst
@@ -299,7 +340,7 @@ const Newsfeed = () => {
                                   : styles.challenges
                               }
                             >
-                              AANTAL challenges
+                              {member.completedChallenges} challenges
                             </Text>
                           </View>
                         ))}
