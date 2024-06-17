@@ -50,7 +50,7 @@ const Fitpass = () => {
                 url = `http://${IPADRESS}:3000/api/v1/rewards/${gymId}`;
             }
 
-            const response = await fetch(url);
+            const response = await fetch(url, { headers: { 'comop-api-key': COMOP_API_KEY } });
             console.log('Response:', response);
 
             if (!response.ok) {

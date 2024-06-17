@@ -6,7 +6,7 @@ import Nav from "../components/nav";
 import UserGreeting from '../components/userGreeting';
 import ArrowBack from '../components/arrowBack';
 import theme from "../theme";
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
@@ -55,6 +55,7 @@ const FitpassMyReward = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'comop-api-key': COMOP_API_KEY,
                 },
                 body: JSON.stringify({ userId }), // Ensure userId is passed in the body
             });

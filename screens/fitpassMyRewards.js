@@ -7,7 +7,7 @@ import UserGreeting from '../components/userGreeting';
 import ArrowBack from '../components/arrowBack';
 import theme from "../theme";
 import { useNavigation } from '@react-navigation/native';
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 
 const noRewardMessage = () => (
     <View style={styles.containerRewards}>
@@ -32,7 +32,7 @@ const FitpassMyRewards = () => {
                 url = `http://${IPADRESS}:3000/api/v1/users/rewards/${userId}`;
             }
 
-            const response = await fetch(url);
+            const response = await fetch(url, { headers: { 'comop-api-key': COMOP_API_KEY } });
             const result = await response.json();
             if (response.ok) {
                 setUserData(result.data.user);

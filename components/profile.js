@@ -80,7 +80,8 @@ const Profile = () => {
 
     const fetchProfileImage = async (userId) => {
         try {
-            const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`, { headers:{'comop-api-key': COMOP_API_KEY,} });
+            let url = prod ? `${render}/api/v1/users/profileImg/${userId}` : `http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`;
+            const response = await fetch(url, { headers:{'comop-api-key': COMOP_API_KEY,} });
             if (!response.ok) {
                 throw new Error(`Failed to fetch profile image: ${response.statusText}`);
             }
@@ -145,7 +146,8 @@ const Profile = () => {
     const storeImage = async (imgUrl) => {
         try {
             const userId = userData._id;
-            const response = await fetch(`http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`, {
+            let url = prod ? `${render}/api/v1/users/profileImg/${userId}` : `http://${IPADRESS}:3000/api/v1/users/profileImg/${userId}`;
+            const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", 'comop-api-key': COMOP_API_KEY, },
                 body: JSON.stringify({ imgUrl }),

@@ -6,7 +6,7 @@ import UserGreeting from '../components/userGreeting';
 import ArrowBack from '../components/arrowBack';
 import theme from "../theme";
 import { useRoute } from '@react-navigation/native';
-import { IPADRESS, prod, render } from '../config';
+import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
@@ -55,6 +55,7 @@ const FitpassReward = () => {
 
             const response = await fetch(url, {
                 method: 'DELETE',
+                'comop-api-key': COMOP_API_KEY,
             });
 
             const result = await response.json();
