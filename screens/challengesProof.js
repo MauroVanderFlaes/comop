@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import Logo from "../components/logo";
 import { useNavigation } from "@react-navigation/native";
@@ -16,6 +17,7 @@ import { IPADRESS, prod, render, COMOP_API_KEY } from "../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ArrowBack from "../components/arrowBack";
 import * as ImagePicker from "expo-image-picker";
+import LoadingScreen from "./loadingScreen";
 import {
   CLOUDINARY_URL,
   CLOUDINARY_PRESET,
@@ -32,140 +34,172 @@ const ChallengesProof = ({ route }) => {
   const [uploadIndex, setUploadIndex] = useState(0);
   // console.log("upload index", uploadIndex);
   const [skipped, setSkipped] = useState(false);
+  const [loading, setLoading] = useState(false);
+
 
   const url = CLOUDINARY_URL;
   const preset = CLOUDINARY_PRESET;
   const cloudName = CLOUDINARY_CLOUD_NAME;
 
   const handleNextButtonPress = async () => {
-
     if (uploadIndex === requiredImages) {
-
-        // post the images to the newsfeed in the database
-        let url;
-        if (prod) {
-            url = `${render}/api/v1/gymfeed`;
-        } else {
-            url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
-        }
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'comop-api-key': COMOP_API_KEY,
-                },
-                body: JSON.stringify({
-                    userId: userData._id,
-                    challengeId: challenge._id,
-                    requiredImages: requiredImages,
-                    uploadedImages: imageUrls,
-                    skipped: false,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            
-            const result = await response.json();
-            console.log('Newsfeed posted:', result);
-            navigation.navigate("challengesFinish", {challenge} ); // Navigate when all images are uploaded
-        } catch (error) {
-            console.error('Error posting newsfeed:', error);
-        }
-
-    } else {
-  
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      });
-      if (!result.cancelled && result.assets && result.assets.length > 0) {
-        const uploadedUrl = await uploadImage(result.assets[0].uri);
-        if (uploadedUrl) {
-          setImageUrls([...imageUrls, uploadedUrl]);
-          console.log("Image uploaded:", uploadedUrl);
-          setUploadIndex(uploadIndex + 1); // Move to the next upload index
-        } else {
-          const error = new Error("Failed to upload image");
-          Alert.alert(`Error uploading image: ${error.message}`);
-        }
+      // post the images to the newsfeed in the database
+      let url;
+      if (prod) {
+        url = `${render}/api/v1/gymfeed`;
+      } else {
+        url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
       }
-    } catch (error) {
-      Alert.alert(`Error selecting image: ${error.message}`);
+  
+      try {
+        // Start het uploaden, toon het loading screen
+        setLoading(true);
+  
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'comop-api-key': COMOP_API_KEY,
+          },
+          body: JSON.stringify({
+            userId: userData._id,
+            challengeId: challenge._id,
+            requiredImages: requiredImages,
+            uploadedImages: imageUrls,
+            skipped: false,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const result = await response.json();
+        console.log('Newsfeed posted:', result);
+        navigation.navigate("challengesFinish", { challenge }); // Navigate when all images are uploaded
+      } catch (error) {
+        console.error('Error posting newsfeed:', error);
+      } finally {
+        // Stop het uploaden, verberg het loading screen
+        setLoading(false);
+      }
+    } else {
+      try {
+        // Start het uploaden, toon het loading screen
+        setLoading(true);
+  
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        });
+  
+        if (!result.cancelled && result.assets && result.assets.length > 0) {
+          const uploadedUrl = await uploadImage(result.assets[0].uri);
+          if (uploadedUrl) {
+            // Toon de afbeelding
+            const tempImage = {
+              uri: uploadedUrl,
+            };
+  
+            // Controleer of de afbeelding volledig is geladen
+            Image.getSize(tempImage.uri, (width, height) => {
+              // Voeg de URL toe aan de lijst met imageUrls
+              setImageUrls([...imageUrls, uploadedUrl]);
+              console.log("Image uploaded:", uploadedUrl);
+              setUploadIndex(uploadIndex + 1); // Ga naar de volgende upload index
+  
+              // Stop het uploaden, verberg het loading screen
+              setLoading(false);
+            }, (error) => {
+              console.error("Failed to get image size:", error);
+              setLoading(false); // Verberg het loading screen bij een fout
+            });
+          } else {
+            const error = new Error("Failed to upload image");
+            Alert.alert(`Error uploading image: ${error.message}`);
+            setLoading(false); // Verberg het loading screen bij een fout
+          }
+        } else {
+          setLoading(false); // Verberg het loading screen als het resultaat is geannuleerd
+        }
+      } catch (error) {
+        Alert.alert(`Error selecting image: ${error.message}`);
+        setLoading(false); // Verberg het loading screen bij een fout
+      }
     }
   };
-};
+  
+  
+  
+  
 
-const deactivateChallenge = async () => {
-  let url;
-  if (prod) {
-    url = `${render}/api/v1/challenges/active/${challenge._id}`;
-  } else {
-    url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
-  }
-  console.log("Deactivating challenge:", url);
 
-  try {
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        'comop-api-key': COMOP_API_KEY,
-      },
-      body: JSON.stringify({ active: false }),
-    });
-
-    if (response.ok) {
-      console.log("Challenge deactivated successfully");
+  const deactivateChallenge = async () => {
+    let url;
+    if (prod) {
+      url = `${render}/api/v1/challenges/active/${challenge._id}`;
     } else {
-      const errorData = await response.json();
-      console.log("Error deactivating challenge:", errorData.message);
+      url = `http://${IPADRESS}:3000/api/v1/challenges/active/${challenge._id}`;
     }
-  } catch (error) {
-    console.log("Error deactivating challenge:", error);
-  }
-};
+    console.log("Deactivating challenge:", url);
 
-const handleSkipButtonPress = async () => {
-  // post the skipped challenge to the newsfeed in the database
-  let url;
-  if (prod) {
-    url = `${render}/api/v1/gymfeed`;
-  } else {
-    url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
-  }
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          'comop-api-key': COMOP_API_KEY,
+        },
+        body: JSON.stringify({ active: false }),
+      });
 
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'comop-api-key': COMOP_API_KEY,
-      },
-      body: JSON.stringify({
-        userId: userData._id,
-        challengeId: challenge._id,
-        requiredImages: requiredImages,
-        uploadedImages: [], // No images uploaded
-        skipped: true, // Mark as skipped
-      }),
-    });
+      if (response.ok) {
+        console.log("Challenge deactivated successfully");
+      } else {
+        const errorData = await response.json();
+        console.log("Error deactivating challenge:", errorData.message);
+      }
+    } catch (error) {
+      console.log("Error deactivating challenge:", error);
+    }
+  };
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+  const handleSkipButtonPress = async () => {
+    // post the skipped challenge to the newsfeed in the database
+    let url;
+    if (prod) {
+      url = `${render}/api/v1/gymfeed`;
+    } else {
+      url = `http://${IPADRESS}:3000/api/v1/gymfeed`;
     }
 
-    const result = await response.json();
-    console.log('Newsfeed posted:', result);
-    await deactivateChallenge();
-    navigation.navigate("fitpass"); // Navigate when the challenge is skipped
-  } catch (error) {
-    console.error('Error posting newsfeed:', error);
-  }
-};
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'comop-api-key': COMOP_API_KEY,
+        },
+        body: JSON.stringify({
+          userId: userData._id,
+          challengeId: challenge._id,
+          requiredImages: requiredImages,
+          uploadedImages: [], // No images uploaded
+          skipped: true, // Mark as skipped
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Newsfeed posted:', result);
+      await deactivateChallenge();
+      navigation.navigate("fitpass"); // Navigate when the challenge is skipped
+    } catch (error) {
+      console.error('Error posting newsfeed:', error);
+    }
+  };
 
 
 
@@ -279,100 +313,108 @@ const handleSkipButtonPress = async () => {
 
   return (
     <View style={styles.container}>
-      <Logo />
-      <ArrowBack style={styles.arrowBack} />
-      <View style={styles.titleBox}>
-        <View style={styles.titleText}>
-          <Text style={theme.textStyles.NameTitle}>{challenge.title}</Text>
-          <Text style={theme.textStyles.customSubtitle}>
-            Almost there {userData?.username || "User"}!
-          </Text>
-        </View>
-      </View>
 
-      <View style={styles.innerContainer}>
-        <View style={styles.imgBox}>
-          <Image source={require("../assets/images/stepsMiddle.png")} style={styles.challengeImg}></Image>
-        </View>
+      {loading ? (
+        <LoadingScreen style={styles.loading} />
+      ) : (
+        <>
 
-        {renderSteps()}
-
-        <View style={[styles.boxTexts, { top: uploadIndex > 0 ? "53%" : "60%" }, requiredImages === 2 && { height: 120 }]}>
-          <View style={styles.boxTextOne}>
-            {uploadIndex > 0 ? (
-              <Image
-                source={{ uri: imageUrls[0] }}
-                style={styles.uploadedImage}
-              />
-            ) : (
-              <>
-                <Text style={styles.firstPic}>
-                  First, we need a picture of your:
-                </Text>
-                <Text style={styles.firstPicText}>
-                  {challenge.imageDescriptions[0]}
-                </Text>
-              </>
-            )}
+          <Logo />
+          <ArrowBack style={styles.arrowBack} />
+          <View style={styles.titleBox}>
+            <View style={styles.titleText}>
+              <Text style={theme.textStyles.NameTitle}>{challenge.title}</Text>
+              <Text style={theme.textStyles.customSubtitle}>
+                Almost there {userData?.username || "User"}!
+              </Text>
+            </View>
           </View>
-          {requiredImages >= 2 && (
-            <View style={styles.boxTextTwo}>
-              {uploadIndex > 1 ? (
-                <Image
-                  source={{ uri: imageUrls[1] }}
-                  style={styles.uploadedImage}
-                />
-              ) : (
-                <>
-                  <Text style={styles.secondPic}>
-                    Second, we need a picture of your:
-                  </Text>
-                  <Text style={styles.secondPicText}>
-                    {challenge.imageDescriptions[1]}
-                  </Text>
-                </>
+
+          <View style={styles.innerContainer}>
+            <View style={styles.imgBox}>
+              <Image source={require("../assets/images/stepsMiddle.png")} style={styles.challengeImg}></Image>
+            </View>
+
+            {renderSteps()}
+
+            <View style={[styles.boxTexts, { top: uploadIndex > 0 ? "53%" : "60%" }, requiredImages === 2 && { height: 120 }]}>
+              <View style={styles.boxTextOne}>
+                {uploadIndex > 0 ? (
+                  <Image
+                    source={{ uri: imageUrls[0] }}
+                    style={styles.uploadedImage}
+                  />
+                ) : (
+                  <>
+                    <Text style={styles.firstPic}>
+                      First, we need a picture of your:
+                    </Text>
+                    <Text style={styles.firstPicText}>
+                      {challenge.imageDescriptions[0]}
+                    </Text>
+                  </>
+                )}
+              </View>
+              {requiredImages >= 2 && (
+                <View style={styles.boxTextTwo}>
+                  {uploadIndex > 1 ? (
+                    <Image
+                      source={{ uri: imageUrls[1] }}
+                      style={styles.uploadedImage}
+                    />
+                  ) : (
+                    <>
+                      <Text style={styles.secondPic}>
+                        Second, we need a picture of your:
+                      </Text>
+                      <Text style={styles.secondPicText}>
+                        {challenge.imageDescriptions[1]}
+                      </Text>
+                    </>
+                  )}
+                </View>
+              )}
+              {requiredImages === 3 && (
+                <View style={styles.boxTextTree}>
+                  {uploadIndex > 2 ? (
+                    <Image
+                      source={{ uri: imageUrls[2] }}
+                      style={styles.uploadedImage}
+                    />
+                  ) : (
+                    <>
+                      <Text style={styles.thirdPic}>
+                        And lastly, we need a picture of your:
+                      </Text>
+                      <Text style={styles.thirdPicText}>
+                        {challenge.imageDescriptions[2]}
+                      </Text>
+                    </>
+                  )}
+                </View>
               )}
             </View>
-          )}
-          {requiredImages === 3 && (
-            <View style={styles.boxTextTree}>
-              {uploadIndex > 2 ? (
-                <Image
-                  source={{ uri: imageUrls[2] }}
-                  style={styles.uploadedImage}
-                />
-              ) : (
-                <>
-                  <Text style={styles.thirdPic}>
-                    And lastly, we need a picture of your:
-                  </Text>
-                  <Text style={styles.thirdPicText}>
-                    {challenge.imageDescriptions[2]}
-                  </Text>
-                </>
-              )}
-            </View>
-          )}
-        </View>
 
-        <View style={styles.boxDescription}></View>
+            <View style={styles.boxDescription}></View>
 
-        <TouchableOpacity
-          style={styles.nextButton}
-          onPress={handleNextButtonPress}
-        >
-          <Text style={styles.nextText}>
-            {uploadIndex < requiredImages
-              ? `Upload image of ${challenge.imageDescriptions[uploadIndex]}`
-              : "Finish challenge"}
-          </Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.nextButton}
+              onPress={handleNextButtonPress}
+            >
+              <Text style={styles.nextText}>
+                {uploadIndex < requiredImages
+                  ? `Upload image of ${challenge.imageDescriptions[uploadIndex]}`
+                  : "Finish challenge"}
+              </Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleSkipButtonPress}>
-          <Text style={styles.skipText}>Skip</Text>
-        </TouchableOpacity>
-      </View>
-      <Nav />
+            <TouchableOpacity onPress={handleSkipButtonPress}>
+              <Text style={styles.skipText}>Skip</Text>
+            </TouchableOpacity>
+          </View>
+          <Nav />
+        </>
+      )}
     </View>
   );
 };
@@ -391,6 +433,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
   },
+
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.offwhite,
+  },
+
+
+
 
   stepsBox: {
     // place this view in the middle of the screen

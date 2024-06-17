@@ -6,17 +6,15 @@ import Logo from "../components/logo";
 import theme from "../theme";
 import UserGreeting from "../components/userGreeting";
 import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
-import ChallengesActive from "./challengesActive";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingScreen from "./loadingScreen"; // Zorg ervoor dat dit pad correct is
 
 const Challenges = () => {
+    const [isLoading, setIsLoading] = useState(true);
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-    const [activeChallengesExist, setActiveChallengesExist] = useState(false);
     const [challenges, setChallenges] = useState([]);
     const [userData, setUserData] = useState({});
     const navigation = useNavigation();
-
-
 
     const fetchData = useCallback(async () => {
         let url;
@@ -43,13 +41,17 @@ const Challenges = () => {
                 const activeChallenge = data.data.find(challenge => challenge.active);
                 if (activeChallenge) {
                     goToActiveChallenge(activeChallenge);
+                } else {
+                    setIsLoading(false); // Stop met laden als er geen actieve challenge is
                 }
             } else {
                 const errorData = await response.json();
                 console.log("Error fetching challenges:", errorData.message);
+                setIsLoading(false); // Stop met laden bij een fout
             }
         } catch (error) {
             console.error("Error fetching challenges:", error);
+            setIsLoading(false); // Stop met laden bij een fout
         }
     }, [navigation]);
 
@@ -60,7 +62,7 @@ const Challenges = () => {
         });
         
         return unsubscribe;
-    }, [navigation]);
+    }, [navigation, fetchData]);
 
     const goToActiveChallenge = (activeChallenge) => {
         console.log("Navigating to active challenge");
@@ -74,6 +76,10 @@ const Challenges = () => {
 
     const handleNavigate = () => {
         navigation.navigate('challengesCategoryOne');
+    }
+
+    if (isLoading) {
+        return <LoadingScreen />; // Laat het laadscherm zien als we aan het laden zijn
     }
 
     return (
@@ -107,7 +113,7 @@ const Challenges = () => {
                     </TouchableOpacity>
                 </View>
                 <View>
-
+                    {/* Andere content */}
                 </View>
             </View>
             <Nav />
