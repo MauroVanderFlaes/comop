@@ -177,9 +177,9 @@ const Newsfeed = () => {
                             }
                           ></TouchableOpacity>
                           <View>
-                            <Text style={styles.contentGymfeed}>
+                            {/* <Text style={styles.contentGymfeed}>
                               placeholder gym message with blur
-                            </Text>
+                            </Text> */}
                           </View>
                         </View>
                       </PanGestureHandler>
