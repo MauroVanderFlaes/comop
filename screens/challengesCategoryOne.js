@@ -8,8 +8,10 @@ import UserGreeting from "../components/userGreeting";
 import { IPADRESS, prod, render, COMOP_API_KEY } from '../config';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingScreen from "./loadingScreen"; // Zorg ervoor dat dit pad correct is
 
 const ChallengesCategoryOne = () => {
+    const [isLoading, setIsLoading] = useState(true);
     const [challenges, setChallenges] = useState([]);
     const [completedChallenges, setCompletedChallenges] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("Community Challenges");
@@ -93,6 +95,8 @@ const ChallengesCategoryOne = () => {
                 }
             } catch (error) {
                 console.error("Error fetching completed challenges:", error);
+            } finally {
+                setIsLoading(false); // Stop loading once both fetches are complete
             }
         };
 
@@ -107,6 +111,10 @@ const ChallengesCategoryOne = () => {
     const filteredChallenges = filterChallengesByCategory(selectedCategory);
     const completedChallengeIds = new Set(completedChallenges.map(completed => completed.challengeId._id));
     const completedChallengesCount = filteredChallenges.filter(challenge => completedChallengeIds.has(challenge._id)).length;
+
+    if (isLoading) {
+        return <LoadingScreen />; // Laat het laadscherm zien als we aan het laden zijn
+    }
 
     return (
         <View style={styles.container}>

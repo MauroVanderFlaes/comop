@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: theme.colors.offwhite,
   },
   loader: {
     width: 150, // Maak de loader groter
